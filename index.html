@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <script type="text/javascript" src="utilities/Strategy.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $.ajax({
+                    type: "GET",
+                    url: "stockdata/AAPL_2019.csv",
+                    dataType: "text",
+                    success: function(data) {
+                        processData(data);
+                    },
+                    error: function(data) {
+                        alert(data);
+                    }
+                });
+
+                var _strategy = [0.03, 0.03, 5.0, 0.03];
+                var strategy = new Strategy(_strategy, 0);
+                alert(strategy.hasMore());
+            });
+
+            function processData(allText) {
+                var allTextLines = allText.split(/\r\n|\n/);
+                var headers = allTextLines[0].split(',');
+                var lines = [];
+
+                for (var i = 1; i < allTextLines.length; i++) {
+                    var data = allTextLines[i].split(',');
+                    if (data.length == headers.length) {
+
+                        var tarr = [];
+                        for (var j = 0; j < headers.length; j++) {
+                            tarr.push(headers[j] + ":" + data[j]);
+                        }
+                        lines.push(tarr);
+                    }
+                }
+            }
+        
+        </script>
+    </head>
+
+<title>ABc</title>
+
+<body>
+
+
+</body>
+</html>
