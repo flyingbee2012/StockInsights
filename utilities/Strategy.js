@@ -8,6 +8,10 @@ class Strategy {
         return this.index < this.strategy.length;
     }
 
+    getCurrentDropPct() {
+        return strategy[k + 1];
+    };
+
        /* 
         vector<float> strategy;
     public:
