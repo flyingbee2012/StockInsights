@@ -9,7 +9,8 @@
                     url: "stockdata/AAPL_2019.csv",
                     dataType: "text",
                     success: function(data) {
-                        processData(data);
+                        //processData(data);
+                        document.body.innerHTML = data;
                     },
                     error: function(data) {
                         alert(data);
@@ -18,7 +19,7 @@
 
                 var _strategy = [0.03, 0.03, 5.0, 0.03];
                 var strategy = new Strategy(_strategy, 0);
-                alert(strategy.hasMore());
+                //alert(strategy.hasMore());
             });
 
             function processData(allText) {
@@ -42,7 +43,7 @@
         </script>
     </head>
 
-<title>ABc</title>
+<title>Stock Analysis</title>
 
 <body>
 

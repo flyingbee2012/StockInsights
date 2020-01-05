@@ -1,7 +1,7 @@
 class Strategy {
-    constructor(strategy, k) {
+    constructor(strategy) {
         this.strategy = strategy;
-        this.index = k;
+        this.index = 0;
     }
 
     hasMore() {
