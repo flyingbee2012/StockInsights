@@ -84,10 +84,10 @@ class StockAnalyser {
                 var data = allTextLines[i].split(',');
                 if (data.length == headers.length) {
                     var dt = data[0];
-                    var openPrice = data[1];
-                    var highPrice = data[2];
-                    var lowPrice = data[3];
-                    var closePrice = data[4];
+                    var openPrice = Number(data[1]);
+                    var highPrice = Number(data[2]);
+                    var lowPrice = Number(data[3]);
+                    var closePrice = Number(data[4]);
 
                     // first point
                     if (ppPrice == -1 && pPrice == -1) {
@@ -110,23 +110,6 @@ class StockAnalyser {
                 }
             }
         }
-
-        /*loadData(path) {
-            //var self = this;
-            $.ajax({
-                type: "GET",
-                url: "stockdata/AAPL_2019.csv",
-                dataType: "text",
-                context: this,
-                success: function(data) {
-                    processData(data);
-                    document.body.innerHTML = data;
-                },
-                error: function(data) {
-                    alert(data);
-                }
-            });
-        } */
     
         applyStrategyFromPrice(index) {
             var trade = new Trade(this.prices.length - 1);
@@ -275,12 +258,12 @@ class StockAnalyser {
                 document.body.innerHTML += "********************************************************************</br>"
             }
     
-            console.log("historical profit: " + historicalProfit);
-            console.log("total profit so far: " + totoalProfit);
+            console.log("historical profit: " + historicalProfit.toFixed(3));
+            console.log("total profit so far: " + totoalProfit.toFixed(3));
             console.log("average day to make profit: " + totoalDays / count);
 
-            document.body.innerHTML += "historical profit: " + historicalProfit + "</br>";
-            document.body.innerHTML += "total profit so far: " + totoalProfit + "</br>";
+            document.body.innerHTML += "historical profit: " + historicalProfit.toFixed(3) + "</br>";
+            document.body.innerHTML += "total profit so far: " + totoalProfit.toFixed(3) + "</br>";
             document.body.innerHTML += "average day to make profit: " + totoalDays / count + "</br>";
         }
 };
