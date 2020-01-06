@@ -269,12 +269,18 @@ class StockAnalyser {
     
             if (this.longestTrade != null) {
                 console.log("************************** Longest Trade ***************************\n");
+                document.body.innerHTML += "************************** Longest Trade ***************************</br>"
                 this.longestTrade.output();
                 console.log("********************************************************************\n");
+                document.body.innerHTML += "********************************************************************</br>"
             }
     
             console.log("historical profit: " + historicalProfit);
             console.log("total profit so far: " + totoalProfit);
-            console.log("average day to make profit: " + totoalDays / count)
+            console.log("average day to make profit: " + totoalDays / count);
+
+            document.body.innerHTML += "historical profit: " + historicalProfit + "</br>";
+            document.body.innerHTML += "total profit so far: " + totoalProfit + "</br>";
+            document.body.innerHTML += "average day to make profit: " + totoalDays / count + "</br>";
         }
 };

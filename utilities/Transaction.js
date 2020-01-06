@@ -12,5 +12,6 @@ class Transaction {
   
     output() {
         console.log(this.type + " " + this.amount + " stocks at " + this.price + " on " + this.date);
+        document.body.innerHTML += this.type + " " + this.amount + " stocks at " + this.price + " on " + this.date;
     }
 };

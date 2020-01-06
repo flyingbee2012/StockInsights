@@ -33,12 +33,18 @@ class Trade {
             transaction.output();
             if (transaction.getType() == "Buy") {
                 console.log(" (" + this.historialCostBasis[JSON.stringify(transaction)] + ")");
+                document.body.innerHTML += " (" + this.historialCostBasis[JSON.stringify(transaction)] + ")";
 			}
             console.log("\n");
+            document.body.innerHTML += "</br>";
 		}
 		console.log("cost basis\t" + this.costBasis + "\n");
 		console.log("profit earned\t" + this.profit + "\n");
-		console.log("num of days\t" + "(" + this.getNumOfTradeDays() + ")" + "\n\n");
+        console.log("num of days\t" + "(" + this.getNumOfTradeDays() + ")" + "\n\n");
+        
+        document.body.innerHTML += "cost basis: " + this.costBasis + "</br>";
+        document.body.innerHTML += "profit earned: " + this.profit + "</br>";
+        document.body.innerHTML += "num of days: " + "(" + this.getNumOfTradeDays() + ")" + "</br></br>";
     }
     
 
