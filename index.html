@@ -1,6 +1,10 @@
 <html>
     <head>
         <script type="text/javascript" src="utilities/Strategy.js"></script>
+        <script type="text/javascript" src="utilities/Trade.js"></script>
+        <script type="text/javascript" src="utilities/Transaction.js"></script>
+        <script type="text/javascript" src="utilities/Price.js"></script>
+        <script type="text/javascript" src="utilities/StockAnalyser.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script>
             $(document).ready(function() {
@@ -10,16 +14,19 @@
                     dataType: "text",
                     success: function(data) {
                         //processData(data);
-                        document.body.innerHTML = data;
+                        //document.body.innerHTML = data;
+                        var strategy = new Strategy([0.03, 0.03, 4.0, 0.03, Number.MAX_VALUE, Number.MAX_VALUE]);
+
+                        var stockAnalyser = new StockAnalyser(30000);
+                        stockAnalyser.processData(data);
+                        stockAnalyser.loadStrategy(strategy);
+                        stockAnalyser.applyStrategyContinuously(true);
                     },
                     error: function(data) {
                         alert(data);
                     }
                 });
-
-                var _strategy = [0.03, 0.03, 5.0, 0.03];
-                var strategy = new Strategy(_strategy, 0);
-                //alert(strategy.hasMore());
+                
             });
 
             function processData(allText) {
