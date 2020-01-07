@@ -196,6 +196,7 @@ class StockAnalyser {
                 totoalDays += trade.getNumOfTradeDays();
                 count++;
                 trade.output(this.histCanvasId);
+                $("#" + this.histCanvasId).append("<hr>");
                 if (trade.getNumOfTradeDays() > maxDays) {
                     maxDays = trade.getNumOfTradeDays();
                     this.longestTrade = trade;
@@ -204,9 +205,9 @@ class StockAnalyser {
             }
     
             if (this.longestTrade != null) {
-                console.log("************************** Longest Trade ***************************\n");
+                console.log("*************************** Longest Trade ****************************\n");
                 //document.body.innerHTML += "************************** Longest Trade ***************************</br>"
-                $('#' + this.summaryCanvasId).append("********************* Longest Trade *********************" + "</br>");
+                $('#' + this.summaryCanvasId).append("************************* Longest Trade *************************" + "</br>");
                 this.longestTrade.output(this.summaryCanvasId);
                 console.log("********************************************************************\n");
                 //document.body.innerHTML += "********************************************************************</br>"

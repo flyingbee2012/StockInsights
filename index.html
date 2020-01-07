@@ -11,7 +11,7 @@
             $(document).ready(function() {
                 $.ajax({
                     type: "GET",
-                    url: "stockdata/AAPL_5years.csv",
+                    url: "stockdata/AAPL_10years.csv",
                     dataType: "text",
                     success: function(data) {
                         var strategy = new Strategy([0.025, 0.025, 4.0, 0.025, Number.MAX_VALUE, Number.MAX_VALUE]);
@@ -34,6 +34,7 @@
     <div class="split left">
         <div id="history_canvas" class="centered">
             <h2>Historical Transactions</h2>
+            <hr>
         </div>
     </div>
     <div class="split right">
