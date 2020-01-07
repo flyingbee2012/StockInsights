@@ -34,15 +34,16 @@ class Trade {
             if (transaction.getType() == "Buy") {
                 var record = " (" + Number(this.historialCostBasis[JSON.stringify(transaction)].toFixed(3)) + ")"
                 console.log(record);
-                $("#" + canvasId).append(record + "</br>");
+                $("#" + canvasId).append(record);
 			}
             console.log("\n");
+            $("#" + canvasId).append("</br>");
 		}
 		console.log("cost basis\t" + Number(this.costBasis.toFixed(3)) + "\n");
 		console.log("profit earned\t" + Number(this.profit.toFixed(3)) + "\n");
         console.log("num of days\t" + "(" + this.getNumOfTradeDays() + ")" + "\n\n");
         
-        $("#" + canvasId).append("</br>");
+        //$("#" + canvasId).append("</br>");
         $("#" + canvasId).append("cost basis: " + Number(this.costBasis.toFixed(3)) + "</br>");
         $("#" + canvasId).append("profit earned: " + Number(this.profit.toFixed(3)) + "</br>");
         $("#" + canvasId).append("num of days: " + "(" + this.getNumOfTradeDays() + ")" + "</br></br>");

@@ -179,7 +179,6 @@ class StockAnalyser {
     
         applyStrategyContinuously(withCompound) {
             var maxDays = -1;
-            //var trade = null;
             var totoalProfit = 0.0;
             var historicalProfit = 0.0;
             var totoalDays = 0.0;
@@ -206,11 +205,9 @@ class StockAnalyser {
     
             if (this.longestTrade != null) {
                 console.log("*************************** Longest Trade ****************************\n");
-                //document.body.innerHTML += "************************** Longest Trade ***************************</br>"
                 $('#' + this.summaryCanvasId).append("************************* Longest Trade *************************" + "</br>");
                 this.longestTrade.output(this.summaryCanvasId);
                 console.log("********************************************************************\n");
-                //document.body.innerHTML += "********************************************************************</br>"
                 $('#' + this.summaryCanvasId).append("********************************************************************" + "</br>");
             }
     
