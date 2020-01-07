@@ -28,23 +28,24 @@ class Trade {
 		return this.profit;
 	}
     
-    output() {
+    output(canvasId) {
         for (var transaction of this.transactions) {
-            transaction.output();
+            transaction.output(canvasId);
             if (transaction.getType() == "Buy") {
-                console.log(" (" + this.historialCostBasis[JSON.stringify(transaction)] + ")");
-                document.body.innerHTML += " (" + Number(this.historialCostBasis[JSON.stringify(transaction)].toFixed(3)) + ")";
+                var record = " (" + Number(this.historialCostBasis[JSON.stringify(transaction)].toFixed(3)) + ")"
+                console.log(record);
+                $("#" + canvasId).append(record + "</br>");
 			}
             console.log("\n");
-            document.body.innerHTML += "</br>";
 		}
 		console.log("cost basis\t" + Number(this.costBasis.toFixed(3)) + "\n");
 		console.log("profit earned\t" + Number(this.profit.toFixed(3)) + "\n");
         console.log("num of days\t" + "(" + this.getNumOfTradeDays() + ")" + "\n\n");
         
-        document.body.innerHTML += "cost basis: " + Number(this.costBasis.toFixed(3)) + "</br>";
-        document.body.innerHTML += "profit earned: " + Number(this.profit.toFixed(3)) + "</br>";
-        document.body.innerHTML += "num of days: " + "(" + this.getNumOfTradeDays() + ")" + "</br></br>";
+        $("#" + canvasId).append("</br>");
+        $("#" + canvasId).append("cost basis: " + Number(this.costBasis.toFixed(3)) + "</br>");
+        $("#" + canvasId).append("profit earned: " + Number(this.profit.toFixed(3)) + "</br>");
+        $("#" + canvasId).append("num of days: " + "(" + this.getNumOfTradeDays() + ")" + "</br></br>");
     }
     
 

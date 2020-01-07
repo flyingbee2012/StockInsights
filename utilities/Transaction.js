@@ -14,8 +14,9 @@ class Transaction {
         return Number(this.price.toFixed(3)).toString();
     }
   
-    output() {
-        console.log(this.type + " " + this.amount + " stocks at " +  this.getPriceString() + " on " + this.date);
-        document.body.innerHTML += this.type + " " + this.amount + " stocks at " + this.getPriceString() + " on " + this.date;
+    output(containerId) {
+        var record = this.type + " " + this.amount + " stocks at " + this.getPriceString() + " on " + this.date;
+        console.log(record);
+        $('#' + containerId).append(record);
     }
 };

@@ -1,65 +1,18 @@
 class StockAnalyser {
-/*
-        vector<Price> prices;
-        vector<int> peaks;
-        Strategy* strategy;
-        Trade* longestTrade;
-        float investment;*/
-    constructor(invest) {
+    constructor(invest, _histCanvasId, _summaryCanvasId) {
         this.investment = invest;
         this.longestTrade = null;
         this.strategy = null;
         this.prices = [];
         this.peaks = [];
+        this.histCanvasId = _histCanvasId;
+        this.summaryCanvasId = _summaryCanvasId;
     }
 
     loadStrategy(_strategy) {
         this.strategy = _strategy;
     }
-
-
-    /*
-
-    
-        loadData(string path) {
-            ifstream file(path);
-            string rowValue;
-            int rowIndex = 0;
-            float ppPrice = -1, pPrice = -1;
-            while (file.good()) {
-                getline(file, rowValue, '\n');
-    
-                vector<string> values = split(rowValue, ',');
-                if (values.size() > 0 && rowIndex > 0) {
-                    string dt = values[0];
-                    float openPrice = stof(values[1]);
-                    float highPrice = stof(values[2]);
-                    float lowPrice = stof(values[3]);
-                    float closePrice = stof(values[4]);
-    
-                    // first point
-                    if (ppPrice == -1 && pPrice == -1) {
-                        pPrice = closePrice;
-                    }
-                    // second point
-                    else if (ppPrice == -1) {
-                        ppPrice = pPrice;
-                        pPrice = closePrice;
-                    }
-                    else {
-                        if (ppPrice < pPrice && closePrice < pPrice) {
-                            peaks.push_back((int)prices.size() - 1);
-                        }
-                        ppPrice = pPrice;
-                        pPrice = closePrice;
-                    }
-    
-                    prices.push_back(Price(dt, openPrice, highPrice, lowPrice, closePrice));
-                }
-                rowIndex++;
-            }
-        }*/
-    
+ 
         /*
         outputData() {
             for (price of this.prices) {
@@ -226,7 +179,7 @@ class StockAnalyser {
     
         applyStrategyContinuously(withCompound) {
             var maxDays = -1;
-            var trade = null;
+            //var trade = null;
             var totoalProfit = 0.0;
             var historicalProfit = 0.0;
             var totoalDays = 0.0;
@@ -234,7 +187,7 @@ class StockAnalyser {
             var count = 0.0;
 
             while (i < this.prices.length) {
-                trade = this.applyStrategyFromPrice(i);
+                var trade = this.applyStrategyFromPrice(i);
                 historicalProfit += Math.max(0.0, trade.getProfit());
                 totoalProfit += trade.getProfit();
                 if (withCompound) {
@@ -242,7 +195,7 @@ class StockAnalyser {
                 }
                 totoalDays += trade.getNumOfTradeDays();
                 count++;
-                trade.output();
+                trade.output(this.histCanvasId);
                 if (trade.getNumOfTradeDays() > maxDays) {
                     maxDays = trade.getNumOfTradeDays();
                     this.longestTrade = trade;
@@ -252,18 +205,25 @@ class StockAnalyser {
     
             if (this.longestTrade != null) {
                 console.log("************************** Longest Trade ***************************\n");
-                document.body.innerHTML += "************************** Longest Trade ***************************</br>"
-                this.longestTrade.output();
+                //document.body.innerHTML += "************************** Longest Trade ***************************</br>"
+                $('#' + this.summaryCanvasId).append("********************* Longest Trade *********************" + "</br>");
+                this.longestTrade.output(this.summaryCanvasId);
                 console.log("********************************************************************\n");
-                document.body.innerHTML += "********************************************************************</br>"
+                //document.body.innerHTML += "********************************************************************</br>"
+                $('#' + this.summaryCanvasId).append("********************************************************************" + "</br>");
             }
     
             console.log("historical profit: " + historicalProfit.toFixed(3));
             console.log("total profit so far: " + totoalProfit.toFixed(3));
             console.log("average day to make profit: " + totoalDays / count);
 
-            document.body.innerHTML += "historical profit: " + historicalProfit.toFixed(3) + "</br>";
-            document.body.innerHTML += "total profit so far: " + totoalProfit.toFixed(3) + "</br>";
-            document.body.innerHTML += "average day to make profit: " + totoalDays / count + "</br>";
+            //document.body.innerHTML += "historical profit: " + historicalProfit.toFixed(3) + "</br>";
+            //document.body.innerHTML += "total profit so far: " + totoalProfit.toFixed(3) + "</br>";
+            //document.body.innerHTML += "average day to make profit: " + totoalDays / count + "</br>";
+
+            $('#' + this.summaryCanvasId).append("historical profit: " + historicalProfit.toFixed(3) + "</br>");
+            $('#' + this.summaryCanvasId).append("total profit so far: " + totoalProfit.toFixed(3) + "</br>");
+            $('#' + this.summaryCanvasId).append("average day to make profit: " + (totoalDays / count).toFixed(3) + "</br>");
+
         }
 };

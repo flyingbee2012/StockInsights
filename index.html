@@ -5,17 +5,18 @@
         <script type="text/javascript" src="utilities/Transaction.js"></script>
         <script type="text/javascript" src="utilities/Price.js"></script>
         <script type="text/javascript" src="utilities/StockAnalyser.js"></script>
+        <link rel="stylesheet" href="css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script>
             $(document).ready(function() {
                 $.ajax({
                     type: "GET",
-                    url: "stockdata/AAPL_2019.csv",
+                    url: "stockdata/AAPL_5years.csv",
                     dataType: "text",
                     success: function(data) {
-                        var strategy = new Strategy([0.03, 0.03, 4.0, 0.03, Number.MAX_VALUE, Number.MAX_VALUE]);
+                        var strategy = new Strategy([0.025, 0.025, 4.0, 0.025, Number.MAX_VALUE, Number.MAX_VALUE]);
 
-                        var stockAnalyser = new StockAnalyser(30000);
+                        var stockAnalyser = new StockAnalyser(30000, 'history_canvas', 'summary_canvas');
                         stockAnalyser.processData(data);
                         stockAnalyser.loadStrategy(strategy);
                         stockAnalyser.applyStrategyContinuously(true);
@@ -23,25 +24,21 @@
                     error: function(data) {
                         alert(data);
                     }
-                });
-                
+                });  
             }); 
         </script>
     </head>
-
 <title>Stock Analysis</title>
 
 <body>
     <div class="split left">
-        <div class="centered">
-            <h2>Jane Flex</h2>
-            <p>Some text.</p>
+        <div id="history_canvas" class="centered">
+            <h2>Historical Transactions</h2>
         </div>
     </div>
     <div class="split right">
-        <div class="centered">
-            <h2>John Doe</h2>
-            <p>Some text here too.</p>
+        <div id="summary_canvas" class="centered">
+            <h2>Summary</h2>
         </div>
     </div>
 </body>
