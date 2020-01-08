@@ -9,23 +9,44 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script>
             $(document).ready(function() {
-                $.ajax({
-                    type: "GET",
-                    url: "stockdata/AAPL_10years.csv",
-                    dataType: "text",
-                    success: function(data) {
-                        var strategy = new Strategy([0.025, 0.025, 4.0, 0.025, Number.MAX_VALUE, Number.MAX_VALUE]);
 
-                        var stockAnalyser = new StockAnalyser(30000, 'history_canvas', 'summary_canvas');
-                        stockAnalyser.processData(data);
-                        stockAnalyser.loadStrategy(strategy);
-                        stockAnalyser.applyStrategyContinuously(true);
-                    },
-                    error: function(data) {
-                        alert(data);
-                    }
-                });  
-            }); 
+            });
+
+            function clearOutput() {
+                document.getElementById("history_canvas").innerHTML = "";
+                document.getElementById("summary_canvas").innerHTML = "";
+            }
+
+            function executeAnalysis() {          
+                var selectedValue = document.getElementById("stockSelect").value;
+                var filePath = "";
+                switch (selectedValue) {
+                    case "1": filePath = "stockdata/AAPL_2019.csv"; break;
+                    case "2": filePath = "stockdata/AAPL_5years.csv"; break;
+                    case "3": filePath = "stockdata/AAPL_10years.csv"; break;
+                    case "4": filePath = "stockdata/PYPL_2019.csv"; break;
+                    case "5": filePath = "stockdata/SPY_2019.csv"; break;
+                }
+
+                if (filePath != "") {
+                    clearOutput();
+                    $.ajax({
+                        type: "GET",
+                        url: filePath,
+                        dataType: "text",
+                        success: function(data) {
+                            var strategy = new Strategy([0.025, 0.025, 4.0, 0.025, Number.MAX_VALUE, Number.MAX_VALUE]);
+                            var stockAnalyser = new StockAnalyser(30000, 'history_canvas', 'summary_canvas');
+                            stockAnalyser.loadStrategy(strategy);
+                            stockAnalyser.processData(data);
+                            stockAnalyser.applyStrategyContinuously(true);
+                        },
+                        error: function(data) {
+                            alert(data);
+                        }
+                    });  
+                }
+            }
         </script>
     </head>
 <title>Stock Analysis</title>
@@ -43,6 +64,15 @@
         </div>
         <div id="contro_panel" class="centered bottom">
             <h2>Control Panel</h2>
+            <select id="stockSelect" class="browser-default custom-select">
+                <option selected>------ select a stock ------</option>
+                <option value="1">AAPL 2019</option>
+                <option value="2">AAPL 5 Years</option>
+                <option value="3">AAPL 10 Years</option>
+                <option value="4">PYPL</option>
+                <option value="5">SPY</option>
+            </select>
+            <button type="button" onclick="executeAnalysis()">Analyze</button>
         </div>
     </div>
 </body>

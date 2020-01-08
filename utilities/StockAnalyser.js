@@ -215,10 +215,6 @@ class StockAnalyser {
             console.log("total profit so far: " + totoalProfit.toFixed(3));
             console.log("average day to make profit: " + totoalDays / count);
 
-            //document.body.innerHTML += "historical profit: " + historicalProfit.toFixed(3) + "</br>";
-            //document.body.innerHTML += "total profit so far: " + totoalProfit.toFixed(3) + "</br>";
-            //document.body.innerHTML += "average day to make profit: " + totoalDays / count + "</br>";
-
             $('#' + this.summaryCanvasId).append("historical profit: " + historicalProfit.toFixed(3) + "</br>");
             $('#' + this.summaryCanvasId).append("total profit so far: " + totoalProfit.toFixed(3) + "</br>");
             $('#' + this.summaryCanvasId).append("average day to make profit: " + (totoalDays / count).toFixed(3) + "</br>");
