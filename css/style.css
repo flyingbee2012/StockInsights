@@ -3,13 +3,23 @@ body {
     color: white;
 }
 
-.split {
+.splitHon {
     height: 100%;
     width: 50%;
     position: fixed;
     z-index: 1;
     top: 0;
     overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.splitVer {
+    height: 50%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    overflow-y: hidden;
     padding-top: 20px;
 }
 
@@ -20,7 +30,16 @@ body {
 
 .right {
     right: 0;
+    background-color: blue;
+}
+
+.top {
+    top: 0;
     background-color: red;
+}
+
+.bottom {
+    bottom: 0;
 }
 
 .centered {
