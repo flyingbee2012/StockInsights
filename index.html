@@ -19,6 +19,7 @@
 
             function executeAnalysis() {          
                 var selectedValue = document.getElementById("stockSelect").value;
+                var fund = Number(document.getElementById("fundBox").value);
                 var filePath = "";
                 switch (selectedValue) {
                     case "1": filePath = "stockdata/AAPL_2019.csv"; break;
@@ -35,8 +36,22 @@
                         url: filePath,
                         dataType: "text",
                         success: function(data) {
-                            var strategy = new Strategy([0.025, 0.025, 4.0, 0.025, Number.MAX_VALUE, Number.MAX_VALUE]);
-                            var stockAnalyser = new StockAnalyser(30000, 'history_canvas', 'summary_canvas');
+                            //var strategy = new Strategy([0.025, 0.025, 4.0, 0.025, Number.MAX_VALUE, Number.MAX_VALUE]);
+                            var strategystring = document.getElementById("strategyBox").value;
+                            var strategyArr = strategystring.split(',');
+                            var strategyInput = [];
+                            for (var i of strategyArr) {
+                                i = i.trim();
+                                if (i == "Number.MAX_VALUE") {
+                                    strategyInput.push(Number.MAX_VALUE);
+                                }
+                                else {
+                                    strategyInput.push(Number(i));
+                                }
+                            }
+                            var strategy = new Strategy(strategyInput);
+
+                            var stockAnalyser = new StockAnalyser(fund, 'history_canvas', 'summary_canvas');
                             stockAnalyser.loadStrategy(strategy);
                             stockAnalyser.processData(data);
                             stockAnalyser.applyStrategyContinuously(true);
@@ -64,15 +79,19 @@
         </div>
         <div id="contro_panel" class="centered bottom">
             <h2>Control Panel</h2>
-            <select id="stockSelect" class="browser-default custom-select">
-                <option selected>------ select a stock ------</option>
-                <option value="1">AAPL 2019</option>
-                <option value="2">AAPL 5 Years</option>
-                <option value="3">AAPL 10 Years</option>
-                <option value="4">PYPL</option>
-                <option value="5">SPY</option>
-            </select>
-            <button type="button" onclick="executeAnalysis()">Analyze</button>
+            <form>
+                Investment: <input id="fundBox" value="30000" type="text" size="10"></br></br>
+                Strategy: <input id="strategyBox" value="0.025, 0.025, 4.0, 0.025, Number.MAX_VALUE, Number.MAX_VALUE" type="text" size="100"></br></br>
+                <select id="stockSelect" class="browser-default custom-select">
+                    <option selected>------ select a stock ------</option>
+                    <option value="1">AAPL 2019</option>
+                    <option value="2">AAPL 5 Years</option>
+                    <option value="3">AAPL 10 Years</option>
+                    <option value="4">PYPL 2019</option>
+                    <option value="5">SPY 2019</option>
+                </select>
+                <button type="button" onclick="executeAnalysis()">Analyze</button>
+            </form>
         </div>
     </div>
 </body>
