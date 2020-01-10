@@ -223,6 +223,47 @@ class StockAnalyser {
 
         // [LB, #, LB, #, ....., UB]
         applyTrioStrategyFromPrice(index) {
-
+            var trade = new Trade(this.prices.length - 1);
+            var baseAmount = this.strategy.getBasePurchaseAmountVersion2(this.investment, this.prices[index].closePrice);
+            var times = 1;
+    
+            var amount = baseAmount * times;
+    
+            var lowerBound = -1.0;
+            var upperBound = Number.MAX_VALUE;
+    
+            trade.purchase(amount, this.prices[index].closePrice, this.prices[index].dateTime, index);
+    
+            if (this.strategy.hasMore()) {
+                lowerBound = this.prices[index].closePrice * (1.0 - this.strategy.getCurrentDropPct());
+                upperBound = this.prices[index].closePrice * (1.0 + this.strategy.getCurrentSalePct());
+                times = this.strategy.getCurrentPurchaseTimes();
+                amount = baseAmount * times;
+                this.strategy.moveToNext();
+            }
+    
+            for (var i = index + 1; i < this.prices.length; i++) {
+                var lowestPrice = this.prices[i].lowPrice;
+                var highestPrice = this.prices[i].highPrice;
+                if (lowestPrice <= lowerBound) {
+                    trade.purchase(amount, lowerBound, this.prices[i].dateTime, i);
+                    if (this.strategy.hasMore()) {
+                        lowerBound = trade.getCostBasis() * (1.0 - this.strategy.getCurrentDropPct());
+                        upperBound = trade.getCostBasis() * (1.0 + this.strategy.getCurrentSalePct());
+                        times = this.strategy.getCurrentPurchaseTimes();
+                        amount = baseAmount * times;
+                        this.strategy.moveToNext();
+                    }
+                }
+                // earned profit and stop
+                else if (highestPrice >= upperBound) {
+                    trade.sellAll(upperBound, this.prices[i].dateTime, i);
+                    this.strategy.reset();
+                    return trade;
+                }
+            }
+    
+            this.strategy.reset();
+            return trade;
         }
 };
