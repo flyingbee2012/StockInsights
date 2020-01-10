@@ -220,4 +220,9 @@ class StockAnalyser {
             $('#' + this.summaryCanvasId).append("average day to make profit: " + (totoalDays / count).toFixed(3) + "</br>");
 
         }
+
+        // [LB, #, LB, #, ....., UB]
+        applyTrioStrategyFromPrice(index) {
+
+        }
 };
