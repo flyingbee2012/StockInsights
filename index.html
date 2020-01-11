@@ -1,6 +1,7 @@
 <html>
     <head>
         <script type="text/javascript" src="utilities/Strategy.js"></script>
+        <script type="text/javascript" src="utilities/LazyStrategy.js"></script>
         <script type="text/javascript" src="utilities/Trade.js"></script>
         <script type="text/javascript" src="utilities/Transaction.js"></script>
         <script type="text/javascript" src="utilities/Price.js"></script>
@@ -36,20 +37,23 @@
                         url: filePath,
                         dataType: "text",
                         success: function(data) {
-                            //var strategy = new Strategy([0.025, 0.025, 4.0, 0.025, Number.MAX_VALUE, Number.MAX_VALUE]);
-                            var strategystring = document.getElementById("strategyBox").value;
-                            var strategyArr = strategystring.split(',');
+                            //var strategy = new Strategy([0.025, 0.025, 4.0, 0.025]);
+                            var metrics = document.getElementById("metricsBox").value;
+                            var strategyArr = metrics.split(',');
                             var strategyInput = [];
                             for (var i of strategyArr) {
                                 i = i.trim();
-                                if (i == "Number.MAX_VALUE") {
-                                    strategyInput.push(Number.MAX_VALUE);
-                                }
-                                else {
-                                    strategyInput.push(Number(i));
-                                }
+                                strategyInput.push(Number(i));
+
+                            }         
+                            
+                            var strategy = null;
+                            if (document.getElementById("strategySelect").value === "1") {
+                                strategy = new Strategy(strategyInput);
                             }
-                            var strategy = new Strategy(strategyInput);
+                            else {
+                                strategy = new LazyStrategy(strategyInput);
+                            }
 
                             var stockAnalyser = new StockAnalyser(fund, 'history_canvas', 'summary_canvas');
                             stockAnalyser.loadStrategy(strategy);
@@ -81,14 +85,19 @@
             <h2>Control Panel</h2>
             <form>
                 Investment: <input id="fundBox" value="30000" type="text" size="10"></br></br>
-                Strategy: <input id="strategyBox" value="0.025, 0.025, 4.0, 0.025, Number.MAX_VALUE, Number.MAX_VALUE" type="text" size="100"></br></br>
+                Strategy Metrics: <input id="metricsBox" value="0.025, 4.0, 0.025" type="text" size="100"></br></br>  
                 <select id="stockSelect" class="browser-default custom-select">
                     <option selected>------ select a stock ------</option>
-                    <option value="1">AAPL 2019</option>
-                    <option value="2">AAPL 5 Years</option>
-                    <option value="3">AAPL 10 Years</option>
-                    <option value="4">PYPL 2019</option>
-                    <option value="5">SPY 2019</option>
+                        <option value="1">AAPL 2019</option>
+                        <option value="2">AAPL 5 Years</option>
+                        <option value="3">AAPL 10 Years</option>
+                        <option value="4">PYPL 2019</option>
+                        <option value="5">SPY 2019</option>
+                </select>
+                <select id="strategySelect" class="browser-default custom-select">
+                    <option selected>------ select a strategy ------</option>
+                        <option value="1">Traditional Strategy</option>
+                        <option value="2">Lazy Strategy</option>
                 </select>
                 <button type="button" onclick="executeAnalysis()">Analyze</button>
             </form>

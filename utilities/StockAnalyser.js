@@ -7,12 +7,14 @@ class StockAnalyser {
         this.peaks = [];
         this.histCanvasId = _histCanvasId;
         this.summaryCanvasId = _summaryCanvasId;
+        this.strategyType = "";
     }
 
     loadStrategy(_strategy) {
         this.strategy = _strategy;
+        this.strategyType = _strategy.type;
     }
- 
+
         /*
         outputData() {
             for (price of this.prices) {
@@ -95,6 +97,9 @@ class StockAnalyser {
                         times = this.strategy.getCurrentPurchaseTimes();
                         amount = baseAmount * times;
                         this.strategy.moveToNext();
+                    }
+                    else {
+                        lowerBound = -1.0;
                     }
                 }
                 // earned profit and stop
@@ -186,7 +191,7 @@ class StockAnalyser {
             var count = 0.0;
 
             while (i < this.prices.length) {
-                var trade = this.applyStrategyFromPrice(i);
+                var trade = (this.strategyType === "Traditional") ? this.applyStrategyFromPrice(i) : this.applyLazyStrategyFromPrice(i);
                 historicalProfit += Math.max(0.0, trade.getProfit());
                 totoalProfit += trade.getProfit();
                 if (withCompound) {
@@ -222,9 +227,9 @@ class StockAnalyser {
         }
 
         // [LB, #, LB, #, ....., UB]
-        applyTrioStrategyFromPrice(index) {
+        applyLazyStrategyFromPrice(index) {
             var trade = new Trade(this.prices.length - 1);
-            var baseAmount = this.strategy.getBasePurchaseAmountVersion2(this.investment, this.prices[index].closePrice);
+            var baseAmount = this.strategy.getBasePurchaseAmount(this.investment, this.prices[index].closePrice);
             var times = 1;
     
             var amount = baseAmount * times;
@@ -236,7 +241,6 @@ class StockAnalyser {
     
             if (this.strategy.hasMore()) {
                 lowerBound = this.prices[index].closePrice * (1.0 - this.strategy.getCurrentDropPct());
-                upperBound = this.prices[index].closePrice * (1.0 + this.strategy.getCurrentSalePct());
                 times = this.strategy.getCurrentPurchaseTimes();
                 amount = baseAmount * times;
                 this.strategy.moveToNext();
@@ -248,11 +252,14 @@ class StockAnalyser {
                 if (lowestPrice <= lowerBound) {
                     trade.purchase(amount, lowerBound, this.prices[i].dateTime, i);
                     if (this.strategy.hasMore()) {
-                        lowerBound = trade.getCostBasis() * (1.0 - this.strategy.getCurrentDropPct());
-                        upperBound = trade.getCostBasis() * (1.0 + this.strategy.getCurrentSalePct());
+                        lowerBound = trade.getCostBasis() * (1.0 - this.strategy.getCurrentDropPct()); 
                         times = this.strategy.getCurrentPurchaseTimes();
                         amount = baseAmount * times;
                         this.strategy.moveToNext();
+                    }
+                    else {
+                        lowerBound = -1.0; // will stop it from purchase more when price gets lower
+                        upperBound = trade.getCostBasis() * (1.0 + this.strategy.getSalePct()); // will make it sell all stocks when price gets higher
                     }
                 }
                 // earned profit and stop

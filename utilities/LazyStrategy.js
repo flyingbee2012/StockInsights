@@ -1,28 +1,29 @@
-class Strategy {
+// [LB, #, LB, #, ....., UB]
+class LazyStrategy {
     constructor(strategy) {
         this.strategy = strategy;
-        this.type = "Traditional";
         this.index = 0;
+        this.type = "Lazy";
     }
 
     hasMore() {
-        return this.index < this.strategy.length;
+        return this.index + 1 < this.strategy.length;
     }
 
     getCurrentDropPct() {
-        return this.strategy[this.index + 1];
+        return this.strategy[this.index];
     };
 
     getCurrentPurchaseTimes() {
-        return this.strategy[this.index + 2];
+        return this.strategy[this.index + 1];
     }
 
-    getCurrentSalePct() {
-        return this.strategy[this.index];
+    getSalePct() {
+        return this.strategy[this.strategy.length - 1];
     }
 
     moveToNext() {
-        this.index += 3;
+        this.index += 2;
     }
 
     reset() {
@@ -31,8 +32,8 @@ class Strategy {
 
     getBasePurchaseAmount(fund, price) {
         var times = 1;
-        for (var i = 2; i < this.strategy.length; i += 3) {
-            times += this.strategy[i];    
+        for (var i = 1; i < this.strategy.length; i += 2) {
+            times += this.strategy[i];
         }
         var share = fund / times;
         return Math.floor(share / price);
