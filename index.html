@@ -14,8 +14,18 @@
             });
 
             function clearOutput() {
-                document.getElementById("history_canvas").innerHTML = "";
-                document.getElementById("summary_canvas").innerHTML = "";
+                document.getElementById("history_content").innerHTML = "";
+                document.getElementById("summary_content").innerHTML = "";
+            }
+
+            function populateMetrics() {
+                var val = $("#strategySelect")[0].selectedIndex;
+                if (val === 1) {
+                    $("#metricsBox").val("0.025, 0.025, 4.0, 0.025");
+                }
+                else {
+                    $("#metricsBox").val("0.025, 4.0, 0.025");
+                }
             }
 
             function executeAnalysis() {          
@@ -37,7 +47,6 @@
                         url: filePath,
                         dataType: "text",
                         success: function(data) {
-                            //var strategy = new Strategy([0.025, 0.025, 4.0, 0.025]);
                             var metrics = document.getElementById("metricsBox").value;
                             var strategyArr = metrics.split(',');
                             var strategyInput = [];
@@ -55,7 +64,7 @@
                                 strategy = new LazyStrategy(strategyInput);
                             }
 
-                            var stockAnalyser = new StockAnalyser(fund, 'history_canvas', 'summary_canvas');
+                            var stockAnalyser = new StockAnalyser(fund, 'history_content', 'summary_content');
                             stockAnalyser.loadStrategy(strategy);
                             stockAnalyser.processData(data);
                             stockAnalyser.applyStrategyContinuously(true);
@@ -74,18 +83,20 @@
     <div class="split left">
         <div id="history_canvas" class="centered">
             <h2>Historical Transactions</h2>
+            <div id="history_content"></div>
             <hr>
         </div>
     </div>
     <div class="split right">
         <div id="summary_canvas" class="centered top">
             <h2>Summary</h2>
+            <div id="summary_content"></div>
         </div>
-        <div id="contro_panel" class="centered bottom">
+        <div id="control_panel" class="centered bottom">
             <h2>Control Panel</h2>
             <form>
                 Investment: <input id="fundBox" value="30000" type="text" size="10"></br></br>
-                Strategy Metrics: <input id="metricsBox" value="0.025, 4.0, 0.025" type="text" size="100"></br></br>  
+                Strategy Metrics: <input id="metricsBox" type="text" size="50"></br></br>  
                 <select id="stockSelect" class="browser-default custom-select">
                     <option selected>------ select a stock ------</option>
                         <option value="1">AAPL 2019</option>
@@ -94,7 +105,7 @@
                         <option value="4">PYPL 2019</option>
                         <option value="5">SPY 2019</option>
                 </select>
-                <select id="strategySelect" class="browser-default custom-select">
+                <select id="strategySelect" class="browser-default custom-select" onchange="populateMetrics()">
                     <option selected>------ select a strategy ------</option>
                         <option value="1">Traditional Strategy</option>
                         <option value="2">Lazy Strategy</option>

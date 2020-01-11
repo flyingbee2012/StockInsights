@@ -233,14 +233,17 @@ class StockAnalyser {
             var times = 1;
     
             var amount = baseAmount * times;
-    
+            var peakValue = this.prices[index].closePrice;
             var lowerBound = -1.0;
             var upperBound = Number.MAX_VALUE;
+            var dropPct = 0;
+            //var depleted = false;
     
             trade.purchase(amount, this.prices[index].closePrice, this.prices[index].dateTime, index);
     
             if (this.strategy.hasMore()) {
-                lowerBound = this.prices[index].closePrice * (1.0 - this.strategy.getCurrentDropPct());
+                dropPct = this.strategy.getCurrentDropPct();
+                lowerBound = this.prices[index].closePrice * (1.0 - dropPct);
                 times = this.strategy.getCurrentPurchaseTimes();
                 amount = baseAmount * times;
                 this.strategy.moveToNext();
@@ -249,17 +252,19 @@ class StockAnalyser {
             for (var i = index + 1; i < this.prices.length; i++) {
                 var lowestPrice = this.prices[i].lowPrice;
                 var highestPrice = this.prices[i].highPrice;
+
                 if (lowestPrice <= lowerBound) {
                     trade.purchase(amount, lowerBound, this.prices[i].dateTime, i);
                     if (this.strategy.hasMore()) {
-                        lowerBound = trade.getCostBasis() * (1.0 - this.strategy.getCurrentDropPct()); 
+                        dropPct = this.strategy.getCurrentDropPct();
                         times = this.strategy.getCurrentPurchaseTimes();
                         amount = baseAmount * times;
                         this.strategy.moveToNext();
                     }
                     else {
-                        lowerBound = -1.0; // will stop it from purchase more when price gets lower
+                        lowerBound = -1.0; // will make it stop from purchasing more when price drops lower next time
                         upperBound = trade.getCostBasis() * (1.0 + this.strategy.getSalePct()); // will make it sell all stocks when price gets higher
+                        //depleted = true;
                     }
                 }
                 // earned profit and stop
@@ -268,8 +273,14 @@ class StockAnalyser {
                     this.strategy.reset();
                     return trade;
                 }
+
+                peakValue = Math.max(peakValue, highestPrice);
+                lowerBound = (lowerBound == -1.0) ? lowerBound : peakValue * (1.0 - dropPct);   
             }
     
+            // if the price never drops below the threshold, sell all stocks at the current price at the end
+            var k = this.prices.length - 1;
+            trade.sellAll(this.prices[k].closePrice, this.prices[k].dateTime, k);
             this.strategy.reset();
             return trade;
         }
