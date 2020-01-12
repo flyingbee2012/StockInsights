@@ -201,26 +201,30 @@ class StockAnalyser {
                 }
                 totoalDays += trade.getNumOfTradeDays();
                 count++;
-                trade.output(this.$historyCanvas);
-                $("#" + this.histCanvasId).append("<hr>");
+                if (this.$historyCanvas) {
+                    trade.output(this.$historyCanvas);
+                    this.$historyCanvas.append("<hr>");
+                }
                 if (trade.getNumOfTradeDays() > maxDays) {
                     maxDays = trade.getNumOfTradeDays();
                     this.longestTrade = trade;
                 }
                 i = trade.getEndIndex() + 1;
             }
-    
-            if (this.longestTrade != null) {        
-                this.$summaryCanvas.append("----- " + this.stockInfo + " with investment " + this.baseFund + " ----- </br>");
-                this.$summaryCanvas.append("----- Strategy: " + this.strategyType + " " + this.strategy.getString() + " -----</br></br>");
-                this.$summaryCanvas.append("******************* Longest Trade *******************" + "</br>");
-                this.longestTrade.output(this.$summaryCanvas);
-                this.$summaryCanvas.append("*********************************************************" + "</br>");
-            }
 
-            this.$summaryCanvas.append("historical profit: " + historicalProfit.toFixed(3) + "</br>");
-            this.$summaryCanvas.append("total profit so far: " + totoalProfit.toFixed(3) + "</br>");
-            this.$summaryCanvas.append("average day to make profit: " + (totoalDays / count).toFixed(3) + "</br>");
+            if (this.$summaryCanvas) {
+                if (this.longestTrade != null) {        
+                    this.$summaryCanvas.append("----- " + this.stockInfo + " with investment " + this.baseFund + " ----- </br>");
+                    this.$summaryCanvas.append("----- Strategy: " + this.strategyType + " " + this.strategy.getString() + " -----</br></br>");
+                    this.$summaryCanvas.append("****************** Longest Trade ******************" + "</br>");
+                    this.longestTrade.output(this.$summaryCanvas);
+                    this.$summaryCanvas.append("*****************************************************" + "</br>");
+                }
+
+                this.$summaryCanvas.append("historical profit: " + historicalProfit.toFixed(3) + "</br>");
+                this.$summaryCanvas.append("total profit so far: " + totoalProfit.toFixed(3) + "</br>");
+                this.$summaryCanvas.append("average day to make profit: " + (totoalDays / count).toFixed(3) + "</br>");
+            }
 
         }
 
