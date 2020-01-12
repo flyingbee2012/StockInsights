@@ -1,5 +1,6 @@
 <html>
     <head>
+        <script type="text/javascript" src="utilities/Board.js"></script>
         <script type="text/javascript" src="utilities/Strategy.js"></script>
         <script type="text/javascript" src="utilities/LazyStrategy.js"></script>
         <script type="text/javascript" src="utilities/Trade.js"></script>
@@ -9,72 +10,21 @@
         <link rel="stylesheet" href="css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script>
-            $(document).ready(function() {
-
+            $(document).ready(function() { 
+                var board = new Board(
+                    $("#history_content"), 
+                    $("#summary_content1"), 
+                    $("#summary_content2"), 
+                    $("#summary_content3"),
+                    $("#analysisButton"),
+                    $("#stockSelect"),
+                    $("#fundBox"),
+                    $("#metricsBox"),
+                    $("#compoundCheckBox"),
+                    $("#strategySelect") 
+                    );
+                board.selectSummaryPanel($("#summary_content1"));
             });
-
-            function clearOutput() {
-                document.getElementById("history_content").innerHTML = "";
-                document.getElementById("summary_content").innerHTML = "";
-            }
-
-            function populateMetrics() {
-                var val = $("#strategySelect")[0].selectedIndex;
-                if (val === 1) {
-                    $("#metricsBox").val("0.025, 0.025, 4.0, 0.025");
-                }
-                else {
-                    $("#metricsBox").val("0.025, 4.0, 0.025");
-                }
-            }
-
-            function executeAnalysis() {          
-                var selectedValue = document.getElementById("stockSelect").value;
-                var fund = Number(document.getElementById("fundBox").value);
-                var filePath = "";
-                switch (selectedValue) {
-                    case "1": filePath = "stockdata/AAPL_2019.csv"; break;
-                    case "2": filePath = "stockdata/AAPL_5years.csv"; break;
-                    case "3": filePath = "stockdata/AAPL_10years.csv"; break;
-                    case "4": filePath = "stockdata/PYPL_2019.csv"; break;
-                    case "5": filePath = "stockdata/SPY_2019.csv"; break;
-                }
-
-                if (filePath != "") {
-                    clearOutput();
-                    $.ajax({
-                        type: "GET",
-                        url: filePath,
-                        dataType: "text",
-                        success: function(data) {
-                            var metrics = document.getElementById("metricsBox").value;
-                            var strategyArr = metrics.split(',');
-                            var strategyInput = [];
-                            for (var i of strategyArr) {
-                                i = i.trim();
-                                strategyInput.push(Number(i));
-
-                            }         
-                            
-                            var strategy = null;
-                            if (document.getElementById("strategySelect").value === "1") {
-                                strategy = new Strategy(strategyInput);
-                            }
-                            else {
-                                strategy = new LazyStrategy(strategyInput);
-                            }
-
-                            var stockAnalyser = new StockAnalyser(fund, 'history_content', 'summary_content');
-                            stockAnalyser.loadStrategy(strategy);
-                            stockAnalyser.processData(data);
-                            stockAnalyser.applyStrategyContinuously(true);
-                        },
-                        error: function(data) {
-                            alert(data);
-                        }
-                    });  
-                }
-            }
         </script>
     </head>
 <title>Stock Analysis</title>
@@ -83,34 +33,49 @@
     <div class="split left">
         <div id="history_canvas" class="centered">
             <h2>Historical Transactions</h2>
-            <div id="history_content"></div>
             <hr>
+            <div id="history_content"></div>
         </div>
     </div>
     <div class="split right">
         <div id="summary_canvas" class="centered top">
             <h2>Summary</h2>
-            <div id="summary_content"></div>
+            <table id="summary_table" border="1" cellpadding="5" style="width: 100%; height: 80%;">
+                <tr>
+                    <td style="width: 30%; height: 100%;"><div id="summary_content1" style="width: 100%; height: 100%;"></div></td>
+                    <td style="width: 30%; height: 100%;"><div id="summary_content2" style="width: 100%; height: 100%;"></div></td>
+                    <td style="width: 30%; height: 100%;"><div id="summary_content3" style="width: 100%; height: 100%;"></div></td>
+                </tr>
+            </table>
         </div>
         <div id="control_panel" class="centered bottom">
             <h2>Control Panel</h2>
             <form>
-                Investment: <input id="fundBox" value="30000" type="text" size="10"></br></br>
-                Strategy Metrics: <input id="metricsBox" type="text" size="50"></br></br>  
+                Investment: <input id="fundBox" value="30000" type="text" size="8">
+                <input type="checkbox" id="compoundCheckBox" value="1" checked>Compound               
                 <select id="stockSelect" class="browser-default custom-select">
                     <option selected>------ select a stock ------</option>
-                        <option value="1">AAPL 2019</option>
-                        <option value="2">AAPL 5 Years</option>
-                        <option value="3">AAPL 10 Years</option>
-                        <option value="4">PYPL 2019</option>
-                        <option value="5">SPY 2019</option>
+                    <option value="1">AAPL 2019</option>
+                    <option value="2">AAPL 5 Years</option>
+                    <option value="3">AAPL 10 Years</option>
+                    <option value="4">PYPL 2019</option>
+                    <option value="5">SPY 2019</option>
                 </select>
-                <select id="strategySelect" class="browser-default custom-select" onchange="populateMetrics()">
+                </br></br>
+                Strategy Metrics: <input id="metricsBox" type="text" size="45"></br></br>  
+                <select id="strategySelect" class="browser-default custom-select">
                     <option selected>------ select a strategy ------</option>
-                        <option value="1">Traditional Strategy</option>
-                        <option value="2">Lazy Strategy</option>
+                    <option value="1">Traditional Strategy</option>
+                    <option value="2">Lazy Strategy</option>
                 </select>
-                <button type="button" onclick="executeAnalysis()">Analyze</button>
+                <select id="strategySelect" class="browser-default custom-select">
+                    <option selected>---- how to make next investment ----</option>
+                    <option value="1">Close Price Next Day</option>
+                    <option value="2">Highest Price Same Day</option>
+                    <option value="3">Same Price Same Day</option>
+                    <option value="4">Next Peak Close Price</option>
+                </select>
+                <button id="analysisButton" type="button">Analyze</button>
             </form>
         </div>
     </div>

@@ -1,12 +1,14 @@
 class StockAnalyser {
-    constructor(invest, _histCanvasId, _summaryCanvasId) {
+    constructor(invest, stockInfo, $historyCanvas, $summaryCanvas) {
+        this.baseFund = invest;
         this.investment = invest;
+        this.stockInfo = stockInfo;
         this.longestTrade = null;
         this.strategy = null;
         this.prices = [];
         this.peaks = [];
-        this.histCanvasId = _histCanvasId;
-        this.summaryCanvasId = _summaryCanvasId;
+        this.$historyCanvas = $historyCanvas;
+        this.$summaryCanvas = $summaryCanvas;
         this.strategyType = "";
     }
 
@@ -199,7 +201,7 @@ class StockAnalyser {
                 }
                 totoalDays += trade.getNumOfTradeDays();
                 count++;
-                trade.output(this.histCanvasId);
+                trade.output(this.$historyCanvas);
                 $("#" + this.histCanvasId).append("<hr>");
                 if (trade.getNumOfTradeDays() > maxDays) {
                     maxDays = trade.getNumOfTradeDays();
@@ -208,21 +210,17 @@ class StockAnalyser {
                 i = trade.getEndIndex() + 1;
             }
     
-            if (this.longestTrade != null) {
-                console.log("*************************** Longest Trade ****************************\n");
-                $('#' + this.summaryCanvasId).append("************************* Longest Trade *************************" + "</br>");
-                this.longestTrade.output(this.summaryCanvasId);
-                console.log("********************************************************************\n");
-                $('#' + this.summaryCanvasId).append("********************************************************************" + "</br>");
+            if (this.longestTrade != null) {        
+                this.$summaryCanvas.append("----- " + this.stockInfo + " with investment " + this.baseFund + " ----- </br>");
+                this.$summaryCanvas.append("----- Strategy: " + this.strategyType + " " + this.strategy.getString() + " -----</br></br>");
+                this.$summaryCanvas.append("******************* Longest Trade *******************" + "</br>");
+                this.longestTrade.output(this.$summaryCanvas);
+                this.$summaryCanvas.append("*********************************************************" + "</br>");
             }
-    
-            console.log("historical profit: " + historicalProfit.toFixed(3));
-            console.log("total profit so far: " + totoalProfit.toFixed(3));
-            console.log("average day to make profit: " + totoalDays / count);
 
-            $('#' + this.summaryCanvasId).append("historical profit: " + historicalProfit.toFixed(3) + "</br>");
-            $('#' + this.summaryCanvasId).append("total profit so far: " + totoalProfit.toFixed(3) + "</br>");
-            $('#' + this.summaryCanvasId).append("average day to make profit: " + (totoalDays / count).toFixed(3) + "</br>");
+            this.$summaryCanvas.append("historical profit: " + historicalProfit.toFixed(3) + "</br>");
+            this.$summaryCanvas.append("total profit so far: " + totoalProfit.toFixed(3) + "</br>");
+            this.$summaryCanvas.append("average day to make profit: " + (totoalDays / count).toFixed(3) + "</br>");
 
         }
 
@@ -237,7 +235,6 @@ class StockAnalyser {
             var lowerBound = -1.0;
             var upperBound = Number.MAX_VALUE;
             var dropPct = 0;
-            //var depleted = false;
     
             trade.purchase(amount, this.prices[index].closePrice, this.prices[index].dateTime, index);
     
@@ -264,7 +261,6 @@ class StockAnalyser {
                     else {
                         lowerBound = -1.0; // will make it stop from purchasing more when price drops lower next time
                         upperBound = trade.getCostBasis() * (1.0 + this.strategy.getSalePct()); // will make it sell all stocks when price gets higher
-                        //depleted = true;
                     }
                 }
                 // earned profit and stop

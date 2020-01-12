@@ -14,9 +14,8 @@ class Transaction {
         return Number(this.price.toFixed(3)).toString();
     }
   
-    output(containerId) {
+    output($container) {
         var record = this.type + " " + this.amount + " stocks at " + this.getPriceString() + " on " + this.date;
-        console.log(record);
-        $('#' + containerId).append(record);
+        $container.append(record);
     }
 };

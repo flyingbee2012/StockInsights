@@ -37,4 +37,8 @@ class Strategy {
         var share = fund / times;
         return Math.floor(share / price);
     }
+    
+    getString() {
+        return this.strategy.toString();
+    }
 };
