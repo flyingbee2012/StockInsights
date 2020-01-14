@@ -1,20 +1,19 @@
 class StockAnalyser {
-    constructor(invest, stockInfo, $historyCanvas, $summaryCanvas) {
+    constructor(invest, stockInfo, strategyType, $historyCanvas, $summaryCanvas) {
         this.baseFund = invest;
         this.investment = invest;
         this.stockInfo = stockInfo;
+        this.strategyType = strategyType;
         this.longestTrade = null;
         this.strategy = null;
         this.prices = [];
         this.peaks = [];
         this.$historyCanvas = $historyCanvas;
         this.$summaryCanvas = $summaryCanvas;
-        this.strategyType = "";
     }
 
     loadStrategy(_strategy) {
         this.strategy = _strategy;
-        this.strategyType = _strategy.type;
     }
 
         /*
@@ -183,6 +182,33 @@ class StockAnalyser {
             cout << "total profit: " << totoalProfit << endl;
             cout << "average day to make profit: " << totoalDays / count << endl;
         }*/
+
+        applyLongTermStrategy() {
+            var trade = new Trade(this.prices.length - 1);
+            var startPrice = this.prices[0].closePrice;
+            var endPrice = this.prices[this.prices.length - 1].closePrice;
+            var amount = this.investment / startPrice;
+            trade.purchase(amount, startPrice, this.prices[0].dateTime, 0);
+            trade.sellAll(endPrice, this.prices[this.prices.length - 1].dateTime, this.prices.length - 1);
+            if (this.$historyCanvas) {
+                trade.output(this.$historyCanvas);
+                this.$historyCanvas.append("<hr>");
+            }
+            var totalProfit = trade.getProfit();
+
+            this.outputSummaryData(
+                this.$summaryCanvas,
+                trade,
+                this.stockInfo,
+                this.baseFund,
+                this.strategyType,
+                "",
+                totalProfit.toFixed(3),
+                totalProfit.toFixed(3),
+                trade.getNumOfTradeDays()
+            );
+
+        }
     
         applyStrategyContinuously(withCompound) {
             var maxDays = -1;
@@ -193,7 +219,7 @@ class StockAnalyser {
             var count = 0.0;
 
             while (i < this.prices.length) {
-                var trade = (this.strategyType === "Traditional") ? this.applyStrategyFromPrice(i) : this.applyLazyStrategyFromPrice(i);
+                var trade = (this.strategyType === "Traditional Strategy") ? this.applyStrategyFromPrice(i) : this.applyLazyStrategyFromPrice(i);
                 historicalProfit += Math.max(0.0, trade.getProfit());
                 totoalProfit += trade.getProfit();
                 if (withCompound) {
@@ -212,20 +238,34 @@ class StockAnalyser {
                 i = trade.getEndIndex() + 1;
             }
 
-            if (this.$summaryCanvas) {
-                if (this.longestTrade != null) {        
-                    this.$summaryCanvas.append("----- " + this.stockInfo + " with investment " + this.baseFund + " ----- </br>");
-                    this.$summaryCanvas.append("----- Strategy: " + this.strategyType + " " + this.strategy.getString() + " -----</br></br>");
-                    this.$summaryCanvas.append("****************** Longest Trade ******************" + "</br>");
-                    this.longestTrade.output(this.$summaryCanvas);
-                    this.$summaryCanvas.append("*****************************************************" + "</br>");
+            this.outputSummaryData(
+                this.$summaryCanvas, 
+                this.longestTrade,
+                this.stockInfo,
+                this.baseFund,
+                this.strategyType,
+                this.strategy.getString(),
+                historicalProfit.toFixed(3),
+                totoalProfit.toFixed(3),
+                (totoalDays / count).toFixed(3)
+            );
+
+        }
+
+        outputSummaryData($canvas, longestTrade, stockInfo, baseFund, strategyType, metrics, hProfit, tProfit, avgDays) {
+            if ($canvas) {
+                if (longestTrade != null) {        
+                    $canvas.append("----- " + stockInfo + " with investment " + baseFund + " ----- </br>");
+                    $canvas.append("----- Strategy: " + strategyType + " " + metrics + " -----</br></br>");
+                    $canvas.append("****************** Longest Trade ******************" + "</br>");
+                    longestTrade.output($canvas);
+                    $canvas.append("*****************************************************" + "</br>");
                 }
 
-                this.$summaryCanvas.append("historical profit: " + historicalProfit.toFixed(3) + "</br>");
-                this.$summaryCanvas.append("total profit so far: " + totoalProfit.toFixed(3) + "</br>");
-                this.$summaryCanvas.append("average day to make profit: " + (totoalDays / count).toFixed(3) + "</br>");
+                $canvas.append("historical profit: " + hProfit + "</br>");
+                $canvas.append("total profit so far: " + tProfit + "</br>");
+                $canvas.append("average day to make profit: " + avgDays + "</br>");
             }
-
         }
 
         // [LB, #, LB, #, ....., UB]

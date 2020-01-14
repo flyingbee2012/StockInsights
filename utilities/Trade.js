@@ -43,9 +43,8 @@ class Trade {
 			$canvas.append("profit earned: " + Number(this.profit.toFixed(3)) + "</br>");
 			$canvas.append("num of days: " + "(" + this.getNumOfTradeDays() + ")" + "</br></br>");
 		}
-    }
-    
-
+	}
+	
 	purchase(amount, price, date, index) {
 		if (this.transactions.length == 0) {
 			this.startTime = date;
