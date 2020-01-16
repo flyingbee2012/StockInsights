@@ -12,24 +12,24 @@ body {
 }
 
 .left {
-    width: 30%;
+    width: 25%;
     left: 0;
     background-color: #111;
 }
 
 .right {
-    width: 70%;
+    width: 75%;
     right: 0;
 }
 
 .top {
-    height: 50%;
+    height: 60%;
     background-color: red;
     overflow-y: auto;
 }
 
 .bottom {
-    height: 50%;
+    height: 40%;
     background-color: blue;
     overflow-y: auto;
 }

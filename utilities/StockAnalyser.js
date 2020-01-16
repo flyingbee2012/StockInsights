@@ -238,7 +238,7 @@ class StockAnalyser {
         outputSummaryData($canvas, longestTrade, stockInfo, baseFund, strategyType, metrics, hProfit, tProfit, avgDays, withCompound) {
             if ($canvas) {
                 if (longestTrade != null) {        
-                    $canvas.append("----- " + stockInfo + "(" + this.startYear + " - " + this.endYear + ") with investment " + baseFund + " ----- </br>");
+                    $canvas.append("--- " + stockInfo + "(" + this.startYear + " - " + this.endYear + ") with investment " + baseFund + " --- </br>");
                     $canvas.append("----- Strategy: " + strategyType + " " + metrics + " Compounded: " + withCompound + " -----</br></br>");
                     $canvas.append("****************** Longest Trade ******************" + "</br>");
                     longestTrade.output($canvas);
