@@ -53,25 +53,10 @@ class Board {
                 this.$timeRangeInput.val("");
             } 
             else {
-                this.loadStockDataAndUpdateDateRnge();
+                this.loadStockDataAndUpdateDateRange();
             }
 
         }
-
-        this.$sliderRange.slider(
-            {
-                range: true,
-                min: null,
-                max: null,
-                step: 1,
-                values: [null, null],
-                slide: (event, ui) => {
-                    this.$timeRangeInput.val(ui.values[0]  + " - " + ui.values[1]);
-                    this.startYear = ui.values[0];
-                    this.endYear = ui.values[1];
-                }
-            }
-        );
         
     }
 
@@ -95,7 +80,7 @@ class Board {
         }
     }
 
-    loadStockDataAndUpdateDateRnge() {
+    loadStockDataAndUpdateDateRange() {
         var filePath = this.getFilePath(); 
 
         if (filePath != "") {
@@ -277,7 +262,7 @@ class Board {
         var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
         selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
 
-        if (filePath && fund && selectedStrategy && this.$historyPanel && this.$selectedSummary) {
+        if (filePath && fund && selectedStrategyIndex != 0 && this.$historyPanel && this.$selectedSummary) {
             // save input in the object for clicking summary panel
             var selectedSummaryId = this.$selectedSummary[0].id;
             this.summaryMapping[selectedSummaryId] = {};
@@ -295,5 +280,8 @@ class Board {
             this.clearAllOutput();
             this.displayAllData(this.data, fund, metrics, this.startYear, this.endYear, compound, selectedStrategy, selectedStock, this.$historyPanel, this.$selectedSummary);
         }     
+        else {
+            alert("Please complete the form.");
+        }
     }
 };
