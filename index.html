@@ -1,5 +1,6 @@
 <html>
     <head>
+        <!-- local libs -->
         <script type="text/javascript" src="utilities/Board.js"></script>
         <script type="text/javascript" src="utilities/Strategy.js"></script>
         <script type="text/javascript" src="utilities/LazyStrategy.js"></script>
@@ -8,14 +9,15 @@
         <script type="text/javascript" src="utilities/Price.js"></script>
         <script type="text/javascript" src="utilities/StockAnalyser.js"></script>
         <link rel="stylesheet" href="css/style.css">
+        <!-- jquery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- jquery ui -->
+        <script src="utilities/jquery-ui-1.12.1/jquery-ui.js"></script>
+        <link rel="stylesheet" href="utilities/jquery-ui-1.12.1/jquery-ui.css">
+        <!-- bootstrap -->
+        <link rel="stylesheet" href="utilities/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+        <script src="utilities/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
         
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <script>
             $(document).ready(function() { 
                 var board = new Board(
