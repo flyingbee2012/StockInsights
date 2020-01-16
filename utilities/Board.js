@@ -1,7 +1,8 @@
 class Board {
     constructor(
         $historyPanel, 
-        $summary1, $summary2, 
+        $summary1, 
+        $summary2, 
         $summary3, 
         $analysisButton, 
         $stockSelect, 
@@ -33,6 +34,8 @@ class Board {
 
         this.data = null;
 
+        this.updateAnalyzeButton();
+
         this.$summary1[0].onclick = () => {
             this.selectSummaryPanel(this.$summary1);
         };
@@ -47,6 +50,7 @@ class Board {
         }
         this.$strategySelect[0].onchange = () => {
             this.populateMetrics();
+            this.updateAnalyzeButton();
         }
         this.$stockSelect[0].onchange = () => {
             if (this.$stockSelect[0].selectedIndex == 0) {
@@ -55,9 +59,34 @@ class Board {
             else {
                 this.loadStockDataAndUpdateDateRange();
             }
-
+            this.updateAnalyzeButton();
         }
-        
+        this.$fundBox[0].onchange = () => {
+            this.updateAnalyzeButton();
+        }
+        this.$metricsBox[0].onchange = () => {
+            this.updateAnalyzeButton();
+        }
+    }
+
+    isInputValid() {
+        var fund = Number(this.$fundBox[0].value);
+        var selectedStockIndex = this.$stockSelect[0].selectedIndex;
+        var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
+        var selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
+        var metrics = this.$metricsBox[0].value;
+        // Long Term Strategy
+        if (fund && selectedStockIndex != 0 && selectedStrategyIndex != 0) {
+            if (selectedStrategy != "Long Term Strategy") {
+                return metrics;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    updateAnalyzeButton() {
+        this.$analysisButton.prop("disabled", !this.isInputValid());
     }
 
     updateDateRange() {  
@@ -262,7 +291,7 @@ class Board {
         var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
         selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
 
-        if (filePath && fund && selectedStrategyIndex != 0 && this.$historyPanel && this.$selectedSummary) {
+        if (filePath && fund && selectedStrategyIndex != 0) {
             // save input in the object for clicking summary panel
             var selectedSummaryId = this.$selectedSummary[0].id;
             this.summaryMapping[selectedSummaryId] = {};
@@ -279,9 +308,6 @@ class Board {
             
             this.clearAllOutput();
             this.displayAllData(this.data, fund, metrics, this.startYear, this.endYear, compound, selectedStrategy, selectedStock, this.$historyPanel, this.$selectedSummary);
-        }     
-        else {
-            alert("Please complete the form.");
         }
     }
 };
