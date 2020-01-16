@@ -8,7 +8,10 @@ class Board {
         $fundBox, 
         $metricsBox, 
         $compoundCheckBox, 
-        $strategySelect) {
+        $strategySelect,
+        $timeRangeInput,
+        $sliderRange
+        ) {
 
         this.$historyPanel = $historyPanel;
         this.$summary1 = $summary1;
@@ -20,9 +23,15 @@ class Board {
         this.$metricsBox = $metricsBox;
         this.$compoundCheckBox = $compoundCheckBox;
         this.$strategySelect = $strategySelect;
+        this.$timeRangeInput = $timeRangeInput;
+        this.$sliderRange = $sliderRange;
        
         this.$selectedSummary = null;
         this.summaryMapping = {};
+        this.startYear = null;
+        this.endYear = null;
+
+        this.data = null;
 
         this.$summary1[0].onclick = () => {
             this.selectSummaryPanel(this.$summary1);
@@ -39,6 +48,93 @@ class Board {
         this.$strategySelect[0].onchange = () => {
             this.populateMetrics();
         }
+        this.$stockSelect[0].onchange = () => {
+            if (this.$stockSelect[0].selectedIndex == 0) {
+                this.$timeRangeInput.val("");
+            } 
+            else {
+                this.loadStockDataAndUpdateDateRnge();
+            }
+
+        }
+
+        this.$sliderRange.slider(
+            {
+                range: true,
+                min: null,
+                max: null,
+                step: 1,
+                values: [null, null],
+                slide: (event, ui) => {
+                    this.$timeRangeInput.val(ui.values[0]  + " - " + ui.values[1]);
+                    this.startYear = ui.values[0];
+                    this.endYear = ui.values[1];
+                }
+            }
+        );
+        
+    }
+
+    updateDateRange() {  
+        if (this.data) {
+            this.$timeRangeInput.val((this.startYear + " - " + this.endYear));
+            this.$sliderRange.slider(
+                {
+                    range: true,
+                    min: this.startYear,
+                    max: this.endYear,
+                    step: 1,
+                    values: [this.startYear, this.endYear],
+                    slide: (event, ui) => {
+                        this.$timeRangeInput.val(ui.values[0]  + " - " + ui.values[1]);
+                        this.startYear = ui.values[0];
+                        this.endYear = ui.values[1];
+                    }
+                }
+            );
+        }
+    }
+
+    loadStockDataAndUpdateDateRnge() {
+        var filePath = this.getFilePath(); 
+
+        if (filePath != "") {
+            $.ajax({
+                type: "GET",
+                url: filePath,
+                dataType: "text",
+                context: this,
+                success: function(data) {
+                    var prices = this.convertRawDataToList(data);
+                    this.startYear = Number(prices[0].dateTime.split("/")[2]);
+                    this.endYear = Number(prices[prices.length - 1].dateTime.split("/")[2]);
+                    this.data = prices;
+
+                    this.updateDateRange();
+                },
+                error: function(data) {
+                    alert(data);
+                }
+            });
+        }
+    }
+
+    convertRawDataToList(data) {
+        var allTextLines = data.split(/\r\n|\n/);
+        var headers = allTextLines[0].split(',');
+        var prices = [];
+        for (var i = 1; i < allTextLines.length; i++) {
+            var data = allTextLines[i].split(',');
+            if (data.length == headers.length) {
+                var dt = data[0];
+                var openPrice = Number(data[1]);
+                var highPrice = Number(data[2]);
+                var lowPrice = Number(data[3]);
+                var closePrice = Number(data[4]);
+                prices.push(new Price(dt, openPrice, highPrice, lowPrice, closePrice));               
+            }
+        }
+        return prices;
     }
 
     selectSummaryPanel($summary) {
@@ -66,11 +162,12 @@ class Board {
             var compound = summaryObj.compound;
             var strategyType = summaryObj.strategyType;
             var selectedStock = summaryObj.selectedStock;
+            var startYear = summaryObj.startYear;
+            var endYear = summaryObj.endYear;
 
             this.clearHistoryPanel();
-            this.displayResult(filePath, fund, metrics, compound, strategyType, selectedStock, this.$historyPanel, null);
+            this.displayHistoricalData(filePath, fund, metrics, startYear, endYear, compound, strategyType, selectedStock, this.$historyPanel);
         }
-
     }
 
     clearAllOutput() {
@@ -105,59 +202,74 @@ class Board {
         }
     }
 
-    displayResult(filePath, fund, metrics, compound, selectedStrategy, selectedStock, $historyCanvas, $summaryCanvas) {
-        if (filePath != "") {
-            $.ajax({
-                type: "GET",
-                url: filePath,
-                dataType: "text",
-
-                success: function(data) {
-                    var strategyArr = metrics.split(',');
-                    var strategyInput = [];
-                    var stockAnalyser = new StockAnalyser(fund, selectedStock, selectedStrategy, $historyCanvas, $summaryCanvas);
-                    stockAnalyser.processData(data);
-                    
-                    for (var i of strategyArr) {
-                        i = i.trim();
-                        strategyInput.push(Number(i));
-                    }         
-                    
-                    var strategy = null;
-                    if (selectedStrategy === "Traditional Strategy") {
-                        strategy = new Strategy(strategyInput);
-                        stockAnalyser.loadStrategy(strategy);
-                        stockAnalyser.applyStrategyContinuously(compound);
-                    }
-                    else if (selectedStrategy === "Lazy Strategy") {
-                        strategy = new LazyStrategy(strategyInput);
-                        stockAnalyser.loadStrategy(strategy);
-                        stockAnalyser.applyStrategyContinuously(compound);
-                    }
-                    // long term strategy
-                    else if (selectedStrategy === "Long Term Strategy") {
-                        stockAnalyser.applyLongTermStrategy();
-                    }                            
-                },
-                error: function(data) {
-                    alert(data);
-                }
-            });  
+    applyStrategy(stockData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, $summaryCanvas) {
+        var strategyArr = metrics.split(',');
+        var strategyInput = [];
+        var stockAnalyser = new StockAnalyser(fund, selectedStock, selectedStrategy, $historyCanvas, $summaryCanvas);
+        stockAnalyser.loadAndProcessData(stockData, startYear, endYear);
+        
+        for (var i of strategyArr) {
+            i = i.trim();
+            strategyInput.push(Number(i));
+        }         
+        
+        var strategy = null;
+        if (selectedStrategy === "Traditional Strategy") {
+            strategy = new Strategy(strategyInput);
+            stockAnalyser.loadStrategy(strategy);
+            stockAnalyser.applyStrategyContinuously(compound);
+        }
+        else if (selectedStrategy === "Lazy Strategy") {
+            strategy = new LazyStrategy(strategyInput);
+            stockAnalyser.loadStrategy(strategy);
+            stockAnalyser.applyStrategyContinuously(compound);
+        }
+        // long term strategy
+        else if (selectedStrategy === "Long Term Strategy") {
+            stockAnalyser.applyLongTermStrategy();
         }
     }
 
-    onAnalysisClick() {
-        var selectedValue = this.$stockSelect[0].value;
-        var fund = Number(this.$fundBox[0].value);
+    // read data based on filePath, need ajax call
+    displayHistoricalData(filePath, fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
+        $.ajax({
+            type: "GET",
+            url: filePath,
+            dataType: "text",
+            context: this,
+            success: function(data) {
+                var processedData = this.convertRawDataToList(data);
+                this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);
+            },
+            error: function(data) {
+                alert(data);
+            }
+        });
+    }
+
+    // data (this.data) is ready, just need to display it
+    displayAllData(data, fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas,  $summaryCanvas) {
+        this.applyStrategy(data, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, $summaryCanvas);
+    }
+
+    getFilePath() {
         var filePath = "";
-        var selectedStrategy = "";
+        var selectedValue = this.$stockSelect[0].value;
         switch (selectedValue) {
-            case "1": filePath = "stockdata/AAPL_2019.csv"; break;
-            case "2": filePath = "stockdata/AAPL_5years.csv"; break;
-            case "3": filePath = "stockdata/AAPL_10years.csv"; break;
-            case "4": filePath = "stockdata/PYPL_2019.csv"; break;
-            case "5": filePath = "stockdata/SPY_2019.csv"; break;
+            case "1": filePath = "stockdata/AAPL.csv"; break;
+            case "2": filePath = "stockdata/FB.csv"; break;
+            case "3": filePath = "stockdata/MSFT.csv"; break;
+            case "4": filePath = "stockdata/PYPL.csv"; break;
+            case "5": filePath = "stockdata/SPY.csv"; break;
         }
+        return filePath;
+    }
+
+    onAnalysisClick() {
+        var fund = Number(this.$fundBox[0].value);
+        var filePath = this.getFilePath();
+        var selectedStrategy = "";
+
         var metrics = this.$metricsBox[0].value;
         var compound = this.$compoundCheckBox[0].checked;
         var selectedIndex = this.$stockSelect[0].selectedIndex;
@@ -165,18 +277,23 @@ class Board {
         var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
         selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
 
-        var selectedSummaryId = this.$selectedSummary[0].id;
-        this.summaryMapping[selectedSummaryId] = {};
-        this.summaryMapping[selectedSummaryId]["filePath"] = filePath;
-        this.summaryMapping[selectedSummaryId]["fund"] = fund;
-        this.summaryMapping[selectedSummaryId]["metrics"] = metrics;
-        this.summaryMapping[selectedSummaryId]["compound"] = compound;
-        this.summaryMapping[selectedSummaryId]["strategyType"] = selectedStrategy;
-        this.summaryMapping[selectedSummaryId]["selectedStock"] = selectedStock;
-        
         if (filePath && fund && selectedStrategy && this.$historyPanel && this.$selectedSummary) {
+            // save input in the object for clicking summary panel
+            var selectedSummaryId = this.$selectedSummary[0].id;
+            this.summaryMapping[selectedSummaryId] = {};
+
+            this.summaryMapping[selectedSummaryId]["filePath"] = filePath;
+            this.summaryMapping[selectedSummaryId]["startYear"] = this.startYear;
+            this.summaryMapping[selectedSummaryId]["endYear"] = this.endYear;
+
+            this.summaryMapping[selectedSummaryId]["fund"] = fund;
+            this.summaryMapping[selectedSummaryId]["metrics"] = metrics;
+            this.summaryMapping[selectedSummaryId]["compound"] = compound;
+            this.summaryMapping[selectedSummaryId]["strategyType"] = selectedStrategy;
+            this.summaryMapping[selectedSummaryId]["selectedStock"] = selectedStock;
+            
             this.clearAllOutput();
-            this.displayResult(filePath, fund, metrics, compound, selectedStrategy, selectedStock, this.$historyPanel, this.$selectedSummary);
-        }
+            this.displayAllData(this.data, fund, metrics, this.startYear, this.endYear, compound, selectedStrategy, selectedStock, this.$historyPanel, this.$selectedSummary);
+        }     
     }
 };

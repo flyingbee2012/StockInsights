@@ -3,6 +3,8 @@ class StockAnalyser {
         this.baseFund = invest;
         this.investment = invest;
         this.stockInfo = stockInfo;
+        this.startYear = null;
+        this.endYear = null;
         this.strategyType = strategyType;
         this.longestTrade = null;
         this.strategy = null;
@@ -31,38 +33,17 @@ class StockAnalyser {
             cout << endl;
         }*/
 
-        processData(allText) {
-            var allTextLines = allText.split(/\r\n|\n/);
-            var headers = allTextLines[0].split(',');
-            var ppPrice = -1, pPrice = -1;
+        getYear(dateTimeString) {
+            return Number(dateTimeString.split("/")[2]);
+        }
 
-            for (var i = 1; i < allTextLines.length; i++) {
-                var data = allTextLines[i].split(',');
-                if (data.length == headers.length) {
-                    var dt = data[0];
-                    var openPrice = Number(data[1]);
-                    var highPrice = Number(data[2]);
-                    var lowPrice = Number(data[3]);
-                    var closePrice = Number(data[4]);
-
-                    // first point
-                    if (ppPrice == -1 && pPrice == -1) {
-                        pPrice = closePrice;
-                    }
-                    // second point
-                    else if (ppPrice == -1) {
-                        ppPrice = pPrice;
-                        pPrice = closePrice;
-                    }
-                    else {
-                        if (ppPrice < pPrice && closePrice < pPrice) {
-                            this.peaks.push(this.prices.length - 1);
-                        }
-                        ppPrice = pPrice;
-                        pPrice = closePrice;
-                    }
-
-                    this.prices.push(new Price(dt, openPrice, highPrice, lowPrice, closePrice));
+        loadAndProcessData(prices, startYear, endYear) {
+            this.startYear = startYear;
+            this.endYear = endYear;
+            for (var i = 0; i < prices.length; i++) {
+                var dt = this.getYear(prices[i].dateTime);
+                if (dt >= startYear && dt <= endYear) {
+                    this.prices.push(prices[i]);
                 }
             }
         }
@@ -205,7 +186,8 @@ class StockAnalyser {
                 "",
                 totalProfit.toFixed(3),
                 totalProfit.toFixed(3),
-                trade.getNumOfTradeDays()
+                trade.getNumOfTradeDays(),
+                false
             );
 
         }
@@ -247,16 +229,17 @@ class StockAnalyser {
                 this.strategy.getString(),
                 historicalProfit.toFixed(3),
                 totoalProfit.toFixed(3),
-                (totoalDays / count).toFixed(3)
+                (totoalDays / count).toFixed(3),
+                withCompound
             );
 
         }
 
-        outputSummaryData($canvas, longestTrade, stockInfo, baseFund, strategyType, metrics, hProfit, tProfit, avgDays) {
+        outputSummaryData($canvas, longestTrade, stockInfo, baseFund, strategyType, metrics, hProfit, tProfit, avgDays, withCompound) {
             if ($canvas) {
                 if (longestTrade != null) {        
-                    $canvas.append("----- " + stockInfo + " with investment " + baseFund + " ----- </br>");
-                    $canvas.append("----- Strategy: " + strategyType + " " + metrics + " -----</br></br>");
+                    $canvas.append("----- " + stockInfo + "(" + this.startYear + " - " + this.endYear + ") with investment " + baseFund + " ----- </br>");
+                    $canvas.append("----- Strategy: " + strategyType + " " + metrics + " Compounded: " + withCompound + " -----</br></br>");
                     $canvas.append("****************** Longest Trade ******************" + "</br>");
                     longestTrade.output($canvas);
                     $canvas.append("*****************************************************" + "</br>");

@@ -9,6 +9,11 @@
         <script type="text/javascript" src="utilities/StockAnalyser.js"></script>
         <link rel="stylesheet" href="css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <script>
@@ -23,8 +28,10 @@
                     $("#fundBox"),
                     $("#metricsBox"),
                     $("#compoundCheckBox"),
-                    $("#strategySelect") 
-                    );
+                    $("#strategySelect"),
+                    $("#timeRangeInput"),
+                    $("#slider-range")
+                );
                 board.selectSummaryPanel($("#summary_content1"));
             });
         </script>
@@ -57,7 +64,7 @@
             <form>
                 <table border="1" cellpadding="5">
                     <tr>
-                        <td style="padding-left: 15;">                
+                        <td style="padding-left:15;">                
                             <div class="input-group mb-3">
                                 <h4><span class="label label-default">Investment:&nbsp;</span></h4>
                                 <div class="input-group-prepend"><span class="input-group-text">$</span></div>
@@ -68,16 +75,23 @@
                         <td style="padding-left: 25;">
                             <input type="checkbox" id="compoundCheckBox" class="form-check-input" value="1" checked>Compound  
                         </td>
+                        <td style="padding-bottom: 10; padding-left: 10; padding-right: 10;">
+                            <p>
+                                <label for="amount">Date range:</label>
+                                <input type="text" id="timeRangeInput" style="border:0; color: #f6931f; font-weight:bold;" readonly/>
+                            </p>
+                            <div id="slider-range"></div>
+                        </td>
                     </tr>
                     <tr>
                         <td>
                             <select id="stockSelect" class="browser-default custom-select">
                                 <option selected>------ select a stock ------</option>
-                                <option value="1">AAPL 2019</option>
-                                <option value="2">AAPL 5 Years</option>
-                                <option value="3">AAPL 10 Years</option>
-                                <option value="4">PYPL 2019</option>
-                                <option value="5">SPY 2019</option>
+                                <option value="1">AAPL</option>
+                                <option value="2">FB</option>
+                                <option value="3">MSFT</option>
+                                <option value="4">PYPL</option>
+                                <option value="5">SPY</option>
                             </select>
                         </td>
                         <td style="padding-left: 15;">
