@@ -271,10 +271,12 @@ class Board {
         var selectedValue = this.$stockSelect[0].value;
         switch (selectedValue) {
             case "1": filePath = "stockdata/AAPL.csv"; break;
-            case "2": filePath = "stockdata/FB.csv"; break;
-            case "3": filePath = "stockdata/MSFT.csv"; break;
-            case "4": filePath = "stockdata/PYPL.csv"; break;
-            case "5": filePath = "stockdata/SPY.csv"; break;
+            case "2": filePath = "stockdata/AMZN.csv"; break;
+            case "3": filePath = "stockdata/FB.csv"; break;
+            case "4": filePath = "stockdata/GOOGL.csv"; break;
+            case "5": filePath = "stockdata/MSFT.csv"; break;
+            case "6": filePath = "stockdata/PYPL.csv"; break;
+            case "7": filePath = "stockdata/SPY.csv"; break;
         }
         return filePath;
     }
