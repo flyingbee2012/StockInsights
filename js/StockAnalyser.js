@@ -192,7 +192,12 @@ class StockAnalyser {
 
         }
     
+        // only applies for 2 strategies
         applyStrategyContinuously(withCompound) {
+            if (this.strategyType != "Averaging Down Lazy" && this.strategyType != "Averaging Down") {
+                return;
+            }
+
             var maxDays = -1;
             var totoalProfit = 0.0;
             var historicalProfit = 0.0;
@@ -201,7 +206,7 @@ class StockAnalyser {
             var count = 0.0;
 
             while (i < this.prices.length) {
-                var trade = (this.strategyType === "Traditional Strategy") ? this.applyStrategyFromPrice(i) : this.applyLazyStrategyFromPrice(i);
+                var trade = (this.strategyType === "Averaging Down") ? this.applyStrategyFromPrice(i) : this.applyLazyStrategyFromPrice(i);
                 historicalProfit += Math.max(0.0, trade.getProfit());
                 totoalProfit += trade.getProfit();
                 if (withCompound) {

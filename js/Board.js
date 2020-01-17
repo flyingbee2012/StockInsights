@@ -77,7 +77,7 @@ class Board {
         var metrics = this.$metricsBox[0].value;
         // Long Term Strategy
         if (fund && selectedStockIndex != 0 && selectedStrategyIndex != 0) {
-            if (selectedStrategy != "Long Term Strategy") {
+            if (selectedStrategy != "Long Term") {
                 return metrics;
             }
             return true;
@@ -129,7 +129,7 @@ class Board {
                 error: function(data) {
                     alert(data);
                 }
-            });
+            });   
         }
     }
 
@@ -228,18 +228,18 @@ class Board {
         }         
         
         var strategy = null;
-        if (selectedStrategy === "Traditional Strategy") {
+        if (selectedStrategy === "Averaging Down") {
             strategy = new Strategy(strategyInput);
             stockAnalyser.loadStrategy(strategy);
             stockAnalyser.applyStrategyContinuously(compound);
         }
-        else if (selectedStrategy === "Lazy Strategy") {
+        else if (selectedStrategy === "Averaging Down Lazy") {
             strategy = new LazyStrategy(strategyInput);
             stockAnalyser.loadStrategy(strategy);
             stockAnalyser.applyStrategyContinuously(compound);
         }
         // long term strategy
-        else if (selectedStrategy === "Long Term Strategy") {
+        else if (selectedStrategy === "Long Term") {
             stockAnalyser.applyLongTermStrategy();
         }
     }
