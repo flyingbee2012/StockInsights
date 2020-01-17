@@ -24,13 +24,18 @@ body {
 
 .top {
     height: 60%;
-    background-color: red;
+    background-color: purple;
+    color: white;
     overflow-y: auto;
+}
+
+.top table {
+    color: white;
 }
 
 .bottom {
     height: 40%;
-    background-color: blue;
+    background-color: grey;
     overflow-y: auto;
 }
 

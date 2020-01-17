@@ -40,7 +40,7 @@ class Trade {
 			}
 			
 			$canvas.append("cost basis: " + Number(this.costBasis.toFixed(3)) + "</br>");
-			$canvas.append("profit earned: " + Number(this.profit.toFixed(3)) + "</br>");
+			$canvas.append("profit earned: <font color='red'>" + Number(this.profit.toFixed(3)) + "</font></br>");
 			$canvas.append("num of days: " + "(" + this.getNumOfTradeDays() + ")" + "</br></br>");
 		}
 	}
