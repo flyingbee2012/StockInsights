@@ -34,7 +34,7 @@ class Board {
 
         this.data = null;
 
-        this.updateAnalyzeButton();
+        this.populateStocksSelect();
 
         this.$summary1[0].onclick = () => {
             this.selectSummaryPanel(this.$summary1);
@@ -67,6 +67,29 @@ class Board {
         this.$metricsBox[0].onchange = () => {
             this.updateAnalyzeButton();
         }
+    }
+
+    populateStocksSelect() {
+        var option = document.createElement("option");
+        option.text = "------ select a stock ------";
+        this.$stockSelect[0].add(option);
+        $.ajax({
+            type: "GET",
+            url: "stockdata/stocks.txt",
+            dataType: "text",
+            context: this,
+            success: function(data) {
+                var allTextLines = data.split(/\r\n|\n/);
+                for (var i = 0; i < allTextLines.length; i++) {
+                    var option = document.createElement("option");
+                    option.text = allTextLines[i];
+                    this.$stockSelect[0].add(option);
+                }
+            },
+            error: function() {
+                alert("cannot load data");
+            }
+        });   
     }
 
     isInputValid() {
@@ -126,8 +149,8 @@ class Board {
 
                     this.updateDateRange();
                 },
-                error: function(data) {
-                    alert(data);
+                error: function() {
+                    alert("cannot load data");
                 }
             });   
         }
@@ -255,8 +278,8 @@ class Board {
                 var processedData = this.convertRawDataToList(data);
                 this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);
             },
-            error: function(data) {
-                alert(data);
+            error: function() {
+                alert("cannot load data");
             }
         });
     }
@@ -267,18 +290,12 @@ class Board {
     }
 
     getFilePath() {
-        var filePath = "";
-        var selectedValue = this.$stockSelect[0].value;
-        switch (selectedValue) {
-            case "1": filePath = "stockdata/AAPL.csv"; break;
-            case "2": filePath = "stockdata/AMZN.csv"; break;
-            case "3": filePath = "stockdata/FB.csv"; break;
-            case "4": filePath = "stockdata/GOOGL.csv"; break;
-            case "5": filePath = "stockdata/MSFT.csv"; break;
-            case "6": filePath = "stockdata/PYPL.csv"; break;
-            case "7": filePath = "stockdata/SPY.csv"; break;
+        var selectedIndex = this.$stockSelect[0].selectedIndex;
+        if (selectedIndex == 0) {
+            return "";
         }
-        return filePath;
+        var selectedStock = this.$stockSelect[0].options[selectedIndex].text
+        return "stockdata/" + selectedStock + ".csv";
     }
 
     onAnalysisClick() {

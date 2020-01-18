@@ -71,6 +71,11 @@ class StockAnalyser {
             for (var i = index + 1; i < this.prices.length; i++) {
                 var lowestPrice = this.prices[i].lowPrice;
                 var highestPrice = this.prices[i].highPrice;
+
+                if (lowestPrice <= lowerBound && highestPrice >= upperBound) {
+                    console.log("large diff: " + this.prices[i].dateTime + "\n");
+                }
+
                 if (lowestPrice <= lowerBound) {
                     trade.purchase(amount, lowerBound, this.prices[i].dateTime, i);
                     if (this.strategy.hasMore()) {
