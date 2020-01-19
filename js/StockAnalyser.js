@@ -10,6 +10,12 @@ class StockAnalyser {
         this.strategy = null;
         this.prices = [];
         this.peaks = [];
+
+        this.biggestDropFromPrice = 0.0;
+        this.biggestDropFromPriceDate = null;
+        this.biggestDropEndPrice = 0.0;
+        this.biggestDropEndPriceDate = null;
+
         this.$historyCanvas = $historyCanvas;
         this.$summaryCanvas = $summaryCanvas;
     }
@@ -40,9 +46,26 @@ class StockAnalyser {
         loadAndProcessData(prices, startYear, endYear) {
             this.startYear = startYear;
             this.endYear = endYear;
+
+            var maxDrop = Number.MIN_SAFE_INTEGER;
+            var highestPrice = Number.MIN_SAFE_INTEGER;
+            var highestPriceDate = null;
+
             for (var i = 0; i < prices.length; i++) {
                 var dt = this.getYear(prices[i].dateTime);
-                if (dt >= startYear && dt <= endYear) {
+                if (dt >= startYear && dt <= endYear) {  
+                    if (prices[i].highPrice > highestPrice) {
+                        highestPrice = prices[i].highPrice;
+                        highestPriceDate = prices[i].dateTime;
+                    }
+                    if (highestPrice - prices[i].lowPrice > maxDrop) {
+                        maxDrop = highestPrice - prices[i].lowPrice;
+                        this.biggestDropFromPrice = highestPrice;
+                        this.biggestDropFromPriceDate = highestPriceDate;
+                        this.biggestDropEndPrice = prices[i].lowPrice;
+                        this.biggestDropEndPriceDate = prices[i].dateTime;
+                    }                                           
+                          
                     this.prices.push(prices[i]);
                 }
             }
@@ -199,7 +222,11 @@ class StockAnalyser {
                 totalProfit.toFixed(3),
                 totalProfit.toFixed(3),
                 trade.getNumOfTradeDays(),
-                false
+                false,
+                this.biggestDropFromPrice.toFixed(3),
+                this.biggestDropFromPriceDate,
+                this.biggestDropEndPrice.toFixed(3),
+                this.biggestDropEndPriceDate
             );
 
         }
@@ -247,15 +274,41 @@ class StockAnalyser {
                 historicalProfit.toFixed(3),
                 totoalProfit.toFixed(3),
                 (totoalDays / count).toFixed(3),
-                withCompound
+                withCompound,
+                this.biggestDropFromPrice.toFixed(3),
+                this.biggestDropFromPriceDate,
+                this.biggestDropEndPrice.toFixed(3),
+                this.biggestDropEndPriceDate
             );
 
         }
 
-        outputSummaryData($canvas, longestTrade, stockInfo, baseFund, strategyType, metrics, hProfit, tProfit, avgDays, withCompound) {
-            if ($canvas) {
+        getDropPct(drpFromPrice, drpEndPrice) {
+            var n = ((drpFromPrice - drpEndPrice) / drpFromPrice) * 100;
+            n = n.toFixed(3);
+            return n.toString() + "%";
+        }
+
+        outputSummaryData(
+            $canvas, 
+            longestTrade, 
+            stockInfo, 
+            baseFund, 
+            strategyType, 
+            metrics, 
+            hProfit, 
+            tProfit, 
+            avgDays, 
+            withCompound, 
+            dropFromPrice, 
+            dropFromDate,
+            dropEndPrice,
+            dropEndDate   
+            ) {
+            
+                if ($canvas) {
                 if (longestTrade != null) {        
-                    $canvas.append("--- " + stockInfo + "(" + this.startYear + " - " + this.endYear + ") with investment " + baseFund + " --- </br>");
+                    $canvas.append("--- " + stockInfo + " (" + this.startYear + " - " + this.endYear + ") with investment " + baseFund + " --- </br>");
                     $canvas.append("----- Strategy: " + strategyType + " " + metrics + " Compounded: " + withCompound + " -----</br></br>");
                     $canvas.append("****************** Longest Trade ******************" + "</br>");
                     longestTrade.output($canvas);
@@ -265,6 +318,17 @@ class StockAnalyser {
                 $canvas.append("historical profit: <font color='red'>" + hProfit + "</font></br>");
                 $canvas.append("total profit so far: <font color='red'>" + tProfit + "</font></br>");
                 $canvas.append("average day to make profit: " + avgDays + "</br>");
+
+                $canvas.append("*****************************************************" + "</br>");
+                //$canvas.append("max drop: From " + this.biggestDropFromPrice + " (" + this.biggestDropFromPriceDate + ") To " + this.biggestDropEndPrice + "(" + this.biggestDropEndPriceDate + ")");
+                $canvas.append("max drop: From " + dropFromPrice 
+                    + " (" + dropFromDate + ") To " 
+                    + dropEndPrice + "(" 
+                    + dropEndDate + ")"
+                    + " => " + "("
+                    + this.getDropPct(dropFromPrice, dropEndPrice)
+                    + ")"
+                    );     
             }
         }
 
