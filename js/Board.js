@@ -4,6 +4,7 @@ class Board {
         $summary1, 
         $summary2, 
         $summary3, 
+        $resetButton,
         $analysisButton, 
         $stockSelect, 
         $fundBox, 
@@ -18,6 +19,7 @@ class Board {
         this.$summary1 = $summary1;
         this.$summary2 = $summary2;
         this.$summary3 = $summary3;
+        this.$resetButton = $resetButton;
         this.$analysisButton = $analysisButton;
         this.$stockSelect = $stockSelect;
         this.$fundBox = $fundBox;
@@ -45,6 +47,9 @@ class Board {
         this.$summary3[0].onclick = () => {
             this.selectSummaryPanel(this.$summary3);
         };
+        this.$resetButton[0].onclick = () => {
+            this.reset();
+        }
         this.$analysisButton[0].onclick = () => {
             this.onAnalysisClick();
         }
@@ -190,6 +195,7 @@ class Board {
             }
         }
         // update history panel
+        this.clearHistoryPanel();
         var summaryId = $summary[0].id;
         if (this.summaryMapping[summaryId] != null) {
             var summaryObj = this.summaryMapping[summaryId];
@@ -202,15 +208,13 @@ class Board {
             var startYear = summaryObj.startYear;
             var endYear = summaryObj.endYear;
 
-            this.clearHistoryPanel();
             this.displayHistoricalData(filePath, fund, metrics, startYear, endYear, compound, strategyType, selectedStock, this.$historyPanel);
         }
     }
 
-    clearAllOutput() {
-        this.clearHistoryPanel();
-        if (this.$selectedSummary != null) {
-            this.$selectedSummary[0].innerHTML = "";
+    clearSummaryPanel($panel) {
+        if ($panel != null) {
+            $panel[0].innerHTML = "";
         }
     }
 
@@ -218,6 +222,14 @@ class Board {
         if (this.$historyPanel) {
             this.$historyPanel[0].innerHTML = "";
         }
+    }
+
+    reset() {
+        this.summaryMapping = {};
+        this.clearHistoryPanel();
+        this.clearSummaryPanel(this.$summary1);
+        this.clearSummaryPanel(this.$summary2);
+        this.clearSummaryPanel(this.$summary3);
     }
 
     populateMetrics() {
@@ -324,8 +336,9 @@ class Board {
             this.summaryMapping[selectedSummaryId]["compound"] = compound;
             this.summaryMapping[selectedSummaryId]["strategyType"] = selectedStrategy;
             this.summaryMapping[selectedSummaryId]["selectedStock"] = selectedStock;
-            
-            this.clearAllOutput();
+
+            this.clearHistoryPanel();
+            this.clearSummaryPanel(this.$selectedSummary);
             this.displayAllData(this.data, fund, metrics, this.startYear, this.endYear, compound, selectedStrategy, selectedStock, this.$historyPanel, this.$selectedSummary);
         }
     }

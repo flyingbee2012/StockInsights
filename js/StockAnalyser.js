@@ -74,6 +74,13 @@ class StockAnalyser {
 
                 if (lowestPrice <= lowerBound && highestPrice >= upperBound) {
                     console.log("large diff: " + this.prices[i].dateTime + "\n");
+                    /*var lowFirst = (Math.random() >= 0.5);
+                    if (lowFirst) {
+                        highestPrice = -1.0;
+                    }
+                    else {
+                        lowestPrice = Number.MAX_VALUE;
+                    }*/
                 }
 
                 if (lowestPrice <= lowerBound) {
