@@ -183,7 +183,7 @@ class Board {
         // update summary panel
         if (this.$selectedSummary == null || $summary[0].id != this.$selectedSummary[0].id) {
             this.$selectedSummary = $summary;
-            $summary.css('border', '3px solid blue'); 
+            $summary.css('border', '3px solid red'); 
             if ($summary[0].id != this.$summary1[0].id) {
                 this.$summary1.css('border', 'none')
             }

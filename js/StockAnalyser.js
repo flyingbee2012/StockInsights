@@ -308,7 +308,7 @@ class StockAnalyser {
             
                 if ($canvas) {
                 if (longestTrade != null) {        
-                    $canvas.append("--- " + stockInfo + " (" + this.startYear + " - " + this.endYear + ") with investment " + baseFund + " --- </br>");
+                    $canvas.append("--- " + stockInfo + " (" + this.startYear + " - " + this.endYear + ") with $" + baseFund + " --- </br>");
                     $canvas.append("----- Strategy: " + strategyType + " " + metrics + " Compounded: " + withCompound + " -----</br></br>");
                     $canvas.append("****************** Longest Trade ******************" + "</br>");
                     longestTrade.output($canvas);
@@ -321,14 +321,10 @@ class StockAnalyser {
 
                 $canvas.append("*****************************************************" + "</br>");
                 //$canvas.append("max drop: From " + this.biggestDropFromPrice + " (" + this.biggestDropFromPriceDate + ") To " + this.biggestDropEndPrice + "(" + this.biggestDropEndPriceDate + ")");
-                $canvas.append("max drop: From " + dropFromPrice 
-                    + " (" + dropFromDate + ") To " 
-                    + dropEndPrice + "(" 
-                    + dropEndDate + ")"
-                    + " => " + "("
-                    + this.getDropPct(dropFromPrice, dropEndPrice)
-                    + ")"
-                    );     
+                $canvas.append("max drop: " 
+                    + "(" + this.getDropPct(dropFromPrice, dropEndPrice) + ") From " + dropFromPrice 
+                    + " (" + dropFromDate + ") To " + dropEndPrice + " (" + dropEndDate + ")"
+                );     
             }
         }
 
