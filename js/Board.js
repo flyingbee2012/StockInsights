@@ -119,7 +119,7 @@ class Board {
 
     updateDateRange() {  
         if (this.data) {
-            this.$timeRangeInput.val((this.startYear + " - " + this.endYear));
+            this.$timeRangeInput.val((" " + this.startYear + " - " + this.endYear));
             this.$sliderRange.slider(
                 {
                     range: true,
@@ -128,7 +128,7 @@ class Board {
                     step: 1,
                     values: [this.startYear, this.endYear],
                     slide: (event, ui) => {
-                        this.$timeRangeInput.val(ui.values[0]  + " - " + ui.values[1]);
+                        this.$timeRangeInput.val(" " + ui.values[0]  + " - " + ui.values[1]);
                         this.startYear = ui.values[0];
                         this.endYear = ui.values[1];
                     }

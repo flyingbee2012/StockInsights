@@ -310,7 +310,7 @@ class StockAnalyser {
                 if (longestTrade != null) {        
                     $canvas.append("<center>--- " + stockInfo + " (" + this.startYear + " - " + this.endYear + ") with $" + baseFund + " ---</center>");
                     $canvas.append("<center>----- " + strategyType + " -----</center>");
-                    $canvas.append("<center>---" + metrics + " Compounded: " + withCompound + " ---</center></br>");
+                    $canvas.append("<center>---" + metrics + " Compounded: " + withCompound + " ---</center><br style='line-height: 10px;'>");
                     $canvas.append("****************** Longest Trade ******************</br>");
                     longestTrade.output($canvas);
                     $canvas.append("*****************************************************" + "</br>");
