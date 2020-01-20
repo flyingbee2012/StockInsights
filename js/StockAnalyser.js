@@ -323,8 +323,8 @@ class StockAnalyser {
                 $canvas.append("*****************************************************" + "</br>");
                 //$canvas.append("max drop: From " + this.biggestDropFromPrice + " (" + this.biggestDropFromPriceDate + ") To " + this.biggestDropEndPrice + "(" + this.biggestDropEndPriceDate + ")");
                 $canvas.append("max drop: " 
-                    + "(" + this.getDropPct(dropFromPrice, dropEndPrice) + ") From " + dropFromPrice 
-                    + " (" + dropFromDate + ") To " + dropEndPrice + " (" + dropEndDate + ")"
+                    + "(" + this.getDropPct(dropFromPrice, dropEndPrice) + ") " + dropFromPrice 
+                    + " (" + dropFromDate + ") => " + dropEndPrice + " (" + dropEndDate + ")"
                 );     
             }
         }
