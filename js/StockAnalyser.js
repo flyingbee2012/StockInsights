@@ -306,7 +306,7 @@ class StockAnalyser {
             dropEndDate   
             ) {
             
-                if ($canvas) {
+            if ($canvas) {
                 if (longestTrade != null) {        
                     $canvas.append("<center>--- " + stockInfo + " (" + this.startYear + " - " + this.endYear + ") with $" + baseFund + " ---</center>");
                     $canvas.append("<center>----- " + strategyType + " -----</center>");
