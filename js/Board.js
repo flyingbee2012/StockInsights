@@ -76,7 +76,7 @@ class Board {
 
     populateStocksSelect() {
         var option = document.createElement("option");
-        option.text = "------ select a stock ------";
+        option.text = "- stock -";
         this.$stockSelect[0].add(option);
         $.ajax({
             type: "GET",

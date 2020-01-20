@@ -66,46 +66,56 @@
         <div id="control_panel" class="centered bottom">
             <hr style="visibility:hidden;" />
             <form>
-                <table border="1" cellpadding="5" style="width:90%; margin-left: 50; margin-right: 50;">
+                <table border="1" cellpadding="5" style="margin-left: 50; margin-right: 50;">
                     <tr>
                         <td style="padding-left:15;">                
                             <div class="input-group mb-3">
                                 <h4><span class="label label-default">Invest:&nbsp;</span></h4>
                                 <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                                <input id="fundBox" value="30000" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                                <input id="fundBox" value="30000" type="text" class="form-control" style="width: 100" aria-label="Amount (to the nearest dollar)">
                                 <div class="input-group-append"><span class="input-group-text">.00</span></div>
                             </div>
-                        </td>
-                        <td style="padding-left: 25;">
-                            <input type="checkbox" id="compoundCheckBox" class="form-check-input" value="1" checked>Compound  
+                            <div style="margin-left: 25;">
+                                <input type="checkbox" id="compoundCheckBox" class="form-check-input" value="1" checked>Compound 
+                            </div>
                         </td>
                         <td style="padding-bottom: 10; padding-left: 15; padding-right: 15; padding-top: 20;">
-                            <p>
-                                <label for="amount">Date range:</label>
-                                <label id="timeRangeInput" style="width:100px; font-weight:bold;"></label>
-                            </p>
-                            <div id="slider-range"></div>
+                            <table border="1">
+                                <tr>
+                                    <td><select id="stockSelect" class="browser-default custom-select" style="width:100;"></select></td>
+                                    <td>
+                                        <label for="amount">&nbsp;&nbsp;Date range:</label>
+                                        <label id="timeRangeInput" style="width:100px; font-weight:bold;"></label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-top: 15;" colspan="2"><div id="slider-range" style="width: 250;"></div></td>
+                                </tr>
+                            </table>        
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <select id="stockSelect" class="browser-default custom-select"></select>
-                        </td>
                         <td style="padding-left: 15;">
-                            <select id="strategySelect" class="browser-default custom-select">
+                            <select id="strategySelect" class="browser-default custom-select" style="width: 200;">
                                 <option selected>------ select a strategy ------</option>
                                 <option value="1">Averaging Down</option>
                                 <option value="2">Averaging Down Lazy</option>
                                 <option value="3">Long Term</option>
                             </select>
                         </td>
-                        <td>
-                            <input id="metricsBox" type="text" size="40" class="form-control">
+                        <td rowspan="2">
+                            <!--<input id="metricsBox" type="text" class="form-control" style="width: 200;">-->
+                            <textarea id="metricsBox" class="form-control" rows="5"></textarea>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <select id="nextStrategySelect" class="browser-default custom-select">
+                            <textarea id="strategyDescription" class="form-control" rows="5"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select id="nextStrategySelect" class="browser-default custom-select" style="width: 200;">
                                 <option selected>---- how to make next investment ----</option>
                                 <option value="1">Close Price Next Day</option>
                                 <option value="2">Highest Price Same Day</option>
