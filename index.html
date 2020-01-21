@@ -18,6 +18,10 @@
         <!-- bootstrap -->
         <link rel="stylesheet" href="lib/bootstrap-4.3.1-dist/css/bootstrap.min.css">
         <script src="lib/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+
+        <!--<link rel="stylesheet" href="lib/jQRangeSlider-5.8.0/css/iThing.css" type="text/css" />
+        <script src="lib/jQRangeSlider-5.8.0/jQRangeSlider-min.js"></script>
+        <script src="lib/jQRangeSlider-5.8.0/demo/lib/jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>-->
         
         <script>
             $(document).ready(function() { 
@@ -37,6 +41,11 @@
                     $("#slider-range")
                 );
                 board.selectSummaryPanel($("#summary_content1"));
+
+                /*$("#slider").rangeSlider();
+                $("#slider").rangeSlider("min", 10);
+                $("#slider").rangeSlider("max", 100);*/
+               
             });
         </script>
     </head>
@@ -76,7 +85,7 @@
                                 <div class="input-group-append"><span class="input-group-text">.00</span></div>
                             </div>
                             <div style="margin-left: 25;">
-                                <input type="checkbox" id="compoundCheckBox" value="1" checked>&nbsp;Compound
+                                <input type="checkbox" id="compoundCheckBox" checked>&nbsp;Compound
                             </div>
                         </td>
                         <td style="padding-bottom: 10; padding-left: 15; padding-right: 15; padding-top: 20;">
@@ -84,7 +93,7 @@
                                 <tr>
                                     <td><select id="stockSelect" class="browser-default custom-select" style="width:100;"></select></td>
                                     <td>
-                                        <label for="amount">&nbsp;&nbsp;Date range:</label>
+                                        <label for="amount">&nbsp;&nbsp;Span:</label>
                                         <label id="timeRangeInput" style="width:100px; font-weight:bold;"></label>
                                     </td>
                                 </tr>
@@ -103,14 +112,13 @@
                                 <option value="3">Long Term</option>
                             </select>
                         </td>
-                        <td rowspan="2">
-                            <!--<input id="metricsBox" type="text" class="form-control" style="width: 200;">-->
+                        <td rowspan="2" style="padding-top: 0;">
                             <textarea id="metricsBox" class="form-control" rows="5"></textarea>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <textarea id="strategyDescription" class="form-control" rows="5"></textarea>
+                            <textarea id="strategyDescription" class="form-control" rows="5" readonly></textarea>
                         </td>
                     </tr>
                     <tr>

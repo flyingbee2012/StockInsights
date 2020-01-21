@@ -55,6 +55,7 @@ class Board {
         }
         this.$strategySelect[0].onchange = () => {
             this.populateMetrics();
+            this.updateStrategyDescription();
             this.updateAnalyzeButton();
         }
         this.$stockSelect[0].onchange = () => {
@@ -72,6 +73,20 @@ class Board {
         this.$metricsBox[0].onchange = () => {
             this.updateAnalyzeButton();
         }
+    }
+
+    updateStrategyDescription() {
+       var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
+       var selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
+       switch (selectedStrategy) {
+           case "Averaging Down":
+            $("#strategyDescription")[0].innerHTML = "Sells stocks when price increases (by UB); When price drops (by LB), purchases more (by T), and so on [UB1,LB1,T1,UB2,LB2,T2,...UB]";
+            break;
+            case "Averaging Down Lazy":
+                $("#strategyDescription")[0].innerHTML = "Hold stocks until price drops (by LB) and purchase more (by T) and sell all when price increases (by UB) [LB, #, LB, #, ....., UB]";
+            break;
+       }
+       
     }
 
     populateStocksSelect() {
