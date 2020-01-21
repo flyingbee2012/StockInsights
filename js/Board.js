@@ -66,7 +66,7 @@ class Board {
         }
         this.$stockSelect[0].onchange = () => {
             if (this.$stockSelect[0].selectedIndex == 0) {
-                this.$timeRangeInput[0].innerHTML = "";
+                this.$timeRangeInput[0].innerHTML = "0000 - 0000";
             } 
             else {
                 this.loadStockDataAndUpdateDateRange();
@@ -79,6 +79,8 @@ class Board {
         this.$metricsBox[0].onchange = () => {
             this.updateAnalyzeButton();
         }
+
+        this.$sliderRange.slider();
     }
 
     updateStrategyTitle() {
