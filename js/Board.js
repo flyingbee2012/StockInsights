@@ -15,6 +15,12 @@ class Board {
         $sliderRange
         ) {
 
+        this.strategyDescription = {
+            "Averaging Down": "Sells stocks when price increases (by UB); When price drops (by LB), purchases more (by T), and so on [UB1,LB1,T1,UB2,LB2,T2,...UB]",
+            "Averaging Down Lazy": "Hold stocks until price drops (by LB) and purchase more (by T) and sell all when price increases (by UB) [LB, #, LB, #, ....., UB]",
+            "Long Term": "Purchase all from start time and sell all at end time"
+        };
+
         this.$historyPanel = $historyPanel;
         this.$summary1 = $summary1;
         this.$summary2 = $summary2;
@@ -55,7 +61,7 @@ class Board {
         }
         this.$strategySelect[0].onchange = () => {
             this.populateMetrics();
-            this.updateStrategyDescription();
+            this.updateStrategyTitle();
             this.updateAnalyzeButton();
         }
         this.$stockSelect[0].onchange = () => {
@@ -75,18 +81,11 @@ class Board {
         }
     }
 
-    updateStrategyDescription() {
+    updateStrategyTitle() {
        var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
        var selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
-       switch (selectedStrategy) {
-           case "Averaging Down":
-            $("#strategyDescription")[0].innerHTML = "Sells stocks when price increases (by UB); When price drops (by LB), purchases more (by T), and so on [UB1,LB1,T1,UB2,LB2,T2,...UB]";
-            break;
-            case "Averaging Down Lazy":
-                $("#strategyDescription")[0].innerHTML = "Hold stocks until price drops (by LB) and purchase more (by T) and sell all when price increases (by UB) [LB, #, LB, #, ....., UB]";
-            break;
-       }
-       
+       var title = (this.strategyDescription[selectedStrategy] == undefined) ? "" : this.strategyDescription[selectedStrategy];
+       this.$strategySelect.prop("title", title);
     }
 
     populateStocksSelect() {
