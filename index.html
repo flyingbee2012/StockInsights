@@ -73,9 +73,8 @@
             </table>
         </div>
         <div id="control_panel" class="centered bottom">
-            <hr style="visibility:hidden;" />
             <form>
-                <table border="1" cellpadding="5" style="margin-left: 50; margin-right: 50;">
+                <table border="1" cellpadding="5" style="margin-left: 50; margin-right: 50; margin-top: 20;">
                     <tr>
                         <td style="padding-left:15;">                
                             <div class="input-group mb-3">
@@ -88,13 +87,13 @@
                                 <input type="checkbox" id="compoundCheckBox" checked>&nbsp;Compound
                             </div>
                         </td>
-                        <td style="padding-bottom: 10; padding-left: 15; padding-right: 15; padding-top: 20;">
+                        <td style="padding-bottom: 10; padding-left: 15; padding-right: 15; ">
                             <table border="1">
                                 <tr>
                                     <td><select id="stockSelect" class="browser-default custom-select" style="width:100;"></select></td>
                                     <td>
                                         <label for="amount">&nbsp;&nbsp;Span:</label>
-                                        <label id="timeRangeInput" style="width:100px; font-weight:bold;"></label>
+                                        <label id="timeRangeInput" style="width:100px; font-weight:bold;">0000 - 0000</label>
                                     </td>
                                 </tr>
                                 <tr>
@@ -104,7 +103,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding-left: 15;">
+                        <td style="padding-left: 15;padding-top: 0;">
                             <select id="strategySelect" class="browser-default custom-select" style="width: 200;">
                                 <option selected>-- select a strategy --</option>
                                 <option value="1">Averaging Down</option>
@@ -112,17 +111,12 @@
                                 <option value="3">Long Term</option>
                             </select>
                         </td>
-                        <td rowspan="2" style="padding-top: 0;">
+                        <td rowspan="2" style="padding-top: 5;">
                             <textarea id="metricsBox" class="form-control" rows="5"></textarea>
                         </td>
                     </tr>
                     <tr>
-                        <td>
-                            <textarea id="strategyDescription" class="form-control" rows="5" readonly></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
+                        <td style="padding-left: 15;">
                             <select id="nextStrategySelect" class="browser-default custom-select" style="width: 200;">
                                 <option selected>---- how to make next investment ----</option>
                                 <option value="1">Close Price Next Day</option>
