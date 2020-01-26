@@ -114,12 +114,18 @@ class Board {
         return stockChartData;
     }
 
+    clearStockChart() {
+        if (this.$stockChart) {
+            this.$stockChart[0].innerHTML = "";
+        }
+    }
+
     updateStockChart(stockData, stockName, startYear, endYear) {
         if (stockData == null) {
             return;
         }
 
-        this.$stockChart[0].innerHTML = "";
+        this.clearStockChart();
 
         var chartData = this.processDataForStockChart(stockData, startYear, endYear);
         var dates = [];
@@ -279,6 +285,7 @@ class Board {
 
     loadStockDataAndUpdateDateRangeAndStockChart() {
         if (this.$stockSelect[0].selectedIndex == 0) {
+            this.clearStockChart();
             this.$timeRangeInput[0].innerHTML = "0000 - 0000";
             return;
         }
@@ -329,7 +336,7 @@ class Board {
     selectSummaryPanel($summary) {
         // update summary panel
         if (this.$selectedSummary == null || $summary[0].id != this.$selectedSummary[0].id) {
-            this.$stockChart[0].innerHTML = "";
+            this.clearStockChart();
             this.$selectedSummary = $summary;
             $summary.css('border', '3px solid red');
             if ($summary[0].id != this.$summary1[0].id) {
@@ -378,7 +385,7 @@ class Board {
         this.clearSummaryPanel(this.$summary1);
         this.clearSummaryPanel(this.$summary2);
         this.clearSummaryPanel(this.$summary3);
-        this.$stockChart[0].innerHTML = "";
+        this.clearStockChart();
     }
 
     populateMetrics() {
