@@ -377,6 +377,7 @@ class Board {
         this.clearSummaryPanel(this.$summary1);
         this.clearSummaryPanel(this.$summary2);
         this.clearSummaryPanel(this.$summary3);
+        this.$stockChart[0].innerHTML = "";
     }
 
     populateMetrics() {

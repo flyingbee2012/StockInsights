@@ -48,10 +48,6 @@
             );
             board.selectSummaryPanel($("#summary_content1"));
 
-            /*$("#slider").rangeSlider();
-            $("#slider").rangeSlider("min", 10);
-            $("#slider").rangeSlider("max", 100);*/
-
         });
     </script>
 </head>
@@ -127,19 +123,6 @@
                     </tr>
                     <tr>
                         <td style="padding-left: 15;padding-top: 0;">
-                            <select id="strategySelect" class="browser-default custom-select" style="width: 200;">
-                                <option selected>-- select a strategy --</option>
-                                <option value="1">Averaging Down</option>
-                                <option value="2">Averaging Down Lazy</option>
-                                <option value="3">Long Term</option>
-                            </select>
-                        </td>
-                        <td rowspan="2" style="padding-top: 5;">
-                            <textarea id="metricsBox" class="form-control" rows="5"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-left: 15;">
                             <select id="nextStrategySelect" class="browser-default custom-select" style="width: 200;">
                                 <option selected>---- how to make next investment ----</option>
                                 <option value="1">Close Price Next Day</option>
@@ -147,7 +130,18 @@
                                 <option value="3">Same Price Same Day</option>
                                 <option value="4">Next Peak Close Price</option>
                             </select>
+                            <select id="strategySelect" class="browser-default custom-select" style="width: 200;">
+                                <option selected>-- select a strategy --</option>
+                                <option value="1">Averaging Down</option>
+                                <option value="2">Averaging Down Lazy</option>
+                                <option value="3">Long Term</option>
+                            </select> 
                         </td>
+                        <td rowspan="3" style="padding-top: 5;">
+                            <textarea id="metricsBox" class="form-control" rows="4"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
                         <td align="center">
                             <button id="resetButton" type="button" class="btn btn-primary">Reset</button>
                             <button id="analysisButton" type="button" class="btn btn-primary" disabled>Analyze</button>
