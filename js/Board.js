@@ -1,19 +1,20 @@
 class Board {
     constructor(
-        $historyPanel, 
-        $summary1, 
-        $summary2, 
-        $summary3, 
+        $historyPanel,
+        $summary1,
+        $summary2,
+        $summary3,
         $resetButton,
-        $analysisButton, 
-        $stockSelect, 
-        $fundBox, 
-        $metricsBox, 
-        $compoundCheckBox, 
+        $analysisButton,
+        $stockChart,
+        $stockSelect,
+        $fundBox,
+        $metricsBox,
+        $compoundCheckBox,
         $strategySelect,
         $timeRangeInput,
         $sliderRange
-        ) {
+    ) {
 
         this.strategyDescription = {
             "Averaging Down": "Sells stocks when price increases (by UB); When price drops (by LB), purchases more (by T), and so on [UB1,LB1,T1,UB2,LB2,T2,...UB]",
@@ -27,6 +28,7 @@ class Board {
         this.$summary3 = $summary3;
         this.$resetButton = $resetButton;
         this.$analysisButton = $analysisButton;
+        this.$stockChart = $stockChart;
         this.$stockSelect = $stockSelect;
         this.$fundBox = $fundBox;
         this.$metricsBox = $metricsBox;
@@ -34,7 +36,7 @@ class Board {
         this.$strategySelect = $strategySelect;
         this.$timeRangeInput = $timeRangeInput;
         this.$sliderRange = $sliderRange;
-       
+
         this.$selectedSummary = null;
         this.summaryMapping = {};
         this.startYear = null;
@@ -65,12 +67,7 @@ class Board {
             this.updateAnalyzeButton();
         }
         this.$stockSelect[0].onchange = () => {
-            if (this.$stockSelect[0].selectedIndex == 0) {
-                this.$timeRangeInput[0].innerHTML = "0000 - 0000";
-            } 
-            else {
-                this.loadStockDataAndUpdateDateRange();
-            }
+            this.loadStockDataAndUpdateDateRangeAndStockChart();
             this.updateAnalyzeButton();
         }
         this.$fundBox[0].onchange = () => {
@@ -83,11 +80,137 @@ class Board {
         this.$sliderRange.slider();
     }
 
+    // "6/1/2012" => "2012-6-1"
+    convertToEpochTime(dateTime) {
+        var strList = dateTime.split("/");
+        var res = strList[2] + "-" + strList[0] + "-" + strList[1];
+        return res;
+    }
+
+    getStep(capacity, start, end) {
+        var years = end - start + 1;
+        var workdaysPerYear = 253;
+        var total = years * workdaysPerYear;
+        return Math.ceil(total / capacity);
+    }
+
+
+    processDataForStockChart(data, startYear, endYear) {
+        var capacity = 1200;
+        var step = this.getStep(capacity, startYear, endYear);
+        var stockChartData = [];
+        for (var i = 0; i < data.length; i += step) {
+            var price = data[i];
+            var strList = price.dateTime.split("/");
+            var year = strList[2];
+            var month = strList[0];
+            var day = strList[1];
+            if (year >= startYear && year <= endYear) {
+                var dt = year + "-" + month + "-" + day;
+                var closePrice = price.closePrice;
+                stockChartData.push({ date: dt, value: closePrice });
+            }
+        }
+        return stockChartData;
+    }
+
+    updateStockChart(stockData, stockName, startYear, endYear) {
+        if (stockData == null) {
+            return;
+        }
+
+        this.$stockChart[0].innerHTML = "";
+
+        var chartData = this.processDataForStockChart(stockData, startYear, endYear);
+        var dates = [];
+
+        for (var i = 0; i < chartData.length; i++) {
+            var innerArr = [chartData[i].date, chartData[i].value];
+            dates.push(innerArr);
+        }
+
+        var options = {
+            //colors: ['#66DA26', '#2E93fA'],
+            series: [{
+                name: stockName,
+                data: dates
+            }],
+            chart: {
+                type: 'area',
+                stacked: false,
+                height: 210,
+                zoom: {
+                    type: 'x',
+                    enabled: true,
+                    autoScaleYaxis: true
+                },
+                toolbar: {
+                    autoSelected: 'zoom'
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            markers: {
+                size: 0,
+            },
+            title: {
+                text: stockName,
+                align: 'left'
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    inverseColors: false,
+                    opacityFrom: 0.5,
+                    opacityTo: 0,
+                    stops: [0, 90, 100]
+                },
+            },
+            /*fill: {
+                colors: [function ({ value, seriesIndex, w }) {
+                    if (value < 155) {
+                        return '#7E36AF'
+                    } else if (value >= 155 && value < 180) {
+                        return '#164666'
+                    } else {
+                        return '#D9534F'
+                    }
+                }]
+            },*/
+            yaxis: {
+                labels: {
+                    formatter: function (val) {
+                        return val.toFixed(2);
+                    },
+                },
+                title: {
+                    text: 'Price'
+                },
+            },
+            xaxis: {
+                type: 'datetime',
+            },
+            tooltip: {
+                shared: false,
+                y: {
+                    formatter: function (val) {
+                        return val.toFixed(3)
+                    }
+                }
+            }
+        };
+
+        var chart = new ApexCharts(this.$stockChart[0], options);
+        chart.render();
+    }
+
     updateStrategyTitle() {
-       var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
-       var selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
-       var title = (this.strategyDescription[selectedStrategy] == undefined) ? "" : this.strategyDescription[selectedStrategy];
-       this.$strategySelect.prop("title", title);
+        var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
+        var selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
+        var title = (this.strategyDescription[selectedStrategy] == undefined) ? "" : this.strategyDescription[selectedStrategy];
+        this.$strategySelect.prop("title", title);
     }
 
     populateStocksSelect() {
@@ -99,7 +222,7 @@ class Board {
             url: "stockdata/stocks.txt",
             dataType: "text",
             context: this,
-            success: function(data) {
+            success: function (data) {
                 var allTextLines = data.split(/\r\n|\n/);
                 for (var i = 0; i < allTextLines.length; i++) {
                     var option = document.createElement("option");
@@ -107,10 +230,10 @@ class Board {
                     this.$stockSelect[0].add(option);
                 }
             },
-            error: function() {
+            error: function () {
                 alert("cannot load data");
             }
-        });   
+        });
     }
 
     isInputValid() {
@@ -133,7 +256,7 @@ class Board {
         this.$analysisButton.prop("disabled", !this.isInputValid());
     }
 
-    updateDateRange() {  
+    updateDateRange() {
         if (this.data) {
             this.$timeRangeInput[0].innerHTML = " " + this.startYear + " - " + this.endYear;
             this.$sliderRange.slider(
@@ -144,7 +267,7 @@ class Board {
                     step: 1,
                     values: [this.startYear, this.endYear],
                     slide: (event, ui) => {
-                        this.$timeRangeInput[0].innerHTML = " " + ui.values[0]  + " - " + ui.values[1];
+                        this.$timeRangeInput[0].innerHTML = " " + ui.values[0] + " - " + ui.values[1];
                         this.startYear = ui.values[0];
                         this.endYear = ui.values[1];
                     }
@@ -153,8 +276,13 @@ class Board {
         }
     }
 
-    loadStockDataAndUpdateDateRange() {
-        var filePath = this.getFilePath(); 
+    loadStockDataAndUpdateDateRangeAndStockChart() {
+        if (this.$stockSelect[0].selectedIndex == 0) {
+            this.$timeRangeInput[0].innerHTML = "0000 - 0000";
+            return;
+        }
+
+        var filePath = this.getFilePath();
 
         if (filePath != "") {
             $.ajax({
@@ -162,18 +290,20 @@ class Board {
                 url: filePath,
                 dataType: "text",
                 context: this,
-                success: function(data) {
+                success: function (data) {
                     var prices = this.convertRawDataToList(data);
                     this.startYear = Number(prices[0].dateTime.split("/")[2]);
                     this.endYear = Number(prices[prices.length - 1].dateTime.split("/")[2]);
                     this.data = prices;
 
+                    var stockName = this.getStockName();
+                    this.updateStockChart(prices, stockName, this.startYear, this.endYear);
                     this.updateDateRange();
                 },
-                error: function() {
+                error: function () {
                     alert("cannot load data");
                 }
-            });   
+            });
         }
     }
 
@@ -189,7 +319,7 @@ class Board {
                 var highPrice = Number(data[2]);
                 var lowPrice = Number(data[3]);
                 var closePrice = Number(data[4]);
-                prices.push(new Price(dt, openPrice, highPrice, lowPrice, closePrice));               
+                prices.push(new Price(dt, openPrice, highPrice, lowPrice, closePrice));
             }
         }
         return prices;
@@ -198,8 +328,9 @@ class Board {
     selectSummaryPanel($summary) {
         // update summary panel
         if (this.$selectedSummary == null || $summary[0].id != this.$selectedSummary[0].id) {
+            this.$stockChart[0].innerHTML = "";
             this.$selectedSummary = $summary;
-            $summary.css('border', '3px solid red'); 
+            $summary.css('border', '3px solid red');
             if ($summary[0].id != this.$summary1[0].id) {
                 this.$summary1.css('border', 'none')
             }
@@ -224,7 +355,7 @@ class Board {
             var startYear = summaryObj.startYear;
             var endYear = summaryObj.endYear;
 
-            this.displayHistoricalData(filePath, fund, metrics, startYear, endYear, compound, strategyType, selectedStock, this.$historyPanel);
+            this.displayHistoricalDataAndStockChart(filePath, fund, metrics, startYear, endYear, compound, strategyType, selectedStock, this.$historyPanel);
         }
     }
 
@@ -272,12 +403,12 @@ class Board {
         var strategyInput = [];
         var stockAnalyser = new StockAnalyser(fund, selectedStock, selectedStrategy, $historyCanvas, $summaryCanvas);
         stockAnalyser.loadAndProcessData(stockData, startYear, endYear);
-        
+
         for (var i of strategyArr) {
             i = i.trim();
             strategyInput.push(Number(i));
-        }         
-        
+        }
+
         var strategy = null;
         if (selectedStrategy === "Averaging Down") {
             strategy = new Strategy(strategyInput);
@@ -296,34 +427,42 @@ class Board {
     }
 
     // read data based on filePath, need ajax call
-    displayHistoricalData(filePath, fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
+    displayHistoricalDataAndStockChart(filePath, fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
         $.ajax({
             type: "GET",
             url: filePath,
             dataType: "text",
             context: this,
-            success: function(data) {
+            success: function (data) {
                 var processedData = this.convertRawDataToList(data);
+
+                // update stock chart
+                this.updateStockChart(processedData, selectedStock, startYear, endYear)
+
                 this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);
             },
-            error: function() {
+            error: function () {
                 alert("cannot load data");
             }
         });
     }
 
     // data (this.data) is ready, just need to display it
-    displayAllData(data, fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas,  $summaryCanvas) {
+    displayAllData(data, fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas, $summaryCanvas) {
         this.applyStrategy(data, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, $summaryCanvas);
     }
 
-    getFilePath() {
+    getStockName() {
         var selectedIndex = this.$stockSelect[0].selectedIndex;
         if (selectedIndex == 0) {
             return "";
         }
         var selectedStock = this.$stockSelect[0].options[selectedIndex].text
-        return "stockdata/" + selectedStock + ".csv";
+        return selectedStock;
+    }
+
+    getFilePath() {
+        return "stockdata/" + this.getStockName() + ".csv";
     }
 
     onAnalysisClick() {
@@ -353,6 +492,7 @@ class Board {
             this.summaryMapping[selectedSummaryId]["strategyType"] = selectedStrategy;
             this.summaryMapping[selectedSummaryId]["selectedStock"] = selectedStock;
 
+            this.updateStockChart(this.data, selectedStock, this.startYear, this.endYear);
             this.clearHistoryPanel();
             this.clearSummaryPanel(this.$selectedSummary);
             this.displayAllData(this.data, fund, metrics, this.startYear, this.endYear, compound, selectedStrategy, selectedStock, this.$historyPanel, this.$selectedSummary);

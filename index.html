@@ -1,86 +1,106 @@
 <html>
-    <head>
-        <!-- local js files -->
-        <script type="text/javascript" src="js/Board.js"></script>
-        <script type="text/javascript" src="js/Strategy.js"></script>
-        <script type="text/javascript" src="js/LazyStrategy.js"></script>
-        <script type="text/javascript" src="js/Trade.js"></script>
-        <script type="text/javascript" src="js/Transaction.js"></script>
-        <script type="text/javascript" src="js/Price.js"></script>
-        <script type="text/javascript" src="js/StockAnalyser.js"></script>
-        <!-- local css files -->
-        <link rel="stylesheet" href="css/style.css">        
-        <!-- jquery -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <!-- jquery ui -->
-        <script src="lib/jquery-ui-1.12.1/jquery-ui.js"></script>
-        <link rel="stylesheet" href="lib/jquery-ui-1.12.1/jquery-ui.css">
-        <!-- bootstrap -->
-        <link rel="stylesheet" href="lib/bootstrap-4.3.1-dist/css/bootstrap.min.css">
-        <script src="lib/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
 
-        <!--<link rel="stylesheet" href="lib/jQRangeSlider-5.8.0/css/iThing.css" type="text/css" />
+<head>
+    <!-- local js files -->
+    <script type="text/javascript" src="js/Board.js"></script>
+    <script type="text/javascript" src="js/Strategy.js"></script>
+    <script type="text/javascript" src="js/LazyStrategy.js"></script>
+    <script type="text/javascript" src="js/Trade.js"></script>
+    <script type="text/javascript" src="js/Transaction.js"></script>
+    <script type="text/javascript" src="js/Price.js"></script>
+    <script type="text/javascript" src="js/StockAnalyser.js"></script>
+    <!-- local css files -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- jquery ui -->
+    <script src="lib/jquery-ui-1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="lib/jquery-ui-1.12.1/jquery-ui.css">
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="lib/bootstrap-4.3.1-dist/css/bootstrap.min.css">
+    <script src="lib/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+
+    <!--<link rel="stylesheet" href="lib/jQRangeSlider-5.8.0/css/iThing.css" type="text/css" />
         <script src="lib/jQRangeSlider-5.8.0/jQRangeSlider-min.js"></script>
         <script src="lib/jQRangeSlider-5.8.0/demo/lib/jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>-->
-        
-        <script>
-            $(document).ready(function() { 
-                var board = new Board(
-                    $("#history_content"), 
-                    $("#summary_content1"), 
-                    $("#summary_content2"), 
-                    $("#summary_content3"),
-                    $("#resetButton"),
-                    $("#analysisButton"),
-                    $("#stockSelect"),
-                    $("#fundBox"),
-                    $("#metricsBox"),
-                    $("#compoundCheckBox"),
-                    $("#strategySelect"),
-                    $("#timeRangeInput"),
-                    $("#slider-range")
-                );
-                board.selectSummaryPanel($("#summary_content1"));
 
-                /*$("#slider").rangeSlider();
-                $("#slider").rangeSlider("min", 10);
-                $("#slider").rangeSlider("max", 100);*/
-               
-            });
-        </script>
-    </head>
+    <!-- apexcharts -->
+    <script src="lib/apexcharts-bundle/e2e/apexcharts.e2e.js"></script>
+    <script src="lib/apexcharts-bundle/assets/irregular-data-series.js"></script>
+    <link href="lib/apexcharts-bundle/assets/styles.css" rel="stylesheet" />
+
+    <script>
+        $(document).ready(function () {
+            var board = new Board(
+                $("#history_content"),
+                $("#summary_content1"),
+                $("#summary_content2"),
+                $("#summary_content3"),
+                $("#resetButton"),
+                $("#analysisButton"),
+                $("#stock_chart"),
+                $("#stockSelect"),
+                $("#fundBox"),
+                $("#metricsBox"),
+                $("#compoundCheckBox"),
+                $("#strategySelect"),
+                $("#timeRangeInput"),
+                $("#slider-range")
+            );
+            board.selectSummaryPanel($("#summary_content1"));
+
+            /*$("#slider").rangeSlider();
+            $("#slider").rangeSlider("min", 10);
+            $("#slider").rangeSlider("max", 100);*/
+
+        });
+    </script>
+</head>
 <title>Stock Analysis</title>
 
 <body>
     <div class="split left">
         <div id="history_canvas" style="color: white; margin-top: 10;">
-            <center><h4>Historical Transactions</h4></center>
+            <center>
+                <h4>Historical Transactions</h4>
+            </center>
             <hr style="border: 1px solid white;">
             <div id="history_content" style="margin-left: 20;"></div>
         </div>
     </div>
     <div class="split right">
-        <div id="summary_canvas" class="centered top">   
-            <table id="summary_table" border="1" cellpadding="5" style="width: 95%; height: 85%; margin-left:auto;margin-right:auto;">
+        <div id="summary_canvas" class="centered top">
+            <table id="summary_table" border="1" cellpadding="3"
+                style="width: 95%; height: 85%; margin-left:auto;margin-right:auto;">
                 <tr>
                     <h4>Summary</h4>
                 </tr>
                 <tr>
-                    <td style="width: 30%; height: 100%;"><div id="summary_content1" style="width: 100%; height: 100%; cursor: pointer;"></div></td>
-                    <td style="width: 30%; height: 100%;"><div id="summary_content2" style="width: 100%; height: 100%; cursor: pointer;"></div></td>
-                    <td style="width: 30%; height: 100%;"><div id="summary_content3" style="width: 100%; height: 100%; cursor: pointer;"></div></td>
+                    <td style="width: 30%; height: 100%;">
+                        <div id="summary_content1" style="width: 100%; height: 100%; cursor: pointer;"></div>
+                    </td>
+                    <td style="width: 30%; height: 100%;">
+                        <div id="summary_content2" style="width: 100%; height: 100%; cursor: pointer;"></div>
+                    </td>
+                    <td style="width: 30%; height: 100%;">
+                        <div id="summary_content3" style="width: 100%; height: 100%; cursor: pointer;"></div>
+                    </td>
                 </tr>
             </table>
+        </div>
+        <div id="stock_chart" class="centered middle">
+            <div id="chart" style="padding: 50 50 50 50;"></div>
         </div>
         <div id="control_panel" class="centered bottom">
             <form>
                 <table border="1" cellpadding="5" style="margin-left: 50; margin-right: 50; margin-top: 20;">
                     <tr>
-                        <td style="padding-left:15;">                
+                        <td style="padding-left:15;">
                             <div class="input-group mb-3">
                                 <h4><span class="label label-default">Invest:&nbsp;</span></h4>
                                 <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                                <input id="fundBox" value="30000" type="text" class="form-control" style="width: 100" aria-label="Amount (to the nearest dollar)">
+                                <input id="fundBox" value="30000" type="text" class="form-control" style="width: 100"
+                                    aria-label="Amount (to the nearest dollar)">
                                 <div class="input-group-append"><span class="input-group-text">.00</span></div>
                             </div>
                             <div style="margin-left: 25;">
@@ -90,16 +110,20 @@
                         <td style="padding-bottom: 10; padding-left: 15; padding-right: 15; ">
                             <table border="1">
                                 <tr>
-                                    <td><select id="stockSelect" class="browser-default custom-select" style="width:100;"></select></td>
+                                    <td><select id="stockSelect" class="browser-default custom-select"
+                                            style="width:100;"></select></td>
                                     <td>
                                         <label for="amount">&nbsp;&nbsp;Span:</label>
-                                        <label id="timeRangeInput" style="width:100px; font-weight:bold;">0000 - 0000</label>
+                                        <label id="timeRangeInput" style="width:100px; font-weight:bold;">0000 -
+                                            0000</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="padding-top: 15;" colspan="2"><div id="slider-range" style="width: 250;"></div></td>
+                                    <td style="padding-top: 15;" colspan="2">
+                                        <div id="slider-range" style="width: 250;"></div>
+                                    </td>
                                 </tr>
-                            </table>        
+                            </table>
                         </td>
                     </tr>
                     <tr>
@@ -130,9 +154,10 @@
                             <button id="analysisButton" type="button" class="btn btn-primary" disabled>Analyze</button>
                         </td>
                     </tr>
-                </table>      
+                </table>
             </form>
         </div>
     </div>
 </body>
+
 </html>

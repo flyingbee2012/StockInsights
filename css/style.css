@@ -1,46 +1,51 @@
 body {
-    font-family: Arial;
-    color: white;
+  font-family: Arial;
+  color: white;
 }
 
 .split {
-    height: 100%;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    overflow-x: auto;
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: auto;
 }
 
 .left {
-    width: 25%;
-    left: 0;
-    background-color: #111;
+  width: 25%;
+  left: 0;
+  background-color: #111;
 }
 
 .right {
-    width: 75%;
-    right: 0;
+  width: 75%;
+  right: 0;
 }
 
 .top {
-    height: 60%;
-    background-color: darkblue;
-    color: white;
-    overflow-y: auto;
+  height: 50%;
+  background-color: darkblue;
+  color: white;
+  overflow-y: auto;
 }
 
-.top table {
-    color: white;
+.middle {
+  height: 25%;
+  overflow-y: auto;
 }
 
 .bottom {
-    height: 40%;
-    background-color: grey;
-    overflow-y: auto;
+  height: 25%;
+  background-color: grey;
+  overflow-y: auto;
+}
+
+.top table {
+  color: white;
 }
 
 .centered {
-    text-align: center;
+  text-align: center;
 }
 
 /*.centered img {

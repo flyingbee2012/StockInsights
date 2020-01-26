@@ -13,7 +13,7 @@ class Transaction {
     getPriceString() {
         return Number(this.price.toFixed(3)).toString();
     }
-  
+
     output($container) {
         var record = this.date + " " + this.type + " " + Math.floor(this.amount) + " stocks at " + this.getPriceString();
         if ($container) {

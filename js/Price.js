@@ -7,4 +7,3 @@ class Price {
         this.closePrice = cp;
     }
 };
-    

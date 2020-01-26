@@ -1,6 +1,6 @@
 class Trade {
-    constructor(eind) {
-        this.transactions = [];
+	constructor(eind) {
+		this.transactions = [];
 		this.startTime = "";
 		this.endTime = "";
 		this.startIndex = Number.MAX_SAFE_INTEGER;
@@ -8,11 +8,11 @@ class Trade {
 		this.costBasis = 0.0;
 		this.numOfShares = 0;
 		this.profit = 0.0;
-        this.complete = false;
-        this.historialCostBasis = {};
-    }
+		this.complete = false;
+		this.historialCostBasis = {};
+	}
 
-    getStartIndex() {
+	getStartIndex() {
 		return this.startIndex;
 	}
 
@@ -27,8 +27,8 @@ class Trade {
 	getProfit() {
 		return this.profit;
 	}
-    
-    output($canvas) {
+
+	output($canvas) {
 		if ($canvas != null) {
 			for (var transaction of this.transactions) {
 				transaction.output($canvas);
@@ -38,13 +38,13 @@ class Trade {
 				}
 				$canvas.append("</br>");
 			}
-			
+
 			$canvas.append("cost basis: " + Number(this.costBasis.toFixed(3)) + "</br>");
 			$canvas.append("profit earned: <font color='red'>" + Number(this.profit.toFixed(3)) + "</font></br>");
 			$canvas.append("num of days: " + "(" + this.getNumOfTradeDays() + ")" + "</br>");
 		}
 	}
-	
+
 	purchase(amount, price, date, index) {
 		if (this.transactions.length == 0) {
 			this.startTime = date;
@@ -56,8 +56,8 @@ class Trade {
 		this.profit -= price * amount;
 
 		var transaction = new Transaction("Buy", price, date, amount);
-        
-        this.historialCostBasis[JSON.stringify(transaction)] = this.costBasis;
+
+		this.historialCostBasis[JSON.stringify(transaction)] = this.costBasis;
 		this.transactions.push(transaction);
 	}
 
@@ -85,5 +85,5 @@ class Trade {
 
 	isComplete() {
 		return complete;
-    }
+	}
 };

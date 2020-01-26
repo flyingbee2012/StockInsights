@@ -32,12 +32,12 @@ class Strategy {
     getBasePurchaseAmount(fund, price) {
         var times = 1;
         for (var i = 2; i < this.strategy.length; i += 3) {
-            times += this.strategy[i];    
+            times += this.strategy[i];
         }
         var share = fund / times;
         return Math.floor(share / price);
     }
-    
+
     getString() {
         return this.strategy.toString();
     }
