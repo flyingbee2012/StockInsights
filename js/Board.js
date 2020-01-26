@@ -139,6 +139,7 @@ class Board {
                 type: 'area',
                 stacked: false,
                 height: 210,
+                width: '95%',
                 zoom: {
                     type: 'x',
                     enabled: true,

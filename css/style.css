@@ -23,7 +23,7 @@ body {
 }
 
 .top {
-  height: 50%;
+  height: 45%;
   background-color: darkblue;
   color: white;
   overflow-y: auto;
@@ -35,7 +35,7 @@ body {
 }
 
 .bottom {
-  height: 25%;
+  height: 30%;
   background-color: grey;
   overflow-y: auto;
 }

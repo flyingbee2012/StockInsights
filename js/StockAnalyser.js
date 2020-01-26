@@ -316,8 +316,7 @@ class StockAnalyser {
                 $canvas.append("*****************************************************" + "</br>");
             }
 
-            $canvas.append("historical profit: <font color='red'>" + hProfit + "</font></br>");
-            $canvas.append("total profit so far: <font color='red'>" + tProfit + "</font></br>");
+            $canvas.append("historical profit: <font color='red'>" + hProfit + " (" + tProfit+ ")</font></br>");
             $canvas.append("average day to make profit: " + avgDays + "</br>");
 
             $canvas.append("*****************************************************" + "</br>");
