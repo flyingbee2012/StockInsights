@@ -338,7 +338,6 @@ class Board {
     selectSummaryPanel($summary) {
         // update summary panel
         if (this.$selectedSummary == null || $summary[0].id != this.$selectedSummary[0].id) {
-            this.clearStockChart();
             this.$selectedSummary = $summary;
             $summary.css('border', '3px solid red');
             if ($summary[0].id != this.$summary1[0].id) {
@@ -350,22 +349,24 @@ class Board {
             if ($summary[0].id != this.$summary3[0].id) {
                 this.$summary3.css('border', 'none')
             }
-        }
-        // update history panel
-        this.clearHistoryPanel();
-        var summaryId = $summary[0].id;
-        if (this.summaryMapping[summaryId] != null) {
-            var summaryObj = this.summaryMapping[summaryId];
-            var filePath = summaryObj.filePath;
-            var fund = summaryObj.fund;
-            var metrics = summaryObj.metrics;
-            var compound = summaryObj.compound;
-            var strategyType = summaryObj.strategyType;
-            var selectedStock = summaryObj.selectedStock;
-            var startYear = summaryObj.startYear;
-            var endYear = summaryObj.endYear;
 
-            this.displayHistoricalDataAndStockChart(filePath, fund, metrics, startYear, endYear, compound, strategyType, selectedStock, this.$historyPanel);
+            // update history panel and stock chart
+            this.clearHistoryPanel();
+            this.clearStockChart();
+            var summaryId = $summary[0].id;
+            if (this.summaryMapping[summaryId] != null) {
+                var summaryObj = this.summaryMapping[summaryId];
+                var filePath = summaryObj.filePath;
+                var fund = summaryObj.fund;
+                var metrics = summaryObj.metrics;
+                var compound = summaryObj.compound;
+                var strategyType = summaryObj.strategyType;
+                var selectedStock = summaryObj.selectedStock;
+                var startYear = summaryObj.startYear;
+                var endYear = summaryObj.endYear;
+
+                this.displayHistoricalDataAndStockChart(filePath, fund, metrics, startYear, endYear, compound, strategyType, selectedStock, this.$historyPanel);
+            }
         }
     }
 
