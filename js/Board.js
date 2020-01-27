@@ -129,6 +129,8 @@ class Board {
 
         var chartData = this.processDataForStockChart(stockData, startYear, endYear);
         var dates = [];
+        var startPrice = chartData[0].value;
+        var endPrice = chartData[chartData.length - 1].value;
 
         for (var i = 0; i < chartData.length; i++) {
             var innerArr = [chartData[i].date, chartData[i].value];
@@ -136,7 +138,7 @@ class Board {
         }
 
         var options = {
-            colors: ['#66DA26'],
+            colors: startPrice <= endPrice ? ['#66DA26'] : ['#FF0000'],
             series: [{
                 name: stockName,
                 data: dates
