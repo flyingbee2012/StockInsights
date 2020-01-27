@@ -33,7 +33,8 @@ class Trade {
 			for (var transaction of this.transactions) {
 				transaction.output($canvas);
 				if (transaction.getType() == "Buy") {
-					var record = " (" + Number(this.historialCostBasis[JSON.stringify(transaction)].toFixed(3)) + ")"
+					//var record = " (" + Number(this.historialCostBasis[JSON.stringify(transaction)].toFixed(3)) + ")"
+					var record = " (" + getString(this.historialCostBasis[JSON.stringify(transaction)], 2) + ")"
 					$canvas.append(record);
 				}
 				$canvas.append("</br>");

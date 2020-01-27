@@ -219,13 +219,13 @@ class StockAnalyser {
             this.baseFund,
             this.strategyType,
             "",
-            totalProfit.toFixed(3),
-            totalProfit.toFixed(3),
+            getString(totalProfit, 2),
+            getString(totalProfit, 2),
             trade.getNumOfTradeDays(),
             false,
-            Number(this.biggestDropFromPrice.toFixed(3)).toString(),
+            getString(this.biggestDropFromPrice, 2),
             this.biggestDropFromPriceDate,
-            Number(this.biggestDropEndPrice.toFixed(3)).toString(),
+            getString(this.biggestEndFromPrice, 2),
             this.biggestDropEndPriceDate
         );
 
@@ -271,13 +271,13 @@ class StockAnalyser {
             this.baseFund,
             this.strategyType,
             this.strategy.getString(),
-            historicalProfit.toFixed(3),
-            totoalProfit.toFixed(3),
-            (totoalDays / count).toFixed(3),
+            getString(historicalProfit, 2),
+            getString(totoalProfit, 2),
+            getString(totoalDays / count, 2),
             withCompound,
-            Number(this.biggestDropFromPrice.toFixed(3)).toString(),
+            getString(this.biggestDropFromPrice, 2),
             this.biggestDropFromPriceDate,
-            Number(this.biggestDropEndPrice.toFixed(3)).toString(),
+            getString(this.biggestDropEndPrice, 2),
             this.biggestDropEndPriceDate
         );
 

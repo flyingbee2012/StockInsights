@@ -10,12 +10,8 @@ class Transaction {
         return this.type;
     }
 
-    getPriceString() {
-        return Number(this.price.toFixed(3)).toString();
-    }
-
     output($container) {
-        var record = this.date + " " + this.type + " " + Math.floor(this.amount) + " stocks at " + this.getPriceString();
+        var record = this.date + " " + this.type + " " + Math.floor(this.amount) + " stocks at " + getString(this.price, 2);
         if ($container) {
             $container.append(record);
         }
