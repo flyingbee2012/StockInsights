@@ -223,9 +223,9 @@ class StockAnalyser {
             totalProfit.toFixed(3),
             trade.getNumOfTradeDays(),
             false,
-            this.biggestDropFromPrice.toFixed(3),
+            Number(this.biggestDropFromPrice.toFixed(3)).toString(),
             this.biggestDropFromPriceDate,
-            this.biggestDropEndPrice.toFixed(3),
+            Number(this.biggestDropEndPrice.toFixed(3)).toString(),
             this.biggestDropEndPriceDate
         );
 
@@ -275,9 +275,9 @@ class StockAnalyser {
             totoalProfit.toFixed(3),
             (totoalDays / count).toFixed(3),
             withCompound,
-            this.biggestDropFromPrice.toFixed(3),
+            Number(this.biggestDropFromPrice.toFixed(3)).toString(),
             this.biggestDropFromPriceDate,
-            this.biggestDropEndPrice.toFixed(3),
+            Number(this.biggestDropEndPrice.toFixed(3)).toString(),
             this.biggestDropEndPriceDate
         );
 
@@ -310,18 +310,17 @@ class StockAnalyser {
             if (longestTrade != null) {
                 $canvas.append("<center>--- <b>" + stockInfo + "</b> (" + this.startYear + " - " + this.endYear + ") with $" + baseFund + " ---</center>");
                 $canvas.append("<center>----- " + strategyType + " -----</center>");
-                $canvas.append("<center>---" + metrics + " Compounded: " + withCompound + " ---</center><br style='line-height: 10px;'>");
+                $canvas.append("<center>--- " + metrics + " Compounded: " + withCompound + " ---</center><br style='line-height: 10px;'>");
                 $canvas.append("<div class='separator'>Longest Trade</div>");
                 longestTrade.output($canvas);
                 $canvas.append("<div class='separator'>Profit</div>");
-                
+
             }
 
-            $canvas.append("historical profit: <font color='red'>" + hProfit + " (" + tProfit+ ")</font></br>");
+            $canvas.append("historical profit: <font color='red'>" + hProfit + " (" + tProfit + ")</font></br>");
             $canvas.append("average day to make profit: " + avgDays + "</br>");
-            $canvas.append("<div class='separator'>Drop</div>");
-            $canvas.append("max drop "
-                + "(" + this.getDropPct(dropFromPrice, dropEndPrice) + "): " + dropFromPrice
+            $canvas.append("<div class='separator'>Max Drop</div>");
+            $canvas.append(this.getDropPct(dropFromPrice, dropEndPrice) + ": " + dropFromPrice
                 + " (" + dropFromDate + ") => " + dropEndPrice + " (" + dropEndDate + ")"
             );
         }
