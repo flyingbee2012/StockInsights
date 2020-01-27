@@ -19,11 +19,6 @@
     <!-- bootstrap -->
     <link rel="stylesheet" href="lib/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="lib/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
-
-    <!--<link rel="stylesheet" href="lib/jQRangeSlider-5.8.0/css/iThing.css" type="text/css" />
-        <script src="lib/jQRangeSlider-5.8.0/jQRangeSlider-min.js"></script>
-        <script src="lib/jQRangeSlider-5.8.0/demo/lib/jquery-ui/js/jquery-ui-1.8.16.custom.min.js"></script>-->
-
     <!-- apexcharts -->
     <script src="lib/apexcharts-bundle/e2e/apexcharts.e2e.js"></script>
     <link href="lib/apexcharts-bundle/assets/styles.css" rel="stylesheet" />
@@ -89,13 +84,12 @@
                     <tr>
                         <td style="padding-left:15;">
                             <div class="input-group mb-3">
-                                <h4><span class="label label-default">Invest:&nbsp;</span></h4>
                                 <div class="input-group-prepend"><span class="input-group-text">$</span></div>
                                 <input id="fundBox" value="30000" type="text" class="form-control" style="width: 100"
                                     aria-label="Amount (to the nearest dollar)">
                                 <div class="input-group-append"><span class="input-group-text">.00</span></div>
                             </div>
-                            <div style="margin-left: 25;">
+                            <div style="margin-left: 5;">
                                 <input type="checkbox" id="compoundCheckBox" checked>&nbsp;Compound
                             </div>
                         </td>
@@ -105,8 +99,7 @@
                                     <td><select id="stockSelect" class="browser-default custom-select"
                                             style="width:100;"></select></td>
                                     <td>
-                                        <label for="amount">&nbsp;&nbsp;Span:</label>
-                                        <label id="timeRangeInput" style="width:100px; font-weight:bold;">0000 -
+                                        <label id="timeRangeInput" style="width:90px; font-weight:bold;">0000 -
                                             0000</label>
                                     </td>
                                 </tr>
@@ -117,28 +110,28 @@
                                 </tr>
                             </table>
                         </td>
+                        <td rowspan="2" style="padding-top: 5;">
+                            <select id="strategySelect" class="browser-default custom-select"
+                                style="width: 220; margin-bottom:5;">
+                                <option selected>-- select a strategy --</option>
+                                <option value="1">Averaging Down</option>
+                                <option value="2">Averaging Down Lazy</option>
+                                <option value="3">Long Term</option>
+                            </select>
+                            <textarea id="metricsBox" class="form-control" rows="4"></textarea>
+                        </td>
                     </tr>
                     <tr>
-                        <td style="padding-left: 15;padding-top: 0;">
-                            <select id="nextStrategySelect" class="browser-default custom-select" style="width: 200;" disabled>
+                        <td>
+                            <select id="nextStrategySelect" class="browser-default custom-select" style="width: 200;"
+                                disabled>
                                 <option selected>---- how to make next investment ----</option>
                                 <option value="1">Close Price Next Day</option>
                                 <option value="2">Highest Price Same Day</option>
                                 <option value="3">Same Price Same Day</option>
                                 <option value="4">Next Peak Close Price</option>
                             </select>
-                            <select id="strategySelect" class="browser-default custom-select" style="width: 200;">
-                                <option selected>-- select a strategy --</option>
-                                <option value="1">Averaging Down</option>
-                                <option value="2">Averaging Down Lazy</option>
-                                <option value="3">Long Term</option>
-                            </select> 
                         </td>
-                        <td rowspan="3" style="padding-top: 5;">
-                            <textarea id="metricsBox" class="form-control" rows="4"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
                         <td align="center">
                             <button id="resetButton" type="button" class="btn btn-primary">Reset</button>
                             <button id="analysisButton" type="button" class="btn btn-primary" disabled>Analyze</button>
