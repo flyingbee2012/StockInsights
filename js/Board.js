@@ -91,7 +91,7 @@ class Board {
         var years = end - start + 1;
         var workdaysPerYear = 253;
         var total = years * workdaysPerYear;
-        return Math.ceil(total / capacity);
+        return Math.max(Math.ceil(total / capacity), 1);
     }
 
 
