@@ -136,7 +136,7 @@ class Board {
         }
 
         var options = {
-            //colors: ['#66DA26', '#2E93fA'],
+            colors: ['#66DA26'],
             series: [{
                 name: stockName,
                 data: dates
