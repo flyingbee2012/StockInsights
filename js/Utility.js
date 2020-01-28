@@ -1,3 +1,3 @@
-function  getString(val, digit) {
-    return Number(val.toFixed(digit)).toString();
+function  getString(val) {
+    return Number(val.toFixed(2)).toString();
 }

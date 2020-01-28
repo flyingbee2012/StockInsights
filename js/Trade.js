@@ -33,15 +33,14 @@ class Trade {
 			for (var transaction of this.transactions) {
 				transaction.output($canvas);
 				if (transaction.getType() == "Buy") {
-					//var record = " (" + Number(this.historialCostBasis[JSON.stringify(transaction)].toFixed(3)) + ")"
-					var record = " (" + getString(this.historialCostBasis[JSON.stringify(transaction)], 2) + ")"
+					var record = " (" + getString(this.historialCostBasis[JSON.stringify(transaction)]) + ")"
 					$canvas.append(record);
 				}
 				$canvas.append("</br>");
 			}
 
-			$canvas.append("cost basis: " + Number(this.costBasis.toFixed(3)) + "</br>");
-			$canvas.append("profit earned: <font color='red'>" + Number(this.profit.toFixed(3)) + "</font></br>");
+			$canvas.append("cost basis: " + getString(this.costBasis) + "</br>");
+			$canvas.append("profit earned: <font color='red'>" + getString(this.profit) + "</font></br>");
 			$canvas.append("num of days: " + "(" + this.getNumOfTradeDays() + ")" + "</br>");
 		}
 	}

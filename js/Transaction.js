@@ -11,7 +11,7 @@ class Transaction {
     }
 
     output($container) {
-        var record = this.date + " " + this.type + " " + Math.floor(this.amount) + " stocks at " + getString(this.price, 2);
+        var record = this.date + " " + this.type + " " + Math.floor(this.amount) + " stocks at " + getString(this.price);
         if ($container) {
             $container.append(record);
         }
