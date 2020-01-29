@@ -396,12 +396,12 @@ class Board {
         if (val === "1") {
             this.$compoundCheckBox.prop("disabled", false);
             this.$metricsBox.prop("disabled", false);
-            this.$metricsBox.val("0.025, 0.025, 4.0, 0.025");
+            this.$metricsBox.val("0.025, 0.025, 2.0, 0.025");
         }
         else if (val === "2") {
             this.$compoundCheckBox.prop("disabled", false);
             this.$metricsBox.prop("disabled", false);
-            this.$metricsBox.val("0.025, 4.0, 0.025");
+            this.$metricsBox.val("0.025, 2.0, 0.025");
         }
         else {
             this.$metricsBox.val("");

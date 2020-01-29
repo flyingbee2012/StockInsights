@@ -225,7 +225,7 @@ class StockAnalyser {
             false,
             getString(this.biggestDropFromPrice),
             this.biggestDropFromPriceDate,
-            getString(this.biggestEndFromPrice),
+            getString(this.biggestDropEndPrice),
             this.biggestDropEndPriceDate
         );
 
