@@ -228,12 +228,10 @@ class Board {
         this.$stockSelect[0].add(option);
         $.ajax({
             type: "GET",
-            //url: "stockdata/stocks.txt",
             url: "https://stockservice.azurewebsites.net/getstocks",
             dataType: "text",
             context: this,
             success: function (data) {
-                //var allTextLines = data.split(/\r\n|\n/);
                 var stocks = JSON.parse(data);
                 for (var i = 0; i < stocks.length; i++) {
                     var option = document.createElement("option");
@@ -294,12 +292,12 @@ class Board {
             return;
         }
 
-        var filePath = this.getFilePath();
+        var stockName = this.getStockName();
 
-        if (filePath != "") {
+        if (stockName != "") {
             $.ajax({
                 type: "GET",
-                url: filePath,
+                url: "https://stockservice.azurewebsites.net/" + stockName,
                 dataType: "text",
                 context: this,
                 success: function (data) {
@@ -308,7 +306,6 @@ class Board {
                     this.endYear = Number(prices[prices.length - 1].dateTime.split("/")[2]);
                     this.data = prices;
 
-                    var stockName = this.getStockName();
                     this.updateStockChart(prices, stockName, this.startYear, this.endYear);
                     this.updateDateRange();
                 },
@@ -319,18 +316,28 @@ class Board {
         }
     }
 
+    /*   
+        [object Object]: {Adj Close: "0.062549", Close: "0.097222", Date: "3/13/1986", High: "0.101563", Low: "0.088542"...}
+        Adj Close: "0.062549"
+        Close: "0.097222"
+        Date: "3/13/1986"
+        High: "0.101563"
+        Low: "0.088542"
+        Open: "0.088542"
+        Volume: "1031788800"
+    */
     convertRawDataToList(data) {
-        var allTextLines = data.split(/\r\n|\n/);
-        var headers = allTextLines[0].split(',');
+        data = JSON.parse(data);
+        var headerLength = Object.keys(JSON.parse(data[0])).length;
         var prices = [];
-        for (var i = 1; i < allTextLines.length; i++) {
-            var data = allTextLines[i].split(',');
-            if (data.length == headers.length) {
-                var dt = data[0];
-                var openPrice = Number(data[1]);
-                var highPrice = Number(data[2]);
-                var lowPrice = Number(data[3]);
-                var closePrice = Number(data[4]);
+        for (var i = 1; i < data.length; i++) {
+            var priceObject = JSON.parse(data[i]);
+            if (Object.keys(priceObject).length == headerLength) {
+                var dt = priceObject.Date;
+                var openPrice = Number(priceObject.Open);
+                var highPrice = Number(priceObject.High);
+                var lowPrice = Number(priceObject.Low);
+                var closePrice = Number(priceObject.Close);
                 prices.push(new Price(dt, openPrice, highPrice, lowPrice, closePrice));
             }
         }
@@ -358,7 +365,6 @@ class Board {
             var summaryId = $summary[0].id;
             if (this.summaryMapping[summaryId] != null) {
                 var summaryObj = this.summaryMapping[summaryId];
-                var filePath = summaryObj.filePath;
                 var fund = summaryObj.fund;
                 var metrics = summaryObj.metrics;
                 var compound = summaryObj.compound;
@@ -367,7 +373,7 @@ class Board {
                 var startYear = summaryObj.startYear;
                 var endYear = summaryObj.endYear;
 
-                this.displayHistoricalDataAndStockChart(filePath, fund, metrics, startYear, endYear, compound, strategyType, selectedStock, this.$historyPanel);
+                this.displayHistoricalDataAndStockChart(fund, metrics, startYear, endYear, compound, strategyType, selectedStock, this.$historyPanel);
             }
         }
     }
@@ -441,10 +447,10 @@ class Board {
     }
 
     // read data based on filePath, need ajax call
-    displayHistoricalDataAndStockChart(filePath, fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
+    displayHistoricalDataAndStockChart(fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
         $.ajax({
             type: "GET",
-            url: filePath,
+            url: "https://stockservice.azurewebsites.net/" + selectedStock,
             dataType: "text",
             context: this,
             success: function (data) {
@@ -475,13 +481,8 @@ class Board {
         return selectedStock;
     }
 
-    getFilePath() {
-        return "stockdata/" + this.getStockName() + ".csv";
-    }
-
     onAnalysisClick() {
         var fund = Number(this.$fundBox[0].value);
-        var filePath = this.getFilePath();
         var selectedStrategy = "";
 
         var metrics = this.$metricsBox[0].value;
@@ -491,15 +492,13 @@ class Board {
         var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
         selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
 
-        if (filePath && fund && selectedStrategyIndex != 0) {
+        if (selectedIndex != 0 && fund && selectedStrategyIndex != 0) {
             // save input in the object for clicking summary panel
             var selectedSummaryId = this.$selectedSummary[0].id;
             this.summaryMapping[selectedSummaryId] = {};
 
-            this.summaryMapping[selectedSummaryId]["filePath"] = filePath;
             this.summaryMapping[selectedSummaryId]["startYear"] = this.startYear;
             this.summaryMapping[selectedSummaryId]["endYear"] = this.endYear;
-
             this.summaryMapping[selectedSummaryId]["fund"] = fund;
             this.summaryMapping[selectedSummaryId]["metrics"] = metrics;
             this.summaryMapping[selectedSummaryId]["compound"] = compound;
