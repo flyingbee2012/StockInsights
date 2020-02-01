@@ -229,14 +229,13 @@ class Board {
         this.$stockSelect[0].add(option);
         $.ajax({
             type: "GET",
-            url: "https://stockservice.azurewebsites.net/getstocks",
-            dataType: "text",
+            url: "data/default_stocks.json",
+            dataType: "json",
             context: this,
             success: function (data) {
-                var stocks = JSON.parse(data);
-                for (var i = 0; i < stocks.length; i++) {
+                for (var i = 0; i < data.length; i++) {
                     var option = document.createElement("option");
-                    option.text = stocks[i];
+                    option.text = data[i];
                     this.$stockSelect[0].add(option);
                 }
             },
