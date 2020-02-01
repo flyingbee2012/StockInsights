@@ -39,6 +39,7 @@ class Board {
 
         this.$selectedSummary = null;
         this.summaryMapping = {};
+        this.stockCache = {};
         this.startYear = null;
         this.endYear = null;
 
@@ -295,77 +296,45 @@ class Board {
         var stockName = this.getStockName();
 
         if (stockName != "") {
-            $.ajax({
-                type: "GET",
-                url: "https://stockservice.azurewebsites.net/" + stockName,
-                //url: "https://query1.finance.yahoo.com/v8/finance/chart/msft?period1=0&period2=1580428800&interval=1d",
-                dataType: "text",
-                //dataType: "jsonp",
-                context: this,
-                success: function (data) {
-                    var prices = this.convertRawDataToList(data);
-                    this.startYear = Number(prices[0].dateTime.split("/")[2]);
-                    this.endYear = Number(prices[prices.length - 1].dateTime.split("/")[2]);
-                    this.data = prices;
+            if (this.stockCache[stockName]) {
+                const prices = this.stockCache[stockName];
+                this.data = prices;
+                this.startYear = Number(prices[0].dateTime.split("/")[2]);
+                this.endYear = Number(prices[prices.length - 1].dateTime.split("/")[2]);
+                this.updateStockChart(prices, stockName, this.startYear, this.endYear);
+                this.updateDateRange();
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "https://stockservice.azurewebsites.net/" + stockName,
+                    dataType: "text",
+                    context: this,
+                    success: function (data) {
+                        const prices = this.convertRawDataToList(data);
+                        this.data = prices;
+                        this.stockCache[stockName] = prices;
 
-                    this.updateStockChart(prices, stockName, this.startYear, this.endYear);
-                    this.updateDateRange();
-                },
-                error: function () {
-                    alert("cannot load data");
-                }
-            });
+                        this.startYear = Number(prices[0].dateTime.split("/")[2]);
+                        this.endYear = Number(prices[prices.length - 1].dateTime.split("/")[2]);
+                        this.updateStockChart(prices, stockName, this.startYear, this.endYear);
+                        this.updateDateRange();
+                    },
+                    error: function () {
+                        alert("cannot load data");
+                    }
+                });
+            }
         }
     }
 
     // example: 1436189400 => 3/13/1986
     convertEpochToDateTimeString(dt) {
         var date = new Date(dt * 1000);
-        var formattedDate = date.getUTCDate() + '/' + (date.getUTCMonth() + 1)+ '/' + date.getUTCFullYear();
+        var formattedDate = date.getUTCDate() + '/' + (date.getUTCMonth() + 1) + '/' + date.getUTCFullYear();
         return formattedDate;
     }
 
-    /*convertRawDataToList(data) {
-        data = JSON.parse(data);
-        // data.chart.result[0].timestamp
-        // data.chart.result[0].indicators.quote.close
-        // data.chart.result[0].indicators.quote.low
-        // data.chart.result[0].indicators.quote.high
-        // data.chart.result[0].indicators.quote.open
-        // data.chart.result[0].indicators.quote.volume
-        // data.chart.result[0].indicators.adjclose[0].adjclose
-
-        var prices = [];
-        var len = data.chart.result[0].timestamp.length;
-        if (len == data.chart.result[0].indicators.quote.close.length &&
-            len == data.chart.result[0].indicators.quote.low.length &&
-            len == data.chart.result[0].indicators.quote.high.length &&
-            len == data.chart.result[0].indicators.quote.open.length
-        ) { 
-            var res = data.chart.result[0];
-            var quote = res.indicators.quote;
-            for (var i = 0; i < len; i++) {
-                var dt = this.convertEpochToDateTimeString(res.timestamp[i]);
-                var openPrice = Number(quote.open[i]);
-                var highPrice = Number(quote.high[i]);
-                var lowPrice = Number(quote.low[i]);
-                var closePrice = Number(quote.close[i]);
-                prices.push(new Price(dt, openPrice, highPrice, lowPrice, closePrice));
-            }
-        }
-        return prices;
-    }*/
-
-    /*   
-        [object Object]: {Adj Close: "0.062549", Close: "0.097222", Date: "3/13/1986", High: "0.101563", Low: "0.088542"...}
-        Adj Close: "0.062549"
-        Close: "0.097222"
-        Date: "3/13/1986"
-        High: "0.101563"
-        Low: "0.088542"
-        Open: "0.088542"
-        Volume: "1031788800"
-    */
     convertRawDataToList(data) {
         data = JSON.parse(data);
         var headerLength = Object.keys(JSON.parse(data[0])).length;
@@ -486,49 +455,31 @@ class Board {
         }
     }
 
-    // https://query1.finance.yahoo.com/v8/finance/chart/msft?period1=0&period2=1580428800&interval=1d
-    // read data based on filePath, need ajax call
-    /*displayHistoricalDataAndStockChart(fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
-        $.ajax({
-            type: "GET",
-            //url: "https://stockservice.azurewebsites.net/" + selectedStock,
-            url: "https://query1.finance.yahoo.com/v8/finance/chart/msft?period1=0&period2=1580428800&interval=1d",
-            //dataType: "text",
-            //dataType: "jsonp",
-            context: this,
-            success: function (data) {
-                var processedData = this.convertRawDataToList(data);
-
-                // update stock chart
-                this.updateStockChart(processedData, selectedStock, startYear, endYear)
-
-                this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);
-            },
-            error: function () {
-                alert("cannot load data");
-            }
-        });
-    }*/
-
     // read data based on filePath, need ajax call
     displayHistoricalDataAndStockChart(fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
-        $.ajax({
-            type: "GET",
-            url: "https://stockservice.azurewebsites.net/" + selectedStock,
-            dataType: "text",
-            context: this,
-            success: function (data) {
-                var processedData = this.convertRawDataToList(data);
+        if (this.stockCache[selectedStock]) {
+            const processedData = this.stockCache[selectedStock];
+            this.updateStockChart(processedData, selectedStock, startYear, endYear)
+            this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);     
+        }
+        else {
+            $.ajax({
+                type: "GET",
+                url: "https://stockservice.azurewebsites.net/" + selectedStock,
+                dataType: "text",
+                context: this,
+                success: function (data) {
+                    var processedData = this.convertRawDataToList(data);
+                    // update stock chart
+                    this.updateStockChart(processedData, selectedStock, startYear, endYear)
 
-                // update stock chart
-                this.updateStockChart(processedData, selectedStock, startYear, endYear)
-
-                this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);
-            },
-            error: function () {
-                alert("cannot load data");
-            }
-        });
+                    this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);
+                },
+                error: function () {
+                    alert("cannot load data");
+                }
+            });
+        }
     }
 
     // data (this.data) is ready, just need to display it
