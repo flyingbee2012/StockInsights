@@ -297,9 +297,9 @@ class Board {
         if (stockName != "") {
             $.ajax({
                 type: "GET",
-                //url: "https://stockservice.azurewebsites.net/" + stockName,
-                url: "https://query1.finance.yahoo.com/v8/finance/chart/msft?period1=0&period2=1580428800&interval=1d",
-                //dataType: "text",
+                url: "https://stockservice.azurewebsites.net/" + stockName,
+                //url: "https://query1.finance.yahoo.com/v8/finance/chart/msft?period1=0&period2=1580428800&interval=1d",
+                dataType: "text",
                 //dataType: "jsonp",
                 context: this,
                 success: function (data) {
@@ -325,7 +325,7 @@ class Board {
         return formattedDate;
     }
 
-    convertRawDataToList(data) {
+    /*convertRawDataToList(data) {
         data = JSON.parse(data);
         // data.chart.result[0].timestamp
         // data.chart.result[0].indicators.quote.close
@@ -354,7 +354,7 @@ class Board {
             }
         }
         return prices;
-    }
+    }*/
 
     /*   
         [object Object]: {Adj Close: "0.062549", Close: "0.097222", Date: "3/13/1986", High: "0.101563", Low: "0.088542"...}
@@ -366,7 +366,7 @@ class Board {
         Open: "0.088542"
         Volume: "1031788800"
     */
-    convertRawDataToListOld(data) {
+    convertRawDataToList(data) {
         data = JSON.parse(data);
         var headerLength = Object.keys(JSON.parse(data[0])).length;
         var prices = [];
@@ -488,7 +488,7 @@ class Board {
 
     // https://query1.finance.yahoo.com/v8/finance/chart/msft?period1=0&period2=1580428800&interval=1d
     // read data based on filePath, need ajax call
-    displayHistoricalDataAndStockChart(fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
+    /*displayHistoricalDataAndStockChart(fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
         $.ajax({
             type: "GET",
             //url: "https://stockservice.azurewebsites.net/" + selectedStock,
@@ -508,10 +508,10 @@ class Board {
                 alert("cannot load data");
             }
         });
-    }
+    }*/
 
     // read data based on filePath, need ajax call
-    displayHistoricalDataAndStockChartOld(fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
+    displayHistoricalDataAndStockChart(fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
         $.ajax({
             type: "GET",
             url: "https://stockservice.azurewebsites.net/" + selectedStock,
