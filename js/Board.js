@@ -252,7 +252,7 @@ class Board {
     addSymbolToList(symbol) {
         $.ajax({
             type: "PUT",
-            url: "http://stockservice.azurewebsites.net/addstock?symbol=" + symbol,
+            url: "https://stockservice.azurewebsites.net/addstock?symbol=" + symbol,
             context: this,
             success: function (data) {
                 if (data == "success") {
@@ -273,7 +273,7 @@ class Board {
     removeSymbolFromList(symbol) {
         $.ajax({
             type: "PUT",
-            url: "http://stockservice.azurewebsites.net/deletestock?symbol=" + symbol,
+            url: "https://stockservice.azurewebsites.net/deletestock?symbol=" + symbol,
             context: this,
             success: function (data) {
                 if (data == "success") {
