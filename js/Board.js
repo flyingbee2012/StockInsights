@@ -99,6 +99,26 @@ class Board {
         this.$addSymbolModal.on('shown.bs.modal', () => {
             this.$symbolBox[0].value = "";
             this.$symbolBox[0].focus();
+
+
+            this.$symbolBox.typeahead({
+                source: function (query, result) {
+                    $.ajax({
+                        url: "https://stockservice.azurewebsites.net/getsymbols",
+                        method: "GET",
+                        //data:{query:query},
+                        dataType: "json",
+                        success: function (data) {
+                            result($.map(data, function (item) {
+                                return item;
+                            }));
+                        },
+                        error: function (data) {
+                            alert(data);
+                        },
+                    })
+                }
+            });
         });
 
         this.$addSymbol[0].onclick = () => {
