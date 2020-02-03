@@ -20,6 +20,8 @@
     <!-- bootstrap -->
     <link rel="stylesheet" href="lib/bootstrap-4.3.1-dist/css/bootstrap.min.css">
     <script src="lib/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="lib/font-awesome-4.7.0/css/font-awesome.min.css">
     <!-- apexcharts -->
     <script src="lib/apexcharts-bundle/e2e/apexcharts.e2e.js"></script>
     <link href="lib/apexcharts-bundle/assets/styles.css" rel="stylesheet" />
@@ -40,7 +42,12 @@
                 $("#compoundCheckBox"),
                 $("#strategySelect"),
                 $("#timeRangeInput"),
-                $("#slider-range")
+                $("#slider-range"),
+                $('#add_stock'),
+                $('#remove_stock'),
+                $('#addSymbolModal'),
+                $('#symbol'),
+                $('#add_button')
             );
             board.selectSummaryPanel($("#summary_content1"));
 
@@ -50,6 +57,31 @@
 <title>Stock Analysis</title>
 
 <body>
+    <!-- Modal -->
+    <div class="modal fade" id="addSymbolModal" style="margin-top:25%;margin-left:50%;width:200" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form>
+                        <table>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label for="usr">Symbol:</label>
+                                        <input id="symbol" type="text" class="form-control" style="width:80">
+                                    </div>
+                                </td>
+                                <td style="padding-left:5;">
+                                    <button id="add_button" type="button" class="btn btn-primary">Add</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="split left">
         <div id="history_canvas" style="color: white; margin-top: 10;">
             <center>
@@ -98,14 +130,31 @@
                             <table border="1">
                                 <tr>
                                     <td><select id="stockSelect" class="browser-default custom-select"
-                                            style="width:118;"></select></td>
+                                            style="width:118;"></select>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <button id="add_stock" type="button" class="btn btn-success btn-sm"
+                                                style="padding:2px 4px 2px 4px" data-type="plus" data-toggle="modal"
+                                                data-target="#addSymbolModal">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                        <div style="margin-top: 3;">
+                                            <button id="remove_stock" type="button" class="btn btn-danger btn-sm"
+                                                style="padding:2px 4px 2px 4px" data-type="minus">
+                                                <i class="fa fa-minus" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+
                                     <td>
                                         <label id="timeRangeInput" style="width:90px; font-weight:bold;">0000 -
                                             0000</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td style="padding-top: 15;" colspan="2">
+                                    <td style="padding-top: 15;" colspan="3">
                                         <div id="slider-range" style="width: 250;"></div>
                                     </td>
                                 </tr>

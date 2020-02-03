@@ -13,7 +13,12 @@ class Board {
         $compoundCheckBox,
         $strategySelect,
         $timeRangeInput,
-        $sliderRange
+        $sliderRange,
+        $addStock,
+        $removeStock,
+        $addSymbolModal,
+        $symbolBox,
+        $addSymbol,
     ) {
 
         this.strategyDescription = {
@@ -36,6 +41,11 @@ class Board {
         this.$strategySelect = $strategySelect;
         this.$timeRangeInput = $timeRangeInput;
         this.$sliderRange = $sliderRange;
+        this.$addStock = $addStock;
+        this.$removeStock = $removeStock;
+        this.$addSymbolModal = $addSymbolModal;
+        this.$symbolBox = $symbolBox;
+        this.$addSymbol = $addSymbol;
 
         this.$selectedSummary = null;
         this.summaryMapping = {};
@@ -78,6 +88,22 @@ class Board {
             this.updateAnalyzeButton();
         }
 
+        this.$removeStock[0].onclick = () => {
+            if (this.$stockSelect[0].selectedIndex != 0) {
+                this.removeSymbolFromList(this.getSelectedStockName());
+            }
+        }
+
+        this.$addSymbolModal.on('shown.bs.modal', () => {
+            this.$symbolBox[0].value = "";
+            this.$symbolBox[0].focus();
+        });
+
+        this.$addSymbol[0].onclick = () => {
+            var symbol = this.$symbolBox[0].value;
+            this.addSymbolToList(symbol);
+        }
+
         this.$sliderRange.slider();
     }
 
@@ -94,7 +120,6 @@ class Board {
         var total = years * workdaysPerYear;
         return Math.max(Math.ceil(total / capacity), 1);
     }
-
 
     processDataForStockChart(data, startYear, endYear) {
         var capacity = 1200;
@@ -223,16 +248,66 @@ class Board {
         this.$strategySelect.prop("title", title);
     }
 
+    // add symbol to the server
+    addSymbolToList(symbol) {
+        $.ajax({
+            type: "PUT",
+            url: "http://stockservice.azurewebsites.net/addstock?symbol=" + symbol,
+            context: this,
+            success: function (data) {
+                if (data == "success") {
+                    this.addSymbolToSelectBox(symbol);
+                    this.sortStockSelect();
+                }
+                else {
+                    alert("cannot add symbol");
+                }
+            },
+            error: function () {
+                alert("cannot load data");
+            }
+        });
+    }
+
+    // remove stock from the server
+    removeSymbolFromList(symbol) {
+        $.ajax({
+            type: "PUT",
+            url: "http://stockservice.azurewebsites.net/deletestock?symbol=" + symbol,
+            context: this,
+            success: function (data) {
+                if (data == "success") {
+                    this.$stockSelect[0].remove(this.$stockSelect[0].selectedIndex);
+                    this.reset();
+                }
+                else {
+                    alert("cannot delete symbol");
+                }
+            },
+            error: function () {
+                alert("cannot delete data");
+            }
+        });
+    }
+
+    addSymbolToSelectBox(symbol) {
+        var option = document.createElement("option");
+        option.text = symbol.toUpperCase();
+        this.$stockSelect[0].add(option);
+        this.$addSymbolModal.modal('hide')
+    }
+
     populateStocksSelect() {
         var option = document.createElement("option");
         option.text = "- stock -";
         this.$stockSelect[0].add(option);
         $.ajax({
             type: "GET",
-            url: "data/default_stocks.json",
+            url: "https://stockservice.azurewebsites.net/getdefaultlist",
             dataType: "json",
             context: this,
             success: function (data) {
+                data.sort();
                 for (var i = 0; i < data.length; i++) {
                     var option = document.createElement("option");
                     option.text = data[i];
@@ -243,6 +318,23 @@ class Board {
                 alert("cannot load data");
             }
         });
+    }
+
+    sortStockSelect() {
+        let stockList = [];
+        for (let i = 1; i < this.$stockSelect[0].options.length; i++) {
+            stockList.push(this.$stockSelect[0].options[i].text);
+        }
+        stockList.sort();
+        this.$stockSelect.empty();
+        var option = document.createElement("option");
+        option.text = "- stock -";
+        this.$stockSelect[0].add(option);
+        for (let i = 0; i < stockList.length; i++) {
+            var option = document.createElement("option");
+            option.text = stockList[i];
+            this.$stockSelect[0].add(option);
+        }
     }
 
     isInputValid() {
@@ -292,7 +384,7 @@ class Board {
             return;
         }
 
-        var stockName = this.getStockName();
+        var stockName = this.getSelectedStockName();
 
         if (stockName != "") {
             if (this.stockCache[stockName]) {
@@ -459,7 +551,7 @@ class Board {
         if (this.stockCache[selectedStock]) {
             const processedData = this.stockCache[selectedStock];
             this.updateStockChart(processedData, selectedStock, startYear, endYear)
-            this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);     
+            this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);
         }
         else {
             $.ajax({
@@ -486,7 +578,7 @@ class Board {
         this.applyStrategy(data, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, $summaryCanvas);
     }
 
-    getStockName() {
+    getSelectedStockName() {
         var selectedIndex = this.$stockSelect[0].selectedIndex;
         if (selectedIndex == 0) {
             return "";
