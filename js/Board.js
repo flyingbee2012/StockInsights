@@ -90,7 +90,9 @@ class Board {
 
         this.$removeStock[0].onclick = () => {
             if (this.$stockSelect[0].selectedIndex != 0) {
-                this.removeSymbolFromList(this.getSelectedStockName());
+                const selectedStock = this.getSelectedStockName();
+                this.removeSymbolFromList(selectedStock);
+                delete this.stockCache[selectedStock];
             }
         }
 
@@ -256,15 +258,18 @@ class Board {
             context: this,
             success: function (data) {
                 if (data == "success") {
+                    symbol = symbol.toUpperCase();
                     this.addSymbolToSelectBox(symbol);
-                    this.sortStockSelect();
+                    this.sortAndSelectStock(symbol);
+                    this.loadStockDataAndUpdateDateRangeAndStockChart();
+                    this.updateAnalyzeButton();
                 }
                 else {
                     alert("cannot add symbol");
                 }
             },
-            error: function () {
-                alert("cannot load data");
+            error: function (data) {
+                alert(data);
             }
         });
     }
@@ -284,15 +289,15 @@ class Board {
                     alert("cannot delete symbol");
                 }
             },
-            error: function () {
-                alert("cannot delete data");
+            error: function (data) {
+                alert(data);
             }
         });
     }
 
     addSymbolToSelectBox(symbol) {
         var option = document.createElement("option");
-        option.text = symbol.toUpperCase();
+        option.text = symbol;
         this.$stockSelect[0].add(option);
         this.$addSymbolModal.modal('hide')
     }
@@ -307,7 +312,6 @@ class Board {
             dataType: "json",
             context: this,
             success: function (data) {
-                data.sort();
                 for (var i = 0; i < data.length; i++) {
                     var option = document.createElement("option");
                     option.text = data[i];
@@ -320,7 +324,7 @@ class Board {
         });
     }
 
-    sortStockSelect() {
+    sortAndSelectStock(symbol) {
         let stockList = [];
         for (let i = 1; i < this.$stockSelect[0].options.length; i++) {
             stockList.push(this.$stockSelect[0].options[i].text);
@@ -335,6 +339,7 @@ class Board {
             option.text = stockList[i];
             this.$stockSelect[0].add(option);
         }
+        this.$stockSelect.val(symbol);
     }
 
     isInputValid() {
