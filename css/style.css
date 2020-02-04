@@ -120,7 +120,7 @@ hr {
 }
 
 /* Use a media query to add a break point at 800px: */
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1024px) {
   ._left,
   ._main,
   ._right {
