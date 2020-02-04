@@ -23,26 +23,26 @@ body {
 }
 
 .top {
-  height: 45%;
+  height: 430px;
   background-color: darkblue;
   color: white;
   overflow-y: auto;
 }
 
 .middle {
-  height: 25%;
+  height: 250px;
   overflow-y: auto;
 }
 
 .bottom {
-  height: 30%;
+  
   background-color: grey;
   overflow-y: auto;
 }
 
-.top table {
+/*.top table {
   color: white;
-}
+}*/
 
 .centered {
   text-align: center;
@@ -75,48 +75,42 @@ hr {
   margin-left: 0.25em;
 }
 
-.flex-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  background-color: DodgerBlue;
-}
 
-.flex-container > div {
-  background-color: #f1f1f1;
-  width: 100%;
-  margin: 10px;
-  text-align: center;
-  line-height: 75px;
-  font-size: 30px;
-}
 
 * {
   box-sizing: border-box;
 }
 
 ._left {
-  background-color: #2196f3;
+  background-color: darkblue;
   padding: 20px;
   float: left;
   width: 33.3%; /* The width is 20%, by default */
   height: 100%;
+  cursor: pointer;
+  border: 1px solid black;
 }
 
 ._main {
-  background-color: #f1f1f1;
+  background-color: plum;
+  /*background-color: darkblue;*/
   padding: 20px;
   float: left;
   width: 33.3%; /* The width is 60%, by default */
   height: 100%;
+  cursor: pointer;
+  border: 1px solid black;
 }
 
 ._right {
-  background-color: #4caf50;
+  /*background-color: darkblue;*/
+  background-color:green;
   padding: 20px;
   float: left;
   width: 33.3%; /* The width is 20%, by default */
   height: 100%;
+  cursor: pointer;
+  border: 1px solid black;
 }
 
 /* Use a media query to add a break point at 800px: */
@@ -125,6 +119,6 @@ hr {
   ._main,
   ._right {
     width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
-    height: 33.3%;
+    height: 430px;
   }
 }
