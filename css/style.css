@@ -20,24 +20,24 @@ body {
 .right {
   width: 75%;
   right: 0;
+  overflow-y: auto;
 }
 
 .top {
   height: 430px;
   background-color: darkblue;
   color: white;
-  overflow-y: auto;
+  /*overflow-y: auto;*/
 }
 
 .middle {
   height: 250px;
-  overflow-y: auto;
+  /*overflow-y: scroll;*/
 }
 
 .bottom {
-  
   background-color: grey;
-  overflow-y: auto;
+  /*overflow-y: auto;*/
 }
 
 /*.top table {
@@ -75,8 +75,6 @@ hr {
   margin-left: 0.25em;
 }
 
-
-
 * {
   box-sizing: border-box;
 }
@@ -104,7 +102,7 @@ hr {
 
 ._right {
   /*background-color: darkblue;*/
-  background-color:green;
+  background-color: green;
   padding: 20px;
   float: left;
   width: 33.3%; /* The width is 20%, by default */
