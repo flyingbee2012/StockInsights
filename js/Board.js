@@ -54,7 +54,10 @@ class Board {
         this.endYear = null;
 
         this.data = null;
+        this.symbols = [];
 
+
+        this.getAllSymbols();
         this.populateStocksSelect();
 
         this.$summary1[0].onclick = () => {
@@ -100,23 +103,9 @@ class Board {
             this.$symbolBox[0].value = "";
             this.$symbolBox[0].focus();
 
-
             this.$symbolBox.typeahead({
-                source: function (query, result) {
-                    $.ajax({
-                        url: "https://stockservice.azurewebsites.net/getsymbols",
-                        method: "GET",
-                        //data:{query:query},
-                        dataType: "json",
-                        success: function (data) {
-                            result($.map(data, function (item) {
-                                return item;
-                            }));
-                        },
-                        error: function (data) {
-                            alert(data);
-                        },
-                    })
+                source: (query, result) => {
+                    result(this.symbols);
                 }
             });
         });
@@ -127,6 +116,21 @@ class Board {
         }
 
         this.$sliderRange.slider();
+    }
+
+    getAllSymbols() {
+        $.ajax({
+            url: "https://stockservice.azurewebsites.net/getsymbols",
+            method: "GET",
+            dataType: "json",
+            context: this,
+            success: function (data) {
+                this.symbols = data;
+            },
+            error: function (data) {
+                alert(data);
+            },
+        })
     }
 
     // "6/1/2012" => "2012-6-1"
