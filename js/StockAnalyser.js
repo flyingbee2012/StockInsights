@@ -261,7 +261,7 @@ class StockAnalyser {
                 maxDays = trade.getNumOfTradeDays();
                 this.longestTrade = trade;
             }
-            i = trade.getEndIndex() + 1;
+            i = trade.getEndIndex() + 2;
         }
 
         this.outputSummaryData(

@@ -326,26 +326,40 @@ class Board {
         this.$addSymbolModal.modal('hide')
     }
 
+    GetDefaultSymbolList() {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "GET",
+                url: "https://stockservice.azurewebsites.net/getdefaultlist",
+                dataType: "json",
+                context: this,
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (data) {
+                    reject(data);
+                }
+            });
+        });
+    }
+
     populateStocksSelect() {
         var option = document.createElement("option");
         option.text = "- stock -";
         this.$stockSelect[0].add(option);
-        $.ajax({
-            type: "GET",
-            url: "https://stockservice.azurewebsites.net/getdefaultlist",
-            dataType: "json",
-            context: this,
-            success: function (data) {
+
+        this.GetDefaultSymbolList()
+            .then(data => {
                 for (var i = 0; i < data.length; i++) {
                     var option = document.createElement("option");
                     option.text = data[i];
                     this.$stockSelect[0].add(option);
                 }
-            },
-            error: function () {
-                alert("cannot load data");
-            }
-        });
+            })
+            .catch(error => {
+                console.log(error);
+                alert(JSON.stringify(error));
+            });
     }
 
     sortAndSelectStock(symbol) {
