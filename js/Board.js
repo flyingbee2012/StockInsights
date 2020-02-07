@@ -332,11 +332,18 @@ class Board {
                 type: "GET",
                 url: "https://stockservice.azurewebsites.net/getdefaultlist",
                 dataType: "json",
-                context: this,
+                tryCount : 0,
+                retryLimit : 3,
                 success: function (data) {
                     resolve(data);
                 },
                 error: function (data) {
+                    this.tryCount++;
+                    if (this.tryCount <= this.retryLimit) {
+                        console.log('failed, retrying');
+                        $.ajax(this);
+                        return;
+                    }             
                     reject(data);
                 }
             });
