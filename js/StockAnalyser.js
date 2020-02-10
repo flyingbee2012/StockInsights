@@ -58,8 +58,10 @@ class StockAnalyser {
                     highestPrice = prices[i].highPrice;
                     highestPriceDate = prices[i].dateTime;
                 }
-                if (highestPrice - prices[i].lowPrice > maxDrop) {
-                    maxDrop = highestPrice - prices[i].lowPrice;
+
+                const dropPct = ((highestPrice - prices[i].lowPrice) / highestPrice) * 100;
+                if (dropPct > maxDrop) {
+                    maxDrop = dropPct;
                     this.biggestDropFromPrice = highestPrice;
                     this.biggestDropFromPriceDate = highestPriceDate;
                     this.biggestDropEndPrice = prices[i].lowPrice;
