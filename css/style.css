@@ -71,7 +71,8 @@ body {
 }
 
 .right {
-  width: 75%;
+  width: 75%; 
+  /*width: calc(100% - 250px);*/
   right: 0;
   overflow-y: auto;
 }

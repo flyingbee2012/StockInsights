@@ -30,6 +30,23 @@
     <link href="lib/apexcharts-bundle/assets/styles.css" rel="stylesheet" />
 
     <script>
+        function myFunction() {
+            /*var w = window.outerWidth;
+            var h = window.outerHeight;
+            var txt = "Window size: width=" + w + ", height=" + h;
+            document.getElementById("demo").innerHTML = txt;*/
+
+            //var leftWidth = $('#left_panel').width();
+            if (window.outerWidth < 1024) {
+                $('#left_panel').hide();
+                $('#right_panel')[0].style.width = '100%';
+            }
+            else {
+                $('#left_panel').show();
+                $('#right_panel')[0].style.width = '75%';
+            }
+        }
+
         $(document).ready(function () {
             var board = new Board(
                 $('#loader'),
@@ -61,7 +78,7 @@
 </head>
 <title>Stock Analysis</title>
 
-<body>
+<body onresize="myFunction()">
     <!-- Modal -->
     <div class="modal fade" id="addSymbolModal" style="margin-top:25%;margin-left:50%;width:200" role="dialog">
         <div class="modal-dialog modal-sm">
@@ -93,7 +110,7 @@
 
     <div id="loader"></div>
     <div id="main_page">
-        <div class="split left">
+        <div id='left_panel' class="split left">
             <div id="history_canvas" style="color: white; margin-top: 10;">
                 <center>
                     <h4>Historical Transactions</h4>
@@ -102,7 +119,7 @@
                 <div id="history_content" style="margin-left: 20;"></div>
             </div>
         </div>
-        <div class="split right">
+        <div id='right_panel' class="split right">
             <div id="summary_canvas" class="centered top">
                 <!--<table id="summary_table" border="1" cellpadding="3"
                 style="width: 98%; height: 85%; margin-top:8;margin-left:auto;margin-right:auto;">
