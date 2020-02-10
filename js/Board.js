@@ -1,5 +1,7 @@
 class Board {
     constructor(
+        $loader,
+        $mainPage,
         $historyPanel,
         $summary1,
         $summary2,
@@ -27,6 +29,8 @@ class Board {
             "Long Term": "Purchase all from start time and sell all at end time"
         };
 
+        this.$loader = $loader;
+        this.$mainPage = $mainPage;
         this.$historyPanel = $historyPanel;
         this.$summary1 = $summary1;
         this.$summary2 = $summary2;
@@ -54,11 +58,10 @@ class Board {
         this.endYear = null;
 
         this.data = null;
-        this.symbols = [];
+        //this.symbols = [];
 
+        this.modalShownEventSet = false;
 
-        this.getAllSymbols();
-        this.populateStocksSelect();
 
         this.$summary1[0].onclick = () => {
             this.selectSummaryPanel(this.$summary1);
@@ -99,16 +102,30 @@ class Board {
             }
         }
 
-        this.$addSymbolModal.on('shown.bs.modal', () => {
-            this.$symbolBox[0].value = "";
-            this.$symbolBox[0].focus();
+        this.$addStock[0].onclick = () => {
+            if (this.modalShownEventSet) {
+                return;
+            }
+            this.getAllSymbols()
+                .then(data => {
+                    this.$addSymbolModal.on('shown.bs.modal', () => {
+                        this.$symbolBox[0].value = "";
+                        this.$symbolBox[0].focus();
 
-            this.$symbolBox.typeahead({
-                source: (query, result) => {
-                    result(this.symbols);
-                }
-            });
-        });
+                        this.$symbolBox.typeahead({
+                            source: (query, result) => {
+                                result(data);
+                            }
+                        });
+                    });
+
+                    this.modalShownEventSet = true;
+                })
+                .catch(error => {
+                    console.log(JSON.stringify(error));
+                    alert(JSON.stringify(error));
+                });
+        }
 
         this.$addSymbol[0].onclick = () => {
             var symbol = this.$symbolBox[0].value;
@@ -119,18 +136,20 @@ class Board {
     }
 
     getAllSymbols() {
-        $.ajax({
-            url: "https://stockservice.azurewebsites.net/getsymbols",
-            method: "GET",
-            dataType: "json",
-            context: this,
-            success: function (data) {
-                this.symbols = data;
-            },
-            error: function (data) {
-                alert(data);
-            },
-        })
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: "https://stockservice.azurewebsites.net/getsymbols",
+                method: "GET",
+                dataType: "json",
+                context: this,
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (data) {
+                    reject(data);
+                },
+            });
+        });
     }
 
     // "6/1/2012" => "2012-6-1"
@@ -326,14 +345,33 @@ class Board {
         this.$addSymbolModal.modal('hide')
     }
 
+    showPage() {
+        this.$loader[0].style.display = "none";
+        this.$mainPage[0].style.display = "block";
+    }
+
+    loadDataAndShowPage() {
+        this.GetDefaultSymbolList()
+            .then(data => {
+                this.showPage();
+                this.populateStocksSelect(data);
+                this.selectSummaryPanel(this.$summary1);
+            })
+            .catch(error => {
+                console.log(JSON.stringify(error));
+                alert(JSON.stringify(error));
+            });
+    }
+
     GetDefaultSymbolList() {
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "GET",
                 url: "https://stockservice.azurewebsites.net/getdefaultlist",
+                //url: "https://stockservice2.azurewebsites2.net/getsymbols",
                 dataType: "json",
-                tryCount : 0,
-                retryLimit : 3,
+                tryCount: 0,
+                retryLimit: 3,
                 success: function (data) {
                     resolve(data);
                 },
@@ -343,30 +381,23 @@ class Board {
                         console.log('failed, retrying');
                         $.ajax(this);
                         return;
-                    }             
+                    }
                     reject(data);
                 }
             });
         });
     }
 
-    populateStocksSelect() {
+    populateStocksSelect(data) {
         var option = document.createElement("option");
         option.text = "- stock -";
         this.$stockSelect[0].add(option);
 
-        this.GetDefaultSymbolList()
-            .then(data => {
-                for (var i = 0; i < data.length; i++) {
-                    var option = document.createElement("option");
-                    option.text = data[i];
-                    this.$stockSelect[0].add(option);
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                alert(JSON.stringify(error));
-            });
+        for (var i = 0; i < data.length; i++) {
+            var option = document.createElement("option");
+            option.text = data[i];
+            this.$stockSelect[0].add(option);
+        }
     }
 
     sortAndSelectStock(symbol) {

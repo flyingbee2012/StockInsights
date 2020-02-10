@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- local js files -->
     <script type="text/javascript" src="js/Board.js"></script>
     <script type="text/javascript" src="js/Strategy.js"></script>
@@ -31,6 +32,8 @@
     <script>
         $(document).ready(function () {
             var board = new Board(
+                $('#loader'),
+                $('#main_page'),
                 $("#history_content"),
                 $("#summary_content1"),
                 $("#summary_content2"),
@@ -51,7 +54,7 @@
                 $('#symbol'),
                 $('#add_button')
             );
-            board.selectSummaryPanel($("#summary_content1"));
+            board.loadDataAndShowPage();
 
         });
     </script>
@@ -88,18 +91,20 @@
         </div>
     </div>
 
-    <div class="split left">
-        <div id="history_canvas" style="color: white; margin-top: 10;">
-            <center>
-                <h4>Historical Transactions</h4>
-            </center>
-            <hr style="border: 1px solid white;">
-            <div id="history_content" style="margin-left: 20;"></div>
+    <div id="loader"></div>
+    <div id="main_page">
+        <div class="split left">
+            <div id="history_canvas" style="color: white; margin-top: 10;">
+                <center>
+                    <h4>Historical Transactions</h4>
+                </center>
+                <hr style="border: 1px solid white;">
+                <div id="history_content" style="margin-left: 20;"></div>
+            </div>
         </div>
-    </div>
-    <div class="split right">
-        <div id="summary_canvas" class="centered top">
-            <!--<table id="summary_table" border="1" cellpadding="3"
+        <div class="split right">
+            <div id="summary_canvas" class="centered top">
+                <!--<table id="summary_table" border="1" cellpadding="3"
                 style="width: 98%; height: 85%; margin-top:8;margin-left:auto;margin-right:auto;">
                 <tr>
                     <td style="width: 30%; height: 100%;">
@@ -113,102 +118,105 @@
                     </td>
                 </tr>
             </table>-->
-            <!--<div class="flex-container">
+                <!--<div class="flex-container">
                 <div>1</div>
                 <div>2</div>
                 <div>3</div>  
               </div>-->
 
-            <div id="summary_content1" class="_left"></div>
-            <div id="summary_content2" class="_main"></div>
-            <div id="summary_content3" class="_right"></div>
-        </div>
-        <div id="stock_chart" class="centered middle" style="padding-top:8;">
-            <div id="chart"></div>
-        </div>
-        <div id="control_panel" class="centered bottom">
-            <form>
-                <table border="1" cellpadding="5" style="margin-left: 50; margin-right: 50; margin-top: 5;">
-                    <tr>
-                        <td style="padding-left:15;">
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                                <input id="fundBox" value="30000" type="text" class="form-control" style="width: 100"
-                                    aria-label="Amount (to the nearest dollar)">
-                                <div class="input-group-append"><span class="input-group-text">.00</span></div>
-                            </div>
-                            <div style="margin-left: 5;">
-                                <input type="checkbox" id="compoundCheckBox" checked>&nbsp;Compounded
-                            </div>
-                        </td>
-                        <td style="padding-bottom: 10; padding-left: 15; padding-right: 15; ">
-                            <table border="1">
-                                <tr>
-                                    <td><select id="stockSelect" class="browser-default custom-select"
-                                            style="width:118;"></select>
-                                    </td>
-                                    <td>
-                                        <div>
-                                            <button id="add_stock" type="button" class="btn btn-success btn-sm"
-                                                style="padding:2px 4px 2px 4px" data-type="plus" data-toggle="modal"
-                                                data-target="#addSymbolModal">
-                                                <i class="fa fa-plus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                        <div style="margin-top: 3;">
-                                            <button id="remove_stock" type="button" class="btn btn-danger btn-sm"
-                                                style="padding:2px 4px 2px 4px" data-type="minus">
-                                                <i class="fa fa-minus" aria-hidden="true"></i>
-                                            </button>
-                                        </div>
-                                    </td>
+                <div id="summary_content1" class="_left"></div>
+                <div id="summary_content2" class="_main"></div>
+                <div id="summary_content3" class="_right"></div>
+            </div>
+            <div id="stock_chart" class="centered middle" style="padding-top:8;">
+                <div id="chart"></div>
+            </div>
+            <div id="control_panel" class="centered bottom">
+                <form>
+                    <table border="1" cellpadding="5" style="margin-left: 50; margin-right: 50; margin-top: 5;">
+                        <tr>
+                            <td style="padding-left:15;">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend"><span class="input-group-text">$</span></div>
+                                    <input id="fundBox" value="30000" type="text" class="form-control"
+                                        style="width: 100" aria-label="Amount (to the nearest dollar)">
+                                    <div class="input-group-append"><span class="input-group-text">.00</span></div>
+                                </div>
+                                <div style="margin-left: 5;">
+                                    <input type="checkbox" id="compoundCheckBox" checked>&nbsp;Compounded
+                                </div>
+                            </td>
+                            <td style="padding-bottom: 10; padding-left: 15; padding-right: 15; ">
+                                <table border="1">
+                                    <tr>
+                                        <td><select id="stockSelect" class="browser-default custom-select"
+                                                style="width:118;"></select>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <button id="add_stock" type="button" class="btn btn-success btn-sm"
+                                                    style="padding:2px 4px 2px 4px" data-type="plus" data-toggle="modal"
+                                                    data-target="#addSymbolModal">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                            <div style="margin-top: 3;">
+                                                <button id="remove_stock" type="button" class="btn btn-danger btn-sm"
+                                                    style="padding:2px 4px 2px 4px" data-type="minus">
+                                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </td>
 
-                                    <td>
-                                        <label id="timeRangeInput" style="width:90px; font-weight:bold;">0000 -
-                                            0000</label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-top: 15;" colspan="3">
-                                        <div id="slider-range" style="width: 250;"></div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td rowspan="2" style="padding-top: 5;">
-                            <select id="strategySelect" class="browser-default custom-select"
-                                style="width: 220; margin-bottom:5;">
-                                <option selected>-- select a strategy --</option>
-                                <option value="1">Averaging Down</option>
-                                <option value="2">Averaging Down Lazy</option>
-                                <option value="3">Long Term</option>
-                            </select>
-                            <textarea id="metricsBox" class="form-control" rows="3"></textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <select id="nextStrategySelect" class="browser-default custom-select" style="width: 200;"
-                                disabled>
-                                <option selected>---- how to make next investment ----</option>
-                                <option value="1">Close Price Next Day</option>
-                                <option value="2">Highest Price Same Day</option>
-                                <option value="3">Same Price Same Day</option>
-                                <option value="4">Next Peak Close Price</option>
-                            </select>
-                        </td>
-                        <td align="center">
-                            <button id="resetButton" type="button" class="btn btn-primary">Reset</button>
-                            <button id="analysisButton" type="button" class="btn btn-primary" disabled>Analyze</button>
-                        </td>
-                    </tr>
-                </table>
-            </form>
+                                        <td>
+                                            <label id="timeRangeInput" style="width:90px; font-weight:bold;">0000 -
+                                                0000</label>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-top: 15;" colspan="3">
+                                            <div id="slider-range" style="width: 250;"></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td rowspan="2" style="padding-top: 5;">
+                                <select id="strategySelect" class="browser-default custom-select"
+                                    style="width: 220; margin-bottom:5;">
+                                    <option selected>-- select a strategy --</option>
+                                    <option value="1">Averaging Down</option>
+                                    <option value="2">Averaging Down Lazy</option>
+                                    <option value="3">Long Term</option>
+                                </select>
+                                <textarea id="metricsBox" class="form-control" rows="3"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="nextStrategySelect" class="browser-default custom-select"
+                                    style="width: 200;" disabled>
+                                    <option selected>---- how to make next investment ----</option>
+                                    <option value="1">Close Price Next Day</option>
+                                    <option value="2">Highest Price Same Day</option>
+                                    <option value="3">Same Price Same Day</option>
+                                    <option value="4">Next Peak Close Price</option>
+                                </select>
+                            </td>
+                            <td align="center">
+                                <button id="resetButton" type="button" class="btn btn-primary">Reset</button>
+                                <button id="analysisButton" type="button" class="btn btn-primary"
+                                    disabled>Analyze</button>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
         </div>
-    </div>
-    <!--<div id="spinner" class="spinner-border" role="status" style="margin-left:50%;margin-top:22%;z-index:1;">
+        <!--<div id="spinner" class="spinner-border" role="status" style="margin-left:50%;margin-top:22%;z-index:1;">
         <span class="sr-only">Loading...</span>
     </div>-->
+
+    </div>
 </body>
 
 </html>
