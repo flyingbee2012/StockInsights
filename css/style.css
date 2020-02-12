@@ -133,10 +133,34 @@ hr {
   box-sizing: border-box;
 }
 
+.summary {
+    float: left;
+    width: 25%; /* The width is 20%, by default */
+    height: 100%;
+    cursor: pointer;
+    border: 1px solid black;
+}
+
+.s1 {
+    background-color: darkblue;
+}
+
+.s2 {
+    background-color: plum;
+}
+
+.s3 {
+    background-color: green;
+}
+
+.s4 {
+    background-color: purple;
+}
+
 ._left {
   background-color: darkblue;
   float: left;
-  width: 33.3%; /* The width is 20%, by default */
+  width: 25%; /* The width is 20%, by default */
   height: 100%;
   cursor: pointer;
   border: 1px solid black;
@@ -146,7 +170,7 @@ hr {
   background-color: plum;
   /*background-color: darkblue;*/
   float: left;
-  width: 33.3%; /* The width is 60%, by default */
+  width: 25%; /* The width is 60%, by default */
   height: 100%;
   cursor: pointer;
   border: 1px solid black;
@@ -156,7 +180,7 @@ hr {
   /*background-color: darkblue;*/
   background-color: green;
   float: left;
-  width: 33.3%; /* The width is 20%, by default */
+  width: 25%; /* The width is 20%, by default */
   height: 100%;
   cursor: pointer;
   border: 1px solid black;
