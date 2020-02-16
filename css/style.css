@@ -1,6 +1,7 @@
 body {
   font-family: Arial;
   color: white;
+  line-height: 1.45;
 }
 
 #loader {
@@ -63,14 +64,14 @@ body {
 }
 
 .left {
-  width: 295px;
+  width: 290px;
   left: 0;
   background-color: #111;
 }
 
 .right {
   /*width: 80%; */
-  width: calc(100% - 295px);
+  width: calc(100% - 290px);
   right: 0;
   overflow-y: auto;
 }
