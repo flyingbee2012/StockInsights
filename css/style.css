@@ -32,7 +32,7 @@ body {
 
 #main_page {
   display: none;
-  text-align: center;
+  /*text-align: center;*/
 }
 
 /* Add animation to "page content" */
@@ -63,20 +63,20 @@ body {
 }
 
 .left {
-  width: 250px;
+  width: 295px;
   left: 0;
   background-color: #111;
 }
 
 .right {
   /*width: 80%; */
-  width: calc(100% - 250px);
+  width: calc(100% - 295px);
   right: 0;
   overflow-y: auto;
 }
 
 .top {
-  height: 385px;
+  height: 400px;
   background-color: darkblue;
   color: white;
   /*overflow-y: auto;*/
@@ -137,6 +137,7 @@ hr {
     height: 100%;
     cursor: pointer;
     border: 1px solid black;
+    padding-left: 5px;
 }
 
 .s1 {

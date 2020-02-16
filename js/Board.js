@@ -6,6 +6,7 @@ class Board {
         $summary1,
         $summary2,
         $summary3,
+        $summary4,
         $resetButton,
         $analysisButton,
         $stockChart,
@@ -35,6 +36,7 @@ class Board {
         this.$summary1 = $summary1;
         this.$summary2 = $summary2;
         this.$summary3 = $summary3;
+        this.$summary4 = $summary4;
         this.$resetButton = $resetButton;
         this.$analysisButton = $analysisButton;
         this.$stockChart = $stockChart;
@@ -71,6 +73,9 @@ class Board {
         };
         this.$summary3[0].onclick = () => {
             this.selectSummaryPanel(this.$summary3);
+        };
+        this.$summary4[0].onclick = () => {
+            this.selectSummaryPanel(this.$summary4);
         };
         this.$resetButton[0].onclick = () => {
             this.reset();
@@ -538,6 +543,9 @@ class Board {
             }
             if ($summary[0].id != this.$summary3[0].id) {
                 this.$summary3.css('border', 'none')
+            }
+            if ($summary[0].id != this.$summary4[0].id) {
+                this.$summary4.css('border', 'none')
             }
 
             // update history panel and stock chart
