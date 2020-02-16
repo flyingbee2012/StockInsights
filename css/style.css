@@ -64,9 +64,10 @@ body {
 }
 
 .left {
-  width: 290px;
+  width: 280px;
   left: 0;
   background-color: #111;
+  font-size: small;
 }
 
 .right {
@@ -77,14 +78,14 @@ body {
 }
 
 .top {
-  height: 400px;
+  height: 315px;
   background-color: darkblue;
   color: white;
   /*overflow-y: auto;*/
 }
 
 .middle {
-  height: 250px;
+  height: 245px;
   /*overflow-y: scroll;*/
 }
 
@@ -139,6 +140,7 @@ hr {
     cursor: pointer;
     border: 1px solid black;
     padding-left: 5px;
+    font-size: small;
 }
 
 .s1 {
