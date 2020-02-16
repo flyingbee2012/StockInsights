@@ -1,6 +1,7 @@
 body {
   font-family: Arial;
   color: white;
+  line-height: 1.45;
 }
 
 #loader {
@@ -63,27 +64,28 @@ body {
 }
 
 .left {
-  width: 295px;
+  width: 280px;
   left: 0;
   background-color: #111;
+  font-size: small;
 }
 
 .right {
   /*width: 80%; */
-  width: calc(100% - 295px);
+  width: calc(100% - 290px);
   right: 0;
   overflow-y: auto;
 }
 
 .top {
-  height: 400px;
+  height: 315px;
   background-color: darkblue;
   color: white;
   /*overflow-y: auto;*/
 }
 
 .middle {
-  height: 250px;
+  height: 245px;
   /*overflow-y: scroll;*/
 }
 
@@ -138,6 +140,7 @@ hr {
     cursor: pointer;
     border: 1px solid black;
     padding-left: 5px;
+    font-size: small;
 }
 
 .s1 {
