@@ -190,9 +190,10 @@ hr {
 
 /* Use a media query to add a break point at 800px: */
 @media screen and (max-width: 1024px) {
-  ._left,
+  /*._left,
   ._main,
-  ._right {
+  ._right*/ 
+  .s1, .s2, .s3, .s4, .bottom {
     width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
     height: 400px;
   }
