@@ -373,7 +373,6 @@ class Board {
             $.ajax({
                 type: "GET",
                 url: "https://stockservice.azurewebsites.net/getdefaultlist",
-                //url: "https://stockservice2.azurewebsites2.net/getsymbols",
                 dataType: "json",
                 tryCount: 0,
                 retryLimit: 3,
@@ -546,9 +545,8 @@ class Board {
             }
             if ($summary[0].id != this.$summary4[0].id) {
                 this.$summary4.css('border', 'none')
-            }
+            }   
 
-            // update history panel and stock chart
             this.clearHistoryPanel();
             this.clearStockChart();
             var summaryId = $summary[0].id;
@@ -562,9 +560,34 @@ class Board {
                 var startYear = summaryObj.startYear;
                 var endYear = summaryObj.endYear;
 
+                // update historial data and stock chart
                 this.displayHistoricalDataAndStockChart(fund, metrics, startYear, endYear, compound, strategyType, selectedStock, this.$historyPanel);
+                // update control panel
+                this.updateControlPanel(summaryObj);
+            } 
+        }
+    }
+
+    updateStraegySelectBox(strategyText) {
+        for (let i = 0; i < this.$strategySelect[0].options.length; i++) {
+            if (this.$strategySelect[0].options[i].text == strategyText) {
+                this.$strategySelect.val(i.toString());
+                break;
             }
         }
+    }
+
+    updateControlPanel(controlData) {
+        this.$fundBox.val(controlData["fund"]);
+        this.$stockSelect.val(controlData["selectedStock"]);
+        this.updateStraegySelectBox(controlData["strategyType"]);
+        this.startYear = controlData["startYear"];
+        this.endYear = controlData["endYear"];
+        this.updateDateRange();
+        this.$compoundCheckBox.prop("disabled", controlData["strategyType"] == "Long Term");
+        this.$compoundCheckBox[0].checked = controlData["compound"];
+        this.$metricsBox.prop("disabled", controlData["strategyType"] == "Long Term");
+        this.$metricsBox.val(controlData["metrics"]);
     }
 
     clearSummaryPanel($panel) {
@@ -640,7 +663,7 @@ class Board {
     displayHistoricalDataAndStockChart(fund, metrics, startYear, endYear, compound, selectedStrategy, selectedStock, $historyCanvas) {
         if (this.stockCache[selectedStock]) {
             const processedData = this.stockCache[selectedStock];
-            this.updateStockChart(processedData, selectedStock, startYear, endYear)
+            this.updateStockChart(processedData, selectedStock, startYear, endYear);
             this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);
         }
         else {
@@ -652,8 +675,8 @@ class Board {
                 success: function (data) {
                     var processedData = this.convertRawDataToList(data);
                     // update stock chart
-                    this.updateStockChart(processedData, selectedStock, startYear, endYear)
-
+                    this.updateStockChart(processedData, selectedStock, startYear, endYear);
+                    // update historical data
                     this.applyStrategy(processedData, startYear, endYear, fund, compound, metrics, selectedStock, selectedStrategy, $historyCanvas, null);
                 },
                 error: function () {
