@@ -704,36 +704,16 @@ class Board {
     $historyCanvas,
     $summaryCanvas,
   ) {
-    var strategyArr = metrics.split(",");
-    var strategyInput = [];
     var stockAnalyser = new StockAnalyser(
       fund,
       selectedStock,
-      selectedStrategy,
       null, // $historyCanvas - commented out as history panel removed
       $summaryCanvas,
     );
     stockAnalyser.loadAndProcessData(stockData, startYear, endYear);
 
-    for (var i of strategyArr) {
-      i = i.trim();
-      strategyInput.push(Number(i));
-    }
-
-    var strategy = null;
-    if (selectedStrategy === "Averaging Down") {
-      strategy = new Strategy(strategyInput);
-      stockAnalyser.loadStrategy(strategy);
-      stockAnalyser.applyStrategyContinuously(compound);
-    } else if (selectedStrategy === "Averaging Down Lazy") {
-      strategy = new LazyStrategy(strategyInput);
-      stockAnalyser.loadStrategy(strategy);
-      stockAnalyser.applyStrategyContinuously(compound);
-    }
-    // long term strategy
-    else if (selectedStrategy === "Long Term") {
-      stockAnalyser.applyLongTermStrategy();
-    }
+    // Only Long Term strategy is supported now
+    stockAnalyser.applyLongTermStrategy();
   }
 
   // read data based on filePath, need ajax call

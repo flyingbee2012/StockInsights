@@ -1,15 +1,11 @@
 class StockAnalyser {
-  constructor(invest, stockInfo, strategyType, $historyCanvas, $summaryCanvas) {
+  constructor(invest, stockInfo, $historyCanvas, $summaryCanvas) {
     this.baseFund = invest;
     this.investment = invest;
     this.stockInfo = stockInfo;
     this.startYear = null;
     this.endYear = null;
-    this.strategyType = strategyType;
-    this.longestTrade = null;
-    this.strategy = null;
     this.prices = [];
-    this.peaks = [];
 
     // Max Drop tracking
     this.biggestDropFromPrice = 0.0;
@@ -29,25 +25,6 @@ class StockAnalyser {
     this.$historyCanvas = $historyCanvas;
     this.$summaryCanvas = $summaryCanvas;
   }
-
-  loadStrategy(_strategy) {
-    this.strategy = _strategy;
-  }
-
-  /*
-    outputData() {
-        for (price of this.prices) {
-            cout << price.dateTime << "\t\t" << price.openPrice << "\t\t" << price.highPrice << "\t\t" << price.lowPrice << "\t\t" << price.closePrice << endl;
-        }
-        cout << endl;
-    }*/
-
-  /*void outputPeaks() {
-        for (int i : peaks) {
-            cout << prices[i].dateTime << "\t\t" << prices[i].closePrice << endl;
-        }
-        cout << endl;
-    }*/
 
   getYear(dateTimeString) {
     return Number(dateTimeString.split("/")[2]);
@@ -211,147 +188,6 @@ class StockAnalyser {
     }
   }
 
-  applyStrategyFromPrice(index) {
-    var trade = new Trade(this.prices.length - 1);
-    var baseAmount = this.strategy.getBasePurchaseAmount(
-      this.investment,
-      this.prices[index].closePrice,
-    );
-    var times = 1;
-
-    var amount = baseAmount * times;
-
-    var lowerBound = -1.0;
-    var upperBound = Number.MAX_VALUE;
-
-    trade.purchase(
-      amount,
-      this.prices[index].closePrice,
-      this.prices[index].dateTime,
-      index,
-    );
-
-    if (this.strategy.hasMore()) {
-      lowerBound =
-        this.prices[index].closePrice *
-        (1.0 - this.strategy.getCurrentDropPct());
-      upperBound =
-        this.prices[index].closePrice *
-        (1.0 + this.strategy.getCurrentSalePct());
-      times = this.strategy.getCurrentPurchaseTimes();
-      amount = baseAmount * times;
-      this.strategy.moveToNext();
-    }
-
-    for (var i = index + 1; i < this.prices.length; i++) {
-      var lowestPrice = this.prices[i].lowPrice;
-      var highestPrice = this.prices[i].highPrice;
-
-      if (lowestPrice <= lowerBound && highestPrice >= upperBound) {
-        console.log("large diff: " + this.prices[i].dateTime + "\n");
-        /*var lowFirst = (Math.random() >= 0.5);
-                if (lowFirst) {
-                    highestPrice = -1.0;
-                }
-                else {
-                    lowestPrice = Number.MAX_VALUE;
-                }*/
-      }
-
-      if (lowestPrice <= lowerBound) {
-        trade.purchase(amount, lowerBound, this.prices[i].dateTime, i);
-        if (this.strategy.hasMore()) {
-          lowerBound =
-            trade.getCostBasis() * (1.0 - this.strategy.getCurrentDropPct());
-          upperBound =
-            trade.getCostBasis() * (1.0 + this.strategy.getCurrentSalePct());
-          times = this.strategy.getCurrentPurchaseTimes();
-          amount = baseAmount * times;
-          this.strategy.moveToNext();
-        } else {
-          lowerBound = -1.0;
-        }
-      }
-      // earned profit and stop
-      else if (highestPrice >= upperBound) {
-        trade.sellAll(upperBound, this.prices[i].dateTime, i);
-        this.strategy.reset();
-        return trade;
-      }
-    }
-
-    this.strategy.reset();
-    return trade;
-  }
-
-  getNextPeak(pks, target) {
-    var start = 0,
-      end = pks.length - 1;
-    while (start + 1 < end) {
-      var mid = start + (end - start) / 2;
-      if (pks[mid] > target) {
-        end = mid;
-      } else {
-        start = mid;
-      }
-    }
-    if (pks[end] > target) {
-      return end;
-    }
-    return Number.MAX_SAFE_INTEGER;
-  }
-
-  // apply strategy on each peak
-  /*void applyStrategyOnPeaks() {
-        int maxDays = -1;
-        Trade* trade = NULL;
-        float totoalProfit = 0.0f;
-        for (int peakIndex : peaks) {
-            trade = applyStrategyFromPrice(peakIndex);
-            totoalProfit += trade->getProfit();
-            trade->output();
-            if (trade->getNumOfTradeDays() > maxDays) {
-                maxDays = trade->getNumOfTradeDays();
-                longestTrade = trade;
-            }
-        }
-        cout << "************************** Longest Trade ***************************" << endl << endl;
-        longestTrade->output();
-        cout << "********************************************************************" << endl;
-        cout << "total profit (with overlap): " << totoalProfit << endl;
-    }*/
-
-  /*void applyStrategyOnPeaksContinuously() {
-        int maxDays = -1;
-        Trade* trade = NULL;
-        float totoalProfit = 0.0f;
-        float totoalDays = 0.0f;
-        unsigned int i = 0;
-        float count = 0.0f;
-        while (i < peaks.size()) {
-            int peakIndex = peaks[i];
-            trade = applyStrategyFromPrice(peakIndex);
-            totoalProfit += trade->getProfit();
-            totoalDays += trade->getNumOfTradeDays();
-            count++;
-            trade->output();
-            if (trade->getNumOfTradeDays() > maxDays) {
-                maxDays = trade->getNumOfTradeDays();
-                longestTrade = trade;
-            }
-            i = getNextPeak(peaks, trade->getEndIndex());
-        }
- 
-        if (longestTrade != NULL) {
-            cout << "************************** Longest Trade ***************************" << endl << endl;
-            longestTrade->output();
-            cout << "********************************************************************" << endl;
-        }
- 
-        cout << "total profit: " << totoalProfit << endl;
-        cout << "average day to make profit: " << totoalDays / count << endl;
-    }*/
-
   applyLongTermStrategy() {
     var trade = new Trade(this.prices.length - 1);
     var startPrice = this.prices[0].closePrice;
@@ -366,52 +202,6 @@ class StockAnalyser {
     if (this.$historyCanvas) {
       trade.output(this.$historyCanvas);
       this.$historyCanvas.append("<hr>");
-    }
-
-    this.outputSummaryData(
-      this.$summaryCanvas,
-      this.stockInfo,
-      this.startYear,
-      this.endYear,
-      this.biggestDropFromPrice,
-      this.biggestDropFromPriceDate,
-      this.biggestDropEndPrice,
-      this.biggestDropEndPriceDate,
-      this.biggestDropDuration,
-      this.longestDropDuration,
-      this.longestDropStartPrice,
-      this.longestDropStartDate,
-      this.longestDropEndPrice,
-      this.longestDropRecoveryDate || "Never recovered",
-    );
-  }
-
-  // only applies for 2 strategies
-  applyStrategyContinuously(withCompound) {
-    if (
-      this.strategyType != "Averaging Down Lazy" &&
-      this.strategyType != "Averaging Down"
-    ) {
-      return;
-    }
-
-    var maxDays = -1;
-    var i = 0;
-
-    while (i < this.prices.length) {
-      var trade =
-        this.strategyType === "Averaging Down"
-          ? this.applyStrategyFromPrice(i)
-          : this.applyLazyStrategyFromPrice(i);
-      if (this.$historyCanvas) {
-        trade.output(this.$historyCanvas);
-        this.$historyCanvas.append("<hr>");
-      }
-      if (trade.getNumOfTradeDays() > maxDays) {
-        maxDays = trade.getNumOfTradeDays();
-        this.longestTrade = trade;
-      }
-      i = trade.getEndIndex() + 2;
     }
 
     this.outputSummaryData(
