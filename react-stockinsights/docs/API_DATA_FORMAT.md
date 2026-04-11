@@ -137,7 +137,7 @@ When modifying this format:
 
 **Last Updated:** April 11, 2026  
 **Related Files:**
-- `src/services/ApiService.ts` - Main parser implementation
+- `src/utils/ApiService.ts` - Main parser implementation
 - `src/types/index.ts` - Type definitions
 - `src/data/mockApiData.json` - Reference mock data
 - `README.md` - User-facing documentation

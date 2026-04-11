@@ -1,6 +1,6 @@
 import React from "react";
 import { SummaryData } from "../types";
-import { getDropPct, formatCurrency } from "../services/StockAnalyser";
+import { getDropPct, formatCurrency } from "../utils/StockAnalyser";
 import styles from "./SummaryPanel.module.scss";
 
 interface SummaryPanelProps {

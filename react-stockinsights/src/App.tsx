@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Price, SummaryData, AnalysisRequest } from "./types";
-import { analyzeStock } from "./services/StockAnalyser";
-import { ApiService } from "./services/ApiService";
+import { analyzeStock } from "./utils/StockAnalyser";
+import { ApiService } from "./utils/ApiService";
 import StockChart from "./components/StockChart";
 import ControlPanel from "./components/ControlPanel";
 import SummaryPanel from "./components/SummaryPanel";

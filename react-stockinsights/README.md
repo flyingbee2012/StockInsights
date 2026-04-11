@@ -28,7 +28,7 @@ src/
 │   ├── SummaryPanel.tsx # Analysis results display
 │   ├── ControlPanel.tsx # User controls
 │   └── AddStockModal.tsx# Stock symbol picker
-├── services/            # Business logic
+├── utils/               # Utility functions
 │   ├── StockAnalyser.ts # Drop analysis calculations
 │   └── ApiService.ts    # API communication
 ├── types/               # TypeScript interfaces
@@ -65,7 +65,7 @@ src/
 The application expects a backend API running on `localhost:3000` with the following endpoints:
 
 - `GET /getdefaultlist` - Returns default stock symbols
-- `GET /getsymbols` - Returns all available stock symbols  
+- `GET /getsymbols` - Returns all available stock symbols
 - `GET /:symbol` - Returns historical price data for a symbol
 - `PUT /addstock?symbol=:symbol` - Adds a new stock symbol
 - `PUT /deletestock?symbol=:symbol` - Removes a stock symbol
@@ -87,6 +87,7 @@ The `GET /:symbol` endpoint must return data in this exact format:
 ```
 
 **Format Requirements:**
+
 - **Array of JSON Strings**: Each array element is a stringified JSON object
 - **All Data Elements**: Every element contains actual price data (no header element)
 - **Data Elements**: All elements should have consistent field structure
@@ -96,9 +97,10 @@ The `GET /:symbol` endpoint must return data in this exact format:
 - **Volume**: Integer representing trading volume
 
 **Critical Notes:**
+
 - The parser expects ALL data objects to have the same number of fields for consistency
 - Missing fields will cause the entire data point to be skipped
-- Date strings must be parseable by JavaScript's Date constructor  
+- Date strings must be parseable by JavaScript's Date constructor
 - This format is parsed by `ApiService.convertRawDataToList()` method
 
 ⚠️ **For complete API documentation and format specifications, see [docs/API_DATA_FORMAT.md](docs/API_DATA_FORMAT.md)**

@@ -42,7 +42,7 @@ c:\Users\biwu\githome\StockInsights\react-stockinsights\
 | Original File         | React Component                | Description                |
 | --------------------- | ------------------------------ | -------------------------- |
 | `js/Board.js`         | `App.tsx`                      | Main application logic     |
-| `js/StockAnalyser.js` | `services/StockAnalyser.ts`    | Drop analysis calculations |
+| `js/StockAnalyser.js` | `utils/StockAnalyser.ts`    | Drop analysis calculations |
 | HTML template         | `components/SummaryPanel.tsx`  | Analysis results display   |
 | jQuery chart          | `components/StockChart.tsx`    | ApexCharts integration     |
 | Form controls         | `components/ControlPanel.tsx`  | User interface controls    |

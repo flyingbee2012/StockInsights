@@ -5,7 +5,7 @@
 ### Files Created: 15
 
 - **React Components**: 4
-- **TypeScript Services**: 2
+- **TypeScript Utils**: 2
 - **Type Definitions**: 1
 - **Configuration Files**: 4
 - **Documentation**: 3
@@ -21,7 +21,7 @@
 ### Core Logic Conversion
 
 ```
-js/StockAnalyser.js (234 lines) → services/StockAnalyser.ts (187 lines)
+js/StockAnalyser.js (234 lines) → utils/StockAnalyser.ts (187 lines)
 js/Board.js (700+ lines) → App.tsx (120 lines) + Components (300+ lines)
 ```
 
