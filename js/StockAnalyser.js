@@ -43,10 +43,6 @@ class StockAnalyser {
     this.startYear = startYear;
     this.endYear = endYear;
 
-    var maxDrop = Number.MIN_SAFE_INTEGER;
-    var highestPrice = Number.MIN_SAFE_INTEGER;
-    var highestPriceDate = null;
-
     // Process all prices to find the data range first
     var validPrices = [];
     for (var i = 0; i < prices.length; i++) {
@@ -56,6 +52,35 @@ class StockAnalyser {
       }
     }
     this.prices = validPrices;
+
+    // Calculate Max Drop
+    this.findMaxDrop();
+    // Calculate Longest Drop using the user's algorithm
+    this.findLongestDrop();
+
+    // Display the analysis results
+    this.outputSummaryData(
+      this.$summaryCanvas,
+      this.stockInfo,
+      this.startYear,
+      this.endYear,
+      this.biggestDropFromPrice,
+      this.biggestDropFromPriceDate,
+      this.biggestDropEndPrice,
+      this.biggestDropEndPriceDate,
+      this.biggestDropDuration,
+      this.longestDropDuration,
+      this.longestDropStartPrice,
+      this.longestDropStartDate,
+      this.longestDropEndPrice,
+      this.longestDropRecoveryDate || "Never recovered",
+    );
+  }
+
+  findMaxDrop() {
+    var maxDrop = Number.MIN_SAFE_INTEGER;
+    var highestPrice = Number.MIN_SAFE_INTEGER;
+    var highestPriceDate = null;
 
     // Calculate Max Drop (existing logic)
     for (var i = 0; i < this.prices.length; i++) {
@@ -80,27 +105,6 @@ class StockAnalyser {
         );
       }
     }
-
-    // Calculate Longest Drop using the user's algorithm
-    this.findLongestDrop();
-
-    // Display the analysis results
-    this.outputSummaryData(
-      this.$summaryCanvas,
-      this.stockInfo,
-      this.startYear,
-      this.endYear,
-      this.biggestDropFromPrice,
-      this.biggestDropFromPriceDate,
-      this.biggestDropEndPrice,
-      this.biggestDropEndPriceDate,
-      this.biggestDropDuration,
-      this.longestDropDuration,
-      this.longestDropStartPrice,
-      this.longestDropStartDate,
-      this.longestDropEndPrice,
-      this.longestDropRecoveryDate || "Never recovered",
-    );
   }
 
   // Modified to follow Max Drop approach: use highPrice for peaks, lowPrice for valleys
@@ -260,71 +264,5 @@ class StockAnalyser {
         $canvas.append("No significant drops found in this period.");
       }
     }
-  }
-
-  // [LB, #, LB, #, ....., UB]
-  applyLazyStrategyFromPrice(index) {
-    var trade = new Trade(this.prices.length - 1);
-    var baseAmount = this.strategy.getBasePurchaseAmount(
-      this.investment,
-      this.prices[index].closePrice,
-    );
-    var times = 1;
-
-    var amount = baseAmount * times;
-    var peakValue = this.prices[index].closePrice;
-    var lowerBound = -1.0;
-    var upperBound = Number.MAX_VALUE;
-    var dropPct = 0;
-
-    trade.purchase(
-      amount,
-      this.prices[index].closePrice,
-      this.prices[index].dateTime,
-      index,
-    );
-
-    if (this.strategy.hasMore()) {
-      dropPct = this.strategy.getCurrentDropPct();
-      lowerBound = this.prices[index].closePrice * (1.0 - dropPct);
-      times = this.strategy.getCurrentPurchaseTimes();
-      amount = baseAmount * times;
-      this.strategy.moveToNext();
-    }
-
-    for (var i = index + 1; i < this.prices.length; i++) {
-      var lowestPrice = this.prices[i].lowPrice;
-      var highestPrice = this.prices[i].highPrice;
-
-      if (lowestPrice <= lowerBound) {
-        trade.purchase(amount, lowerBound, this.prices[i].dateTime, i);
-        if (this.strategy.hasMore()) {
-          dropPct = this.strategy.getCurrentDropPct();
-          times = this.strategy.getCurrentPurchaseTimes();
-          amount = baseAmount * times;
-          this.strategy.moveToNext();
-        } else {
-          lowerBound = -1.0; // will make it stop from purchasing more when price drops lower next time
-          upperBound =
-            trade.getCostBasis() * (1.0 + this.strategy.getSalePct()); // will make it sell all stocks when price gets higher
-        }
-      }
-      // earned profit and stop
-      else if (highestPrice >= upperBound) {
-        trade.sellAll(upperBound, this.prices[i].dateTime, i);
-        this.strategy.reset();
-        return trade;
-      }
-
-      peakValue = Math.max(peakValue, highestPrice);
-      lowerBound =
-        lowerBound == -1.0 ? lowerBound : peakValue * (1.0 - dropPct);
-    }
-
-    // if the price never drops below the threshold, sell all stocks at the current price at the end
-    var k = this.prices.length - 1;
-    trade.sellAll(this.prices[k].closePrice, this.prices[k].dateTime, k);
-    this.strategy.reset();
-    return trade;
   }
 }
