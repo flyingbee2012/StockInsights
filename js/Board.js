@@ -100,9 +100,6 @@ class Board {
     this.$fundBox[0].onchange = () => {
       this.updateAnalyzeButton();
     };
-    this.$metricsBox[0].onchange = () => {
-      this.updateAnalyzeButton();
-    };
 
     this.$removeStock[0].onclick = () => {
       if (this.$stockSelect[0].selectedIndex != 0) {
@@ -441,22 +438,8 @@ class Board {
   isInputValid() {
     var fund = Number(this.$fundBox[0].value);
     var selectedStockIndex = this.$stockSelect[0].selectedIndex;
-    // Strategy select functionality commented out - returning simplified validation
-    /*
-    var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
-    var selectedStrategy =
-      this.$strategySelect[0].options[selectedStrategyIndex].text;
-    var metrics = this.$metricsBox[0].value;
-    // Long Term Strategy
-    if (fund && selectedStockIndex != 0 && selectedStrategyIndex != 0) {
-      if (selectedStrategy != "Long Term") {
-        return metrics;
-      }
-      return true;
-    }
-    */
 
-    // Simplified validation without strategy selection
+    // Simple validation - just need fund and stock selection
     if (fund && selectedStockIndex != 0) {
       return true;
     }
@@ -592,9 +575,6 @@ class Board {
       if (this.summaryMapping[summaryId] != null) {
         var summaryObj = this.summaryMapping[summaryId];
         var fund = summaryObj.fund;
-        var metrics = summaryObj.metrics;
-        var compound = summaryObj.compound;
-        var strategyType = summaryObj.strategyType;
         var selectedStock = summaryObj.selectedStock;
         var startYear = summaryObj.startYear;
         var endYear = summaryObj.endYear;
@@ -602,11 +582,8 @@ class Board {
         // update historial data and stock chart
         this.displayHistoricalDataAndStockChart(
           fund,
-          metrics,
           startYear,
           endYear,
-          compound,
-          strategyType,
           selectedStock,
           this.$historyPanel,
         );
@@ -631,20 +608,9 @@ class Board {
   updateControlPanel(controlData) {
     this.$fundBox.val(controlData["fund"]);
     this.$stockSelect.val(controlData["selectedStock"]);
-    // this.updateStraegySelectBox(controlData["strategyType"]); // Commented out - Strategy dropdown removed
     this.startYear = controlData["startYear"];
     this.endYear = controlData["endYear"];
     this.updateDateRange();
-    this.$compoundCheckBox.prop(
-      "disabled",
-      controlData["strategyType"] == "Long Term",
-    );
-    this.$compoundCheckBox[0].checked = controlData["compound"];
-    this.$metricsBox.prop(
-      "disabled",
-      controlData["strategyType"] == "Long Term",
-    );
-    this.$metricsBox.val(controlData["metrics"]);
   }
 
   clearSummaryPanel($panel) {
@@ -697,11 +663,7 @@ class Board {
     startYear,
     endYear,
     fund,
-    compound,
-    metrics,
     selectedStock,
-    selectedStrategy,
-    $historyCanvas,
     $summaryCanvas,
   ) {
     var stockAnalyser = new StockAnalyser(
@@ -711,19 +673,13 @@ class Board {
       $summaryCanvas,
     );
     stockAnalyser.loadAndProcessData(stockData, startYear, endYear);
-
-    // Only Long Term strategy is supported now
-    stockAnalyser.applyLongTermStrategy();
   }
 
   // read data based on filePath, need ajax call
   displayHistoricalDataAndStockChart(
     fund,
-    metrics,
     startYear,
     endYear,
-    compound,
-    selectedStrategy,
     selectedStock,
     $historyCanvas,
   ) {
@@ -735,11 +691,7 @@ class Board {
         startYear,
         endYear,
         fund,
-        compound,
-        metrics,
         selectedStock,
-        selectedStrategy,
-        $historyCanvas,
         null,
       );
     } else {
@@ -763,11 +715,7 @@ class Board {
             startYear,
             endYear,
             fund,
-            compound,
-            metrics,
             selectedStock,
-            selectedStrategy,
-            $historyCanvas,
             null,
           );
         },
@@ -782,13 +730,9 @@ class Board {
   displayAllData(
     data,
     fund,
-    metrics,
     startYear,
     endYear,
-    compound,
-    selectedStrategy,
     selectedStock,
-    $historyCanvas, // This will be null since history panel is removed
     $summaryCanvas,
   ) {
     this.applyStrategy(
@@ -796,11 +740,7 @@ class Board {
       startYear,
       endYear,
       fund,
-      compound,
-      metrics,
       selectedStock,
-      selectedStrategy,
-      $historyCanvas,
       $summaryCanvas,
     );
   }
@@ -816,19 +756,10 @@ class Board {
 
   onAnalysisClick() {
     var fund = Number(this.$fundBox[0].value);
-    var metrics = this.$metricsBox[0].value;
-    var compound = this.$compoundCheckBox[0].checked;
     var selectedIndex = this.$stockSelect[0].selectedIndex;
     var selectedStock = this.$stockSelect[0].options[selectedIndex].text;
-    // Strategy selection functionality commented out - using default strategy
-    /*
-    var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
-    var selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
-    */
-    var selectedStrategy = "Long Term"; // Default strategy since dropdown is removed
 
     if (selectedIndex != 0 && fund) {
-      // Removed strategy selection requirement
       // save input in the object for clicking summary panel
       var selectedSummaryId = this.$selectedSummary[0].id;
       this.summaryMapping[selectedSummaryId] = {};
@@ -836,9 +767,6 @@ class Board {
       this.summaryMapping[selectedSummaryId]["startYear"] = this.startYear;
       this.summaryMapping[selectedSummaryId]["endYear"] = this.endYear;
       this.summaryMapping[selectedSummaryId]["fund"] = fund;
-      this.summaryMapping[selectedSummaryId]["metrics"] = metrics;
-      this.summaryMapping[selectedSummaryId]["compound"] = compound;
-      this.summaryMapping[selectedSummaryId]["strategyType"] = selectedStrategy;
       this.summaryMapping[selectedSummaryId]["selectedStock"] = selectedStock;
 
       this.updateStockChart(
@@ -847,18 +775,13 @@ class Board {
         this.startYear,
         this.endYear,
       );
-      // this.clearHistoryPanel(); // Commented out - Historical Transaction component removed
       this.clearSummaryPanel(this.$selectedSummary);
       this.displayAllData(
         this.data,
         fund,
-        metrics,
         this.startYear,
         this.endYear,
-        compound,
-        selectedStrategy,
         selectedStock,
-        null, // this.$historyPanel - commented out as component removed
         this.$selectedSummary,
       );
     }

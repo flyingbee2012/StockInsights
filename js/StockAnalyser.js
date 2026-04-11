@@ -83,6 +83,24 @@ class StockAnalyser {
 
     // Calculate Longest Drop using the user's algorithm
     this.findLongestDrop();
+
+    // Display the analysis results
+    this.outputSummaryData(
+      this.$summaryCanvas,
+      this.stockInfo,
+      this.startYear,
+      this.endYear,
+      this.biggestDropFromPrice,
+      this.biggestDropFromPriceDate,
+      this.biggestDropEndPrice,
+      this.biggestDropEndPriceDate,
+      this.biggestDropDuration,
+      this.longestDropDuration,
+      this.longestDropStartPrice,
+      this.longestDropStartDate,
+      this.longestDropEndPrice,
+      this.longestDropRecoveryDate || "Never recovered",
+    );
   }
 
   // Modified to follow Max Drop approach: use highPrice for peaks, lowPrice for valleys
@@ -129,35 +147,24 @@ class StockAnalyser {
           this.prices[recoveryIndex].dateTime,
         );
         recoveryDate = this.prices[recoveryIndex].dateTime;
-
-        // Store this completed drop information
-        dropDurations.push({
-          duration: dropDuration,
-          startPrice: dropStartPrice,
-          startDate: dropStartDate,
-          lowestPrice: lowestPrice,
-          lowestDate: lowestDate,
-          recoveryDate: recoveryDate,
-        });
-
         i = recoveryIndex; // Jump to recovery point
       } else {
         // Never recovered - calculate calendar days from start to end of data
         var endDate = this.prices[this.prices.length - 1].dateTime;
         dropDuration = this.calculateDateDifference(dropStartDate, endDate);
-
-        // Store this never-recovered drop information
-        dropDurations.push({
-          duration: dropDuration,
-          startPrice: dropStartPrice,
-          startDate: dropStartDate,
-          lowestPrice: lowestPrice,
-          lowestDate: lowestDate,
-          recoveryDate: null, // Never recovered
-        });
-
+        recoveryDate = null; // Never recovered
         i = this.prices.length; // End the loop
       }
+
+      // Store drop information (consolidated from both branches)
+      dropDurations.push({
+        duration: dropDuration,
+        startPrice: dropStartPrice,
+        startDate: dropStartDate,
+        lowestPrice: lowestPrice,
+        lowestDate: lowestDate,
+        recoveryDate: recoveryDate,
+      });
     }
 
     // Find the longest drop
@@ -177,40 +184,6 @@ class StockAnalyser {
       this.longestDropEndDate = longestDrop.lowestDate;
       this.longestDropRecoveryDate = longestDrop.recoveryDate;
     }
-  }
-
-  applyLongTermStrategy() {
-    var trade = new Trade(this.prices.length - 1);
-    var startPrice = this.prices[0].closePrice;
-    var endPrice = this.prices[this.prices.length - 1].closePrice;
-    var amount = this.investment / startPrice;
-    trade.purchase(amount, startPrice, this.prices[0].dateTime, 0);
-    trade.sellAll(
-      endPrice,
-      this.prices[this.prices.length - 1].dateTime,
-      this.prices.length - 1,
-    );
-    if (this.$historyCanvas) {
-      trade.output(this.$historyCanvas);
-      this.$historyCanvas.append("<hr>");
-    }
-
-    this.outputSummaryData(
-      this.$summaryCanvas,
-      this.stockInfo,
-      this.startYear,
-      this.endYear,
-      this.biggestDropFromPrice,
-      this.biggestDropFromPriceDate,
-      this.biggestDropEndPrice,
-      this.biggestDropEndPriceDate,
-      this.biggestDropDuration,
-      this.longestDropDuration,
-      this.longestDropStartPrice,
-      this.longestDropStartDate,
-      this.longestDropEndPrice,
-      this.longestDropRecoveryDate || "Never recovered",
-    );
   }
 
   getDropPct(drpFromPrice, drpEndPrice) {
