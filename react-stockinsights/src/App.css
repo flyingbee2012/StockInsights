@@ -1,0 +1,73 @@
+.summary-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 10px 0;
+  height: 300px;
+}
+
+.summary-panel {
+  border: 2px solid #ccc;
+  padding: 10px;
+  cursor: pointer;
+  overflow-y: auto;
+  background: white;
+  border-radius: 5px;
+}
+
+.summary-panel.selected {
+  border-color: red;
+}
+
+.separator {
+  font-weight: bold;
+  color: #007bff;
+  margin: 10px 0;
+}
+
+.chart-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.control-panel {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+.control-table {
+  width: 100%;
+}
+
+.control-table td {
+  padding: 10px;
+  vertical-align: top;
+}
+
+.year-range-container {
+  margin: 10px 0;
+}
+
+.year-slider {
+  width: 100%;
+  margin: 10px 0;
+}
+
+@media (max-width: 768px) {
+  .summary-container {
+    grid-template-columns: 1fr 1fr;
+    height: 600px;
+  }
+
+  .control-table {
+    display: block;
+  }
+
+  .control-table td {
+    display: block;
+    width: 100%;
+    padding: 5px;
+  }
+}
