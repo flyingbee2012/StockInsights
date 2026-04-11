@@ -1,9 +1,4 @@
-import {
-  Price,
-  MaxDropData,
-  LongestDropData,
-  DropAnalysisResult,
-} from "../types";
+import { Price, DropAnalysisResult } from "../types";
 
 export class StockAnalyser {
   private prices: Price[] = [];
@@ -198,7 +193,7 @@ export class StockAnalyser {
 
   public static getDropPct(fromPrice: number, endPrice: number): string {
     const n = ((fromPrice - endPrice) / fromPrice) * 100;
-    return n.toFixed(3) + "%";
+    return n.toFixed(2) + "%";
   }
 
   public static formatCurrency(value: number): string {
@@ -206,7 +201,7 @@ export class StockAnalyser {
       style: "currency",
       currency: "USD",
       minimumFractionDigits: 2,
-      maximumFractionDigits: 3,
+      maximumFractionDigits: 2,
     });
   }
 }

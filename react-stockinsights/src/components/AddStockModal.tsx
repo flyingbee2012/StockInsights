@@ -68,20 +68,38 @@ const AddStockModal: React.FC<AddStockModalProps> = ({
   return (
     <div
       className="modal show d-block"
-      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      style={{ backgroundColor: "rgba(0,0,0,0.8)" }}
     >
       <div className="modal-dialog modal-sm">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Add Stock Symbol</h5>
+        <div 
+          className="modal-content" 
+          style={{ 
+            backgroundColor: "#2d2d2d", 
+            border: "1px solid #444",
+            color: "#ffffff" 
+          }}
+        >
+          <div 
+            className="modal-header" 
+            style={{ 
+              backgroundColor: "#333", 
+              borderBottom: "1px solid #444",
+              color: "#ffffff" 
+            }}
+          >
+            <h5 className="modal-title" style={{ color: "#ffffff" }}>Add Stock Symbol</h5>
             <button
               type="button"
               className="btn-close"
               onClick={onClose}
               aria-label="Close"
+              style={{ 
+                filter: "invert(1)",
+                backgroundColor: "transparent" 
+              }}
             ></button>
           </div>
-          <div className="modal-body">
+          <div className="modal-body" style={{ backgroundColor: "#2d2d2d" }}>
             <div className="form-group position-relative">
               <input
                 type="text"
@@ -95,8 +113,11 @@ const AddStockModal: React.FC<AddStockModalProps> = ({
               />
               {showSuggestions && filteredSymbols.length > 0 && (
                 <div
-                  className="position-absolute bg-white border mt-1 w-100"
+                  className="position-absolute border mt-1 w-100"
                   style={{
+                    backgroundColor: "#333",
+                    borderColor: "#555",
+                    color: "#ffffff",
                     zIndex: 1000,
                     maxHeight: "200px",
                     overflowY: "auto",
@@ -106,13 +127,17 @@ const AddStockModal: React.FC<AddStockModalProps> = ({
                     <div
                       key={index}
                       className="px-3 py-2 border-bottom cursor-pointer"
-                      style={{ cursor: "pointer" }}
+                      style={{ 
+                        cursor: "pointer", 
+                        borderColor: "#555",
+                        color: "#ffffff" 
+                      }}
                       onClick={() => handleSuggestionClick(suggestion)}
                       onMouseEnter={(e) =>
-                        (e.currentTarget.style.backgroundColor = "#f8f9fa")
+                        (e.currentTarget.style.backgroundColor = "#444")
                       }
                       onMouseLeave={(e) =>
-                        (e.currentTarget.style.backgroundColor = "white")
+                        (e.currentTarget.style.backgroundColor = "#333")
                       }
                     >
                       {suggestion}
@@ -122,12 +147,29 @@ const AddStockModal: React.FC<AddStockModalProps> = ({
               )}
             </div>
             {error && (
-              <div className="alert alert-danger mt-2" role="alert">
+              <div 
+                className="alert mt-2" 
+                role="alert"
+                style={{
+                  backgroundColor: "#dc3545",
+                  borderColor: "#dc3545",
+                  color: "#ffffff",
+                  border: "1px solid #dc3545",
+                  borderRadius: "0.375rem",
+                  padding: "0.75rem 1.25rem"
+                }}
+              >
                 {error}
               </div>
             )}
           </div>
-          <div className="modal-footer">
+          <div 
+            className="modal-footer" 
+            style={{ 
+              backgroundColor: "#333", 
+              borderTop: "1px solid #444" 
+            }}
+          >
             <button
               type="button"
               className="btn btn-primary"

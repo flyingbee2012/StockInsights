@@ -44,8 +44,6 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
           {maxDrop.endDate})
         </div>
 
-        <br />
-
         <div className="separator">Longest Drop</div>
         {longestDrop.duration > 0 ? (
           <div>

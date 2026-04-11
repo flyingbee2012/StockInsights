@@ -196,10 +196,14 @@ const App: React.FC = () => {
     return (
       <div
         className="d-flex justify-content-center align-items-center"
-        style={{ height: "100vh" }}
+        style={{ 
+          height: "100vh", 
+          backgroundColor: "#1a1a1a", 
+          color: "#ffffff" 
+        }}
       >
         <div className="spinner-border" role="status">
-          <span className="sr-only">Loading...</span>
+          <span className="visually-hidden">Loading...</span>
         </div>
       </div>
     );

@@ -58,9 +58,15 @@ const StockChart: React.FC<StockChartProps> = ({
         },
         toolbar: {
           autoSelected: "zoom",
+          theme: "dark",
         },
+        background: "#2d2d2d",
+        foreColor: "#ffffff",
       },
-      colors: [isGainColor ? "#66DA26" : "#FF0000"],
+      theme: {
+        mode: "dark",
+      },
+      colors: [isGainColor ? "#66DA26" : "#FF4560"],
       dataLabels: {
         enabled: false,
       },
@@ -70,6 +76,11 @@ const StockChart: React.FC<StockChartProps> = ({
       title: {
         text: stockSymbol,
         align: "left",
+        style: {
+          color: "#ffffff",
+          fontSize: "16px",
+          fontWeight: "bold",
+        },
       },
       fill: {
         type: "gradient",
@@ -84,16 +95,32 @@ const StockChart: React.FC<StockChartProps> = ({
       yaxis: {
         labels: {
           formatter: (val: number) => val.toFixed(2),
+          style: {
+            colors: "#ffffff",
+          },
         },
         title: {
           text: "Price",
+          style: {
+            color: "#ffffff",
+          },
         },
       },
       xaxis: {
         type: "datetime",
+        labels: {
+          style: {
+            colors: "#ffffff",
+          },
+        },
+      },
+      grid: {
+        borderColor: "#444",
+        strokeDashArray: 0,
       },
       tooltip: {
         shared: false,
+        theme: "dark",
         y: {
           formatter: (val: number) => val.toFixed(3),
         },
