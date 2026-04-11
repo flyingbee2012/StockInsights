@@ -1,11 +1,24 @@
 // Import variables and mixins
 @import "./styles/variables";
 
-// Global Dark Theme Overrides
+/* 
+  CSS Specificity Approach:
+  Instead of using !important, we use higher specificity selectors
+  to override Bootstrap's default styles in a maintainable way
+*/
+
+// Global Dark Theme Overrides with Higher Specificity
 :global(body),
 :global(html) {
-  background-color: $color-bg-primary !important;
-  color: $color-text-primary !important;
+  background-color: $color-bg-primary;
+  color: $color-text-primary;
+}
+
+// Ensure dark theme takes precedence over Bootstrap
+:global(body.dark-theme),
+:global(div.container-fluid) {
+  background-color: $color-bg-primary;
+  color: $color-text-primary;
 }
 
 .containerFluid {
@@ -96,147 +109,161 @@
   border-radius: 8px;
 }
 
-// Dark Theme for Bootstrap Form Controls (Global)
-:global(.form-control) {
-  background-color: $color-bg-tertiary !important;
-  border-color: $color-border-light !important;
-  color: $color-text-primary !important;
+// Dark Theme for Bootstrap Form Controls (Higher Specificity)
+:global(.container-fluid .form-control),
+:global(.control-panel .form-control),
+:global(div .form-control) {
+  background-color: $color-bg-tertiary;
+  border-color: $color-border-light;
+  color: $color-text-primary;
 
   &:focus {
-    background-color: $color-border !important;
-    border-color: $color-accent !important;
-    box-shadow: 0 0 0 0.2rem rgba(77, 184, 255, 0.25) !important;
-    color: $color-text-primary !important;
+    background-color: $color-border;
+    border-color: $color-accent;
+    box-shadow: 0 0 0 0.2rem rgba(77, 184, 255, 0.25);
+    color: $color-text-primary;
   }
 
   option {
-    background-color: $color-bg-tertiary !important;
-    color: $color-text-primary !important;
+    background-color: $color-bg-tertiary;
+    color: $color-text-primary;
   }
 }
 
-:global(.input-group-text) {
-  background-color: $color-border !important;
-  border-color: $color-border-light !important;
-  color: $color-text-primary !important;
+:global(.container-fluid .input-group-text),
+:global(div .input-group-text) {
+  background-color: $color-border;
+  border-color: $color-border-light;
+  color: $color-text-primary;
 }
 
-// Dark Theme for Buttons (Global)
-:global(.btn-primary) {
-  background-color: $color-accent !important;
-  border-color: $color-accent !important;
-  color: $color-bg-primary !important;
+// Dark Theme for Buttons (Higher Specificity)
+:global(.container-fluid .btn-primary),
+:global(div .btn.btn-primary) {
+  background-color: $color-accent;
+  border-color: $color-accent;
+  color: $color-bg-primary;
 
   &:hover {
-    background-color: $color-accent-hover !important;
-    border-color: $color-accent-hover !important;
+    background-color: $color-accent-hover;
+    border-color: $color-accent-hover;
   }
 
   &:disabled {
-    background-color: $color-border-light !important;
-    border-color: $color-border-light !important;
-    color: $color-text-secondary !important;
+    background-color: $color-border-light;
+    border-color: $color-border-light;
+    color: $color-text-secondary;
   }
 }
 
-:global(.btn-success) {
-  background-color: $color-success !important;
-  border-color: $color-success !important;
+:global(.container-fluid .btn-success),
+:global(div .btn.btn-success) {
+  background-color: $color-success;
+  border-color: $color-success;
 
   &:hover {
-    background-color: $color-success-hover !important;
-    border-color: #1e7e34 !important;
+    background-color: $color-success-hover;
+    border-color: #1e7e34;
   }
 }
 
-:global(.btn-danger) {
-  background-color: $color-danger !important;
-  border-color: $color-danger !important;
+:global(.container-fluid .btn-danger),
+:global(div .btn.btn-danger) {
+  background-color: $color-danger;
+  border-color: $color-danger;
 
   &:hover {
-    background-color: $color-danger-hover !important;
-    border-color: #bd2130 !important;
+    background-color: $color-danger-hover;
+    border-color: #bd2130;
   }
 }
 
-:global(.btn-secondary) {
-  background-color: $color-border-light !important;
-  border-color: $color-border-light !important;
-  color: $color-text-primary !important;
+:global(.container-fluid .btn-secondary),
+:global(div .btn.btn-secondary) {
+  background-color: $color-border-light;
+  border-color: $color-border-light;
+  color: $color-text-primary;
 
   &:hover {
-    background-color: $color-border-lighter !important;
-    border-color: $color-border-lighter !important;
+    background-color: $color-border-lighter;
+    border-color: $color-border-lighter;
   }
 }
 
-// Dark Theme for Range Sliders (Global)
-:global(.form-range) {
+// Dark Theme for Range Sliders (Higher Specificity)
+:global(.container-fluid .form-range),
+:global(div input[type="range"].form-range) {
   background: transparent;
 
   &::-webkit-slider-track {
-    background: $color-border-light !important;
+    background: $color-border-light;
     border-radius: 2px;
   }
 
   &::-webkit-slider-thumb {
-    background: $color-accent !important;
-    border: 2px solid $color-bg-tertiary !important;
+    background: $color-accent;
+    border: 2px solid $color-bg-tertiary;
   }
 
   &::-moz-range-track {
-    background: $color-border-light !important;
+    background: $color-border-light;
     border-radius: 2px;
   }
 
   &::-moz-range-thumb {
-    background: $color-accent !important;
-    border: 2px solid $color-bg-tertiary !important;
+    background: $color-accent;
+    border: 2px solid $color-bg-tertiary;
   }
 }
 
-// Dark Loading Spinner (Global)
-:global(.spinner-border) {
-  color: $color-accent !important;
-}
-
-// Dark Theme for Modals (Global)
-:global(.modal-content) {
-  background-color: $color-bg-secondary !important;
-  border: 1px solid $color-border !important;
-  color: $color-text-primary !important;
-}
-
-:global(.modal-header) {
-  background-color: $color-bg-tertiary !important;
-  border-bottom: 1px solid $color-border !important;
-  color: $color-text-primary !important;
-}
-
-:global(.modal-footer) {
-  background-color: $color-bg-tertiary !important;
-  border-top: 1px solid $color-border !important;
-}
-
-// Dark Theme for Alerts (Global)
-:global(.alert) {
-  color: $color-text-primary !important;
-  border: 1px solid !important;
-
-  &.alert-danger {
-    background-color: $color-danger !important;
-    border-color: $color-danger !important;
-  }
-}
-
-// Dark Theme for Checkboxes (Global)
-:global(input[type="checkbox"]) {
-  background-color: $color-bg-tertiary !important;
-  border-color: $color-border-light !important;
+// Dark Theme for Checkboxes (Higher Specificity)
+:global(.container-fluid input[type="checkbox"]),
+:global(div input[type="checkbox"]) {
+  background-color: $color-bg-tertiary;
+  border-color: $color-border-light;
 
   &:checked {
-    background-color: $color-accent !important;
-    border-color: $color-accent !important;
+    background-color: $color-accent;
+    border-color: $color-accent;
+  }
+}
+
+// Dark Loading Spinner (Higher Specificity)
+:global(.container-fluid .spinner-border),
+:global(div .spinner-border) {
+  color: $color-accent;
+}
+
+// Dark Theme for Modals (Higher Specificity)
+:global(body .modal-content),
+:global(.modal .modal-content) {
+  background-color: $color-bg-secondary;
+  border: 1px solid $color-border;
+  color: $color-text-primary;
+}
+
+:global(body .modal-header),
+:global(.modal .modal-header) {
+  background-color: $color-bg-tertiary;
+  border-bottom: 1px solid $color-border;
+  color: $color-text-primary;
+}
+
+:global(body .modal-footer),
+:global(.modal .modal-footer) {
+  background-color: $color-bg-tertiary;
+  border-top: 1px solid $color-border;
+}
+
+// Dark Theme for Alerts (Higher Specificity)
+:global(.container-fluid .alert),
+:global(div .alert) {
+  color: $color-text-primary;
+  border: 1px solid;
+
+  &.alert-danger {
+    background-color: $color-danger;
+    border-color: $color-danger;
   }
 }
 
