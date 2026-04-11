@@ -1,6 +1,6 @@
 import React from "react";
 import { SummaryData } from "../types";
-import { StockAnalyser } from "../services/StockAnalyser";
+import { getDropPct, formatCurrency } from "../services/StockAnalyser";
 import styles from "./SummaryPanel.module.scss";
 
 interface SummaryPanelProps {
@@ -33,10 +33,9 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         <div className={styles.separator}>Max Drop</div>
         <div>Duration: {maxDrop.duration} days</div>
         <div>
-          {StockAnalyser.getDropPct(maxDrop.fromPrice, maxDrop.endPrice)}:{" "}
-          {StockAnalyser.formatCurrency(maxDrop.fromPrice)} ({maxDrop.fromDate})
-          =&gt; {StockAnalyser.formatCurrency(maxDrop.endPrice)} (
-          {maxDrop.endDate})
+          {getDropPct(maxDrop.fromPrice, maxDrop.endPrice)}:{" "}
+          {formatCurrency(maxDrop.fromPrice)} ({maxDrop.fromDate}) =&gt;{" "}
+          {formatCurrency(maxDrop.endPrice)} ({maxDrop.endDate})
         </div>
 
         <div className={styles.separator}>Longest Drop</div>
@@ -44,16 +43,12 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
           <div>
             <div>Duration: {longestDrop.duration} days</div>
             <div>
-              From: {StockAnalyser.formatCurrency(longestDrop.startPrice)} (
+              From: {formatCurrency(longestDrop.startPrice)} (
               {longestDrop.startDate})
             </div>
             <div>
-              Drop:{" "}
-              {StockAnalyser.getDropPct(
-                longestDrop.startPrice,
-                longestDrop.endPrice,
-              )}{" "}
-              to {StockAnalyser.formatCurrency(longestDrop.endPrice)}
+              Drop: {getDropPct(longestDrop.startPrice, longestDrop.endPrice)}{" "}
+              to {formatCurrency(longestDrop.endPrice)}
             </div>
             <div>
               Recovery: {longestDrop.recoveryDate || "Never recovered"}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Price, SummaryData, AnalysisRequest } from "./types";
-import { StockAnalyser } from "./services/StockAnalyser";
+import { analyzeStock } from "./services/StockAnalyser";
 import { ApiService } from "./services/ApiService";
 import StockChart from "./components/StockChart";
 import ControlPanel from "./components/ControlPanel";
@@ -27,8 +27,6 @@ const App: React.FC = () => {
     {},
   );
   const [showModal, setShowModal] = useState<boolean>(false);
-
-  const stockAnalyser = new StockAnalyser();
 
   useEffect(() => {
     const initialize = async () => {
@@ -167,11 +165,7 @@ const App: React.FC = () => {
   const handleAnalyze = () => {
     if (!selectedStock || !fund || stockData.length === 0) return;
 
-    const analysisResult = stockAnalyser.analyzeStock(
-      stockData,
-      startYear,
-      endYear,
-    );
+    const analysisResult = analyzeStock(stockData, startYear, endYear);
 
     const summary: SummaryData = {
       stockInfo: selectedStock,
@@ -196,10 +190,10 @@ const App: React.FC = () => {
     return (
       <div
         className="d-flex justify-content-center align-items-center"
-        style={{ 
-          height: "100vh", 
-          backgroundColor: "#1a1a1a", 
-          color: "#ffffff" 
+        style={{
+          height: "100vh",
+          backgroundColor: "#1a1a1a",
+          color: "#ffffff",
         }}
       >
         <div className="spinner-border" role="status">
