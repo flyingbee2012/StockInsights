@@ -12,6 +12,8 @@ interface ControlPanelProps {
   onRemoveStock: () => void;
   startYear: number;
   endYear: number;
+  dataMinYear: number;
+  dataMaxYear: number;
   onYearRangeChange: (start: number, end: number) => void;
   onReset: () => void;
   onAnalyze: () => void;
@@ -30,17 +32,42 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   onRemoveStock,
   startYear,
   endYear,
+  dataMinYear,
+  dataMaxYear,
   onYearRangeChange,
   onReset,
   onAnalyze,
   isAnalyzeEnabled,
 }) => {
-  const handleYearChange = (type: "start" | "end", value: number) => {
-    if (type === "start") {
-      onYearRangeChange(value, endYear);
-    } else {
-      onYearRangeChange(startYear, value);
-    }
+  const [tempStartYear, setTempStartYear] = React.useState(startYear);
+  const [tempEndYear, setTempEndYear] = React.useState(endYear);
+
+  // Update temp values when props change
+  React.useEffect(() => {
+    setTempStartYear(startYear);
+    setTempEndYear(endYear);
+  }, [startYear, endYear]);
+
+  // Handle slider movement (only update display text)
+  const handleStartYearChange = (value: number) => {
+    const newStart = Math.min(value, tempEndYear);
+    setTempStartYear(newStart);
+  };
+
+  const handleEndYearChange = (value: number) => {
+    const newEnd = Math.max(value, tempStartYear);
+    setTempEndYear(newEnd);
+  };
+
+  // Handle when slider drag is complete (update chart)
+  const handleStartYearComplete = (value: number) => {
+    const newStart = Math.min(value, tempEndYear);
+    onYearRangeChange(newStart, tempEndYear);
+  };
+
+  const handleEndYearComplete = (value: number) => {
+    const newEnd = Math.max(value, tempStartYear);
+    onYearRangeChange(tempStartYear, newEnd);
   };
 
   return (
@@ -123,24 +150,34 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                             fontWeight: "bold",
                           }}
                         >
-                          {startYear} - {endYear}
+                          {tempStartYear} - {tempEndYear}
                         </label>
                       </td>
                     </tr>
                     <tr>
                       <td colSpan={3}>
                         <div className="year-range-container">
-                          <div className="d-flex">
+                          <div
+                            className="d-flex"
+                            style={{ position: "relative" }}
+                          >
                             <input
                               type="range"
                               className="form-range me-2"
-                              min={startYear}
-                              max={endYear}
-                              value={startYear}
+                              min={dataMinYear}
+                              max={dataMaxYear}
+                              value={tempStartYear}
                               onChange={(e) =>
-                                handleYearChange(
-                                  "start",
-                                  Number(e.target.value),
+                                handleStartYearChange(Number(e.target.value))
+                              }
+                              onMouseUp={(e) =>
+                                handleStartYearComplete(
+                                  Number((e.target as HTMLInputElement).value),
+                                )
+                              }
+                              onTouchEnd={(e) =>
+                                handleStartYearComplete(
+                                  Number((e.target as HTMLInputElement).value),
                                 )
                               }
                               style={{ width: "120px" }}
@@ -148,11 +185,21 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                             <input
                               type="range"
                               className="form-range"
-                              min={startYear}
-                              max={endYear}
-                              value={endYear}
+                              min={dataMinYear}
+                              max={dataMaxYear}
+                              value={tempEndYear}
                               onChange={(e) =>
-                                handleYearChange("end", Number(e.target.value))
+                                handleEndYearChange(Number(e.target.value))
+                              }
+                              onMouseUp={(e) =>
+                                handleEndYearComplete(
+                                  Number((e.target as HTMLInputElement).value),
+                                )
+                              }
+                              onTouchEnd={(e) =>
+                                handleEndYearComplete(
+                                  Number((e.target as HTMLInputElement).value),
+                                )
                               }
                               style={{ width: "120px" }}
                             />

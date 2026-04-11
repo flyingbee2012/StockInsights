@@ -19,6 +19,8 @@ const App: React.FC = () => {
   const [compound, setCompound] = useState<boolean>(true);
   const [startYear, setStartYear] = useState<number>(2024);
   const [endYear, setEndYear] = useState<number>(2026);
+  const [dataMinYear, setDataMinYear] = useState<number>(2024);
+  const [dataMaxYear, setDataMaxYear] = useState<number>(2026);
   const [stockData, setStockData] = useState<Price[]>([]);
   const [selectedSummary, setSelectedSummary] = useState<number>(0);
   const [summaryData, setSummaryData] = useState<Record<number, SummaryData>>(
@@ -47,7 +49,10 @@ const App: React.FC = () => {
   }, []);
 
   const loadStockData = useCallback(
-    async (symbol: string, preserveYears?: { startYear: number; endYear: number }) => {
+    async (
+      symbol: string,
+      preserveYears?: { startYear: number; endYear: number },
+    ) => {
       if (!symbol) return;
 
       try {
@@ -60,18 +65,23 @@ const App: React.FC = () => {
         }
 
         setStockData(prices);
-        
-        // Only update years if not preserving specific years
-        if (!preserveYears && prices.length > 0) {
-          const startYearData = Number(prices[0].dateTime.split("/")[2]);
-          const endYearData = Number(
+
+        if (prices.length > 0) {
+          const dataStartYear = Number(prices[0].dateTime.split("/")[2]);
+          const dataEndYear = Number(
             prices[prices.length - 1].dateTime.split("/")[2],
           );
-          setStartYear(startYearData);
-          setEndYear(endYearData);
-        } else if (preserveYears) {
-          setStartYear(preserveYears.startYear);
-          setEndYear(preserveYears.endYear);
+          setDataMinYear(dataStartYear);
+          setDataMaxYear(dataEndYear);
+
+          // Only update selected years if not preserving specific years
+          if (!preserveYears) {
+            setStartYear(dataStartYear);
+            setEndYear(dataEndYear);
+          } else {
+            setStartYear(preserveYears.startYear);
+            setEndYear(preserveYears.endYear);
+          }
         }
       } catch (error) {
         console.error("Failed to load stock data:", error);
@@ -87,28 +97,36 @@ const App: React.FC = () => {
 
   const handleSummarySelect = (index: number) => {
     setSelectedSummary(index);
-    
+
     const summary = summaryData[index];
     if (summary) {
       // Update the selected stock and load data with preserved time range
       setSelectedStock(summary.stockInfo);
       loadStockData(summary.stockInfo, {
         startYear: summary.startYear,
-        endYear: summary.endYear
+        endYear: summary.endYear,
       });
     }
   };
 
-  const handleAddStock = async (symbol: string): Promise<{ success: boolean; error?: string }> => {
+  const handleAddStock = async (
+    symbol: string,
+  ): Promise<{ success: boolean; error?: string }> => {
     const upperSymbol = symbol.toUpperCase();
-    
+
     // Pre-validation
     if (stockSymbols.includes(upperSymbol)) {
-      return { success: false, error: `${upperSymbol} is already in your stock list.` };
+      return {
+        success: false,
+        error: `${upperSymbol} is already in your stock list.`,
+      };
     }
-    
+
     if (!allSymbols.includes(upperSymbol)) {
-      return { success: false, error: `${upperSymbol} is not a valid stock symbol.` };
+      return {
+        success: false,
+        error: `${upperSymbol} is not a valid stock symbol.`,
+      };
     }
 
     try {
@@ -120,7 +138,7 @@ const App: React.FC = () => {
     } catch (error) {
       return {
         success: false,
-        error: `Network error: ${error instanceof Error ? error.message : 'Unknown error'}`
+        error: `Network error: ${error instanceof Error ? error.message : "Unknown error"}`,
       };
     }
   };
@@ -222,6 +240,8 @@ const App: React.FC = () => {
             onRemoveStock={handleRemoveStock}
             startYear={startYear}
             endYear={endYear}
+            dataMinYear={dataMinYear}
+            dataMaxYear={dataMaxYear}
             onYearRangeChange={(start, end) => {
               setStartYear(start);
               setEndYear(end);
