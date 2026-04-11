@@ -65,10 +65,45 @@ src/
 The application expects a backend API running on `localhost:3000` with the following endpoints:
 
 - `GET /getdefaultlist` - Returns default stock symbols
-- `GET /getsymbols` - Returns all available stock symbols
+- `GET /getsymbols` - Returns all available stock symbols  
 - `GET /:symbol` - Returns historical price data for a symbol
 - `PUT /addstock?symbol=:symbol` - Adds a new stock symbol
 - `PUT /deletestock?symbol=:symbol` - Removes a stock symbol
+
+## Data Format Specification
+
+### Expected Raw Data Format from API
+
+The `GET /:symbol` endpoint must return data in this exact format:
+
+```json
+[
+  "{\"Date\":\"12/2/2022\",\"Open\":20,\"High\":20.3799991607666,\"Low\":20,\"Close\":20.200000762939453,\"Volume\":1383500}",
+  "{\"Date\":\"12/5/2022\",\"Open\":20.06999969482422,\"High\":20.100000381469727,\"Low\":19.899999618530273,\"Close\":19.93199920654297,\"Volume\":17900}",
+  "{\"Date\":\"12/6/2022\",\"Open\":19.90999984741211,\"High\":19.975000381469727,\"Low\":19.84000015258789,\"Close\":19.91900062561035,\"Volume\":165200}",
+  "{\"Date\":\"12/7/2022\",\"Open\":19.850000381469727,\"High\":19.940000534057617,\"Low\":19.799999237060547,\"Close\":19.86199951171875,\"Volume\":28900}",
+  "{\"Date\":\"12/8/2022\",\"Open\":20.059999465942383,\"High\":20.059999465942383,\"Low\":19.979999542236328,\"Close\":20.027999877929688,\"Volume\":75600}"
+]
+```
+
+**Format Requirements:**
+- **Array of JSON Strings**: Each array element is a stringified JSON object
+- **All Data Elements**: Every element contains actual price data (no header element)
+- **Data Elements**: All elements should have consistent field structure
+- **Required Fields**: Each data object must contain: `Date`, `Open`, `High`, `Low`, `Close`, `Volume`
+- **Date Format**: MM/dd/yyyy string format
+- **Price Fields**: Numeric values (can be integers or decimals)
+- **Volume**: Integer representing trading volume
+
+**Critical Notes:**
+- The parser expects ALL data objects to have the same number of fields for consistency
+- Missing fields will cause the entire data point to be skipped
+- Date strings must be parseable by JavaScript's Date constructor  
+- This format is parsed by `ApiService.convertRawDataToList()` method
+
+⚠️ **For complete API documentation and format specifications, see [docs/API_DATA_FORMAT.md](docs/API_DATA_FORMAT.md)**
+
+**Mock Data:** Reference implementation available at `src/data/mockApiData.json` for testing when API is unavailable.
 
 ## Key Differences from Original
 

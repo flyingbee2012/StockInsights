@@ -78,19 +78,44 @@ export class ApiService {
     return result === "success";
   }
 
+  /**
+   * Converts raw API data to Price array format
+   *
+   * Expected Raw Data Format:
+   * [
+   *   "{\"Date\":\"12/2/2022\",\"Open\":20,\"High\":20.38,\"Low\":20,\"Close\":20.20,\"Volume\":1383500}",
+   *   "{\"Date\":\"12/5/2022\",\"Open\":20.07,\"High\":20.10,\"Low\":19.90,\"Close\":19.93,\"Volume\":17900}",
+   *   ...
+   * ]
+   *
+   * @param data Raw JSON string from API containing array of stringified JSON objects
+   * @returns Array of Price objects with parsed date/price data
+   *
+   * CRITICAL: This parser expects:
+   * - Array of JSON strings (each element is stringified JSON)
+   * - All elements contain actual price data (no header element)
+   * - All elements should have same field count for data integrity
+   * - Required fields: Date, Open, High, Low, Close, Volume
+   * - Date in MM/dd/yyyy format, numbers for all price fields
+   */
   private static convertRawDataToList(data: string): Price[] {
     const parsedData = JSON.parse(data);
+
+    // Use first element to determine expected field count for validation
     const headerLength = Object.keys(JSON.parse(parsedData[0])).length;
     const prices: Price[] = [];
 
-    for (let i = 1; i < parsedData.length; i++) {
+    // Process all elements starting from index 0 (all are data, no header)
+    for (let i = 0; i < parsedData.length; i++) {
       const priceObject = JSON.parse(parsedData[i]);
+
+      // Validate object has same field count as first element (data integrity check)
       if (Object.keys(priceObject).length === headerLength) {
-        const dt = priceObject.Date;
-        const openPrice = Number(priceObject.Open);
-        const highPrice = Number(priceObject.High);
-        const lowPrice = Number(priceObject.Low);
-        const closePrice = Number(priceObject.Close);
+        const dt = priceObject.Date; // MM/dd/yyyy format
+        const openPrice = Number(priceObject.Open); // Convert to number
+        const highPrice = Number(priceObject.High); // Convert to number
+        const lowPrice = Number(priceObject.Low); // Convert to number
+        const closePrice = Number(priceObject.Close); // Convert to number
 
         prices.push({
           dateTime: dt,
@@ -100,6 +125,7 @@ export class ApiService {
           closePrice,
         });
       }
+      // Note: Objects with mismatched field counts are silently skipped
     }
     return prices;
   }
