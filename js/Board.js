@@ -4,7 +4,7 @@ class Board {
   constructor(
     $loader,
     $mainPage,
-    $historyPanel,
+    // $historyPanel, // Commented out - Historical Transaction component removed
     $summary1,
     $summary2,
     $summary3,
@@ -16,14 +16,14 @@ class Board {
     $fundBox,
     $metricsBox,
     $compoundCheckBox,
-    $strategySelect,
+    // $strategySelect, // Commented out - Strategy dropdown removed
     $timeRangeInput,
     $sliderRange,
     $addStock,
     $removeStock,
     $addSymbolModal,
     $symbolBox,
-    $addSymbol
+    $addSymbol,
   ) {
     this.strategyDescription = {
       "Averaging Down":
@@ -35,7 +35,7 @@ class Board {
 
     this.$loader = $loader;
     this.$mainPage = $mainPage;
-    this.$historyPanel = $historyPanel;
+    // this.$historyPanel = $historyPanel; // Commented out - Historical Transaction component removed
     this.$summary1 = $summary1;
     this.$summary2 = $summary2;
     this.$summary3 = $summary3;
@@ -47,7 +47,7 @@ class Board {
     this.$fundBox = $fundBox;
     this.$metricsBox = $metricsBox;
     this.$compoundCheckBox = $compoundCheckBox;
-    this.$strategySelect = $strategySelect;
+    // this.$strategySelect = $strategySelect; // Commented out - Strategy dropdown removed
     this.$timeRangeInput = $timeRangeInput;
     this.$sliderRange = $sliderRange;
     this.$addStock = $addStock;
@@ -85,11 +85,14 @@ class Board {
     this.$analysisButton[0].onclick = () => {
       this.onAnalysisClick();
     };
+    /*
+    // Commented out - Strategy dropdown removed
     this.$strategySelect[0].onchange = () => {
       this.populateMetrics();
       this.updateStrategyTitle();
       this.updateAnalyzeButton();
     };
+    */
     this.$stockSelect[0].onchange = () => {
       this.loadStockDataAndUpdateDateRangeAndStockChart();
       this.updateAnalyzeButton();
@@ -208,7 +211,7 @@ class Board {
     var chartData = this.processDataForStockChart(
       stockData,
       startYear,
-      endYear
+      endYear,
     );
     var dates = [];
     var startPrice = chartData[0].value;
@@ -299,6 +302,8 @@ class Board {
     chart.render();
   }
 
+  // Commented out - Strategy dropdown removed
+  /*
   updateStrategyTitle() {
     var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
     var selectedStrategy =
@@ -309,6 +314,7 @@ class Board {
         : this.strategyDescription[selectedStrategy];
     this.$strategySelect.prop("title", title);
   }
+  */
 
   // add symbol to the server
   addSymbolToList(symbol) {
@@ -435,6 +441,8 @@ class Board {
   isInputValid() {
     var fund = Number(this.$fundBox[0].value);
     var selectedStockIndex = this.$stockSelect[0].selectedIndex;
+    // Strategy select functionality commented out - returning simplified validation
+    /*
     var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
     var selectedStrategy =
       this.$strategySelect[0].options[selectedStrategyIndex].text;
@@ -444,6 +452,12 @@ class Board {
       if (selectedStrategy != "Long Term") {
         return metrics;
       }
+      return true;
+    }
+    */
+
+    // Simplified validation without strategy selection
+    if (fund && selectedStockIndex != 0) {
       return true;
     }
     return false;
@@ -503,13 +517,13 @@ class Board {
 
             this.startYear = Number(prices[0].dateTime.split("/")[2]);
             this.endYear = Number(
-              prices[prices.length - 1].dateTime.split("/")[2]
+              prices[prices.length - 1].dateTime.split("/")[2],
             );
             this.updateStockChart(
               prices,
               stockName,
               this.startYear,
-              this.endYear
+              this.endYear,
             );
             this.updateDateRange();
           },
@@ -572,7 +586,7 @@ class Board {
         this.$summary4.css("border", "none");
       }
 
-      this.clearHistoryPanel();
+      // this.clearHistoryPanel(); // Commented out - Historical Transaction component removed
       this.clearStockChart();
       var summaryId = $summary[0].id;
       if (this.summaryMapping[summaryId] != null) {
@@ -594,7 +608,7 @@ class Board {
           compound,
           strategyType,
           selectedStock,
-          this.$historyPanel
+          this.$historyPanel,
         );
         // update control panel
         this.updateControlPanel(summaryObj);
@@ -602,6 +616,8 @@ class Board {
     }
   }
 
+  // Commented out - Strategy dropdown removed
+  /*
   updateStraegySelectBox(strategyText) {
     for (let i = 0; i < this.$strategySelect[0].options.length; i++) {
       if (this.$strategySelect[0].options[i].text == strategyText) {
@@ -610,22 +626,23 @@ class Board {
       }
     }
   }
+  */
 
   updateControlPanel(controlData) {
     this.$fundBox.val(controlData["fund"]);
     this.$stockSelect.val(controlData["selectedStock"]);
-    this.updateStraegySelectBox(controlData["strategyType"]);
+    // this.updateStraegySelectBox(controlData["strategyType"]); // Commented out - Strategy dropdown removed
     this.startYear = controlData["startYear"];
     this.endYear = controlData["endYear"];
     this.updateDateRange();
     this.$compoundCheckBox.prop(
       "disabled",
-      controlData["strategyType"] == "Long Term"
+      controlData["strategyType"] == "Long Term",
     );
     this.$compoundCheckBox[0].checked = controlData["compound"];
     this.$metricsBox.prop(
       "disabled",
-      controlData["strategyType"] == "Long Term"
+      controlData["strategyType"] == "Long Term",
     );
     this.$metricsBox.val(controlData["metrics"]);
   }
@@ -636,15 +653,18 @@ class Board {
     }
   }
 
+  // Commented out - Historical Transaction component removed
+  /*
   clearHistoryPanel() {
     if (this.$historyPanel) {
       this.$historyPanel[0].innerHTML = "";
     }
   }
+  */
 
   reset() {
     this.summaryMapping = {};
-    this.clearHistoryPanel();
+    // this.clearHistoryPanel(); // Commented out - Historical Transaction component removed
     this.clearSummaryPanel(this.$summary1);
     this.clearSummaryPanel(this.$summary2);
     this.clearSummaryPanel(this.$summary3);
@@ -652,6 +672,8 @@ class Board {
     this.clearStockChart();
   }
 
+  // Commented out - Strategy dropdown removed
+  /*
   populateMetrics() {
     var val = this.$strategySelect[0].value;
     if (val === "1") {
@@ -668,6 +690,7 @@ class Board {
       this.$compoundCheckBox.prop("disabled", true);
     }
   }
+  */
 
   applyStrategy(
     stockData,
@@ -679,7 +702,7 @@ class Board {
     selectedStock,
     selectedStrategy,
     $historyCanvas,
-    $summaryCanvas
+    $summaryCanvas,
   ) {
     var strategyArr = metrics.split(",");
     var strategyInput = [];
@@ -687,8 +710,8 @@ class Board {
       fund,
       selectedStock,
       selectedStrategy,
-      $historyCanvas,
-      $summaryCanvas
+      null, // $historyCanvas - commented out as history panel removed
+      $summaryCanvas,
     );
     stockAnalyser.loadAndProcessData(stockData, startYear, endYear);
 
@@ -722,7 +745,7 @@ class Board {
     compound,
     selectedStrategy,
     selectedStock,
-    $historyCanvas
+    $historyCanvas,
   ) {
     if (this.stockCache[selectedStock]) {
       const processedData = this.stockCache[selectedStock];
@@ -737,7 +760,7 @@ class Board {
         selectedStock,
         selectedStrategy,
         $historyCanvas,
-        null
+        null,
       );
     } else {
       $.ajax({
@@ -752,7 +775,7 @@ class Board {
             processedData,
             selectedStock,
             startYear,
-            endYear
+            endYear,
           );
           // update historical data
           this.applyStrategy(
@@ -765,7 +788,7 @@ class Board {
             selectedStock,
             selectedStrategy,
             $historyCanvas,
-            null
+            null,
           );
         },
         error: function () {
@@ -785,8 +808,8 @@ class Board {
     compound,
     selectedStrategy,
     selectedStock,
-    $historyCanvas,
-    $summaryCanvas
+    $historyCanvas, // This will be null since history panel is removed
+    $summaryCanvas,
   ) {
     this.applyStrategy(
       data,
@@ -798,7 +821,7 @@ class Board {
       selectedStock,
       selectedStrategy,
       $historyCanvas,
-      $summaryCanvas
+      $summaryCanvas,
     );
   }
 
@@ -813,17 +836,19 @@ class Board {
 
   onAnalysisClick() {
     var fund = Number(this.$fundBox[0].value);
-    var selectedStrategy = "";
-
     var metrics = this.$metricsBox[0].value;
     var compound = this.$compoundCheckBox[0].checked;
     var selectedIndex = this.$stockSelect[0].selectedIndex;
     var selectedStock = this.$stockSelect[0].options[selectedIndex].text;
+    // Strategy selection functionality commented out - using default strategy
+    /*
     var selectedStrategyIndex = this.$strategySelect[0].selectedIndex;
-    selectedStrategy =
-      this.$strategySelect[0].options[selectedStrategyIndex].text;
+    var selectedStrategy = this.$strategySelect[0].options[selectedStrategyIndex].text;
+    */
+    var selectedStrategy = "Long Term"; // Default strategy since dropdown is removed
 
-    if (selectedIndex != 0 && fund && selectedStrategyIndex != 0) {
+    if (selectedIndex != 0 && fund) {
+      // Removed strategy selection requirement
       // save input in the object for clicking summary panel
       var selectedSummaryId = this.$selectedSummary[0].id;
       this.summaryMapping[selectedSummaryId] = {};
@@ -840,9 +865,9 @@ class Board {
         this.data,
         selectedStock,
         this.startYear,
-        this.endYear
+        this.endYear,
       );
-      this.clearHistoryPanel();
+      // this.clearHistoryPanel(); // Commented out - Historical Transaction component removed
       this.clearSummaryPanel(this.$selectedSummary);
       this.displayAllData(
         this.data,
@@ -853,8 +878,8 @@ class Board {
         compound,
         selectedStrategy,
         selectedStock,
-        this.$historyPanel,
-        this.$selectedSummary
+        null, // this.$historyPanel - commented out as component removed
+        this.$selectedSummary,
       );
     }
   }
