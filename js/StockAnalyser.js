@@ -94,78 +94,69 @@ class StockAnalyser {
       var currentHigh = this.prices[i].highPrice;
       var currentDate = this.prices[i].dateTime;
 
-      // Check if next day's low is significantly lower (drop starts)
-      if (
-        i + 1 < this.prices.length &&
-        this.prices[i + 1].lowPrice < currentHigh
-      ) {
-        var dropStartIndex = i;
-        var dropStartPrice = currentHigh;
-        var dropStartDate = currentDate;
-        var recoveryIndex = -1;
+      var dropStartIndex = i;
+      var dropStartPrice = currentHigh;
+      var dropStartDate = currentDate;
+      var recoveryIndex = -1;
 
-        // Look forward for recovery (highPrice >= original highPrice)
-        for (var j = i + 1; j < this.prices.length; j++) {
-          if (this.prices[j].highPrice >= currentHigh) {
-            recoveryIndex = j;
-            break;
-          }
+      // Look forward for recovery (highPrice >= original highPrice)
+      for (var j = i + 1; j < this.prices.length; j++) {
+        if (this.prices[j].highPrice >= currentHigh) {
+          recoveryIndex = j;
+          break;
         }
+      }
 
-        var dropDuration;
-        var recoveryDate;
-        var lowestPrice = currentHigh;
-        var lowestDate = currentDate;
+      var dropDuration;
+      var recoveryDate;
+      var lowestPrice = currentHigh;
+      var lowestDate = currentDate;
 
-        // Find the lowest price during the drop period (using lowPrice like Max Drop)
-        var endIndex =
-          recoveryIndex !== -1 ? recoveryIndex : this.prices.length - 1;
-        for (var k = dropStartIndex; k <= endIndex; k++) {
-          if (this.prices[k].lowPrice < lowestPrice) {
-            lowestPrice = this.prices[k].lowPrice;
-            lowestDate = this.prices[k].dateTime;
-          }
+      // Find the lowest price during the drop period (using lowPrice like Max Drop)
+      var endIndex =
+        recoveryIndex !== -1 ? recoveryIndex : this.prices.length - 1;
+      for (var k = dropStartIndex; k <= endIndex; k++) {
+        if (this.prices[k].lowPrice < lowestPrice) {
+          lowestPrice = this.prices[k].lowPrice;
+          lowestDate = this.prices[k].dateTime;
         }
+      }
 
-        if (recoveryIndex !== -1) {
-          // Recovered - calculate calendar days between start and recovery
-          dropDuration = this.calculateDateDifference(
-            dropStartDate,
-            this.prices[recoveryIndex].dateTime,
-          );
-          recoveryDate = this.prices[recoveryIndex].dateTime;
+      if (recoveryIndex !== -1) {
+        // Recovered - calculate calendar days between start and recovery
+        dropDuration = this.calculateDateDifference(
+          dropStartDate,
+          this.prices[recoveryIndex].dateTime,
+        );
+        recoveryDate = this.prices[recoveryIndex].dateTime;
 
-          // Store this completed drop information
-          dropDurations.push({
-            duration: dropDuration,
-            startPrice: dropStartPrice,
-            startDate: dropStartDate,
-            lowestPrice: lowestPrice,
-            lowestDate: lowestDate,
-            recoveryDate: recoveryDate,
-          });
+        // Store this completed drop information
+        dropDurations.push({
+          duration: dropDuration,
+          startPrice: dropStartPrice,
+          startDate: dropStartDate,
+          lowestPrice: lowestPrice,
+          lowestDate: lowestDate,
+          recoveryDate: recoveryDate,
+        });
 
-          i = recoveryIndex; // Jump to recovery point
-        } else {
-          // Never recovered - calculate calendar days from start to end of data
-          var endDate = this.prices[this.prices.length - 1].dateTime;
-          dropDuration = this.calculateDateDifference(dropStartDate, endDate);
-
-          // Store this never-recovered drop information
-          dropDurations.push({
-            duration: dropDuration,
-            startPrice: dropStartPrice,
-            startDate: dropStartDate,
-            lowestPrice: lowestPrice,
-            lowestDate: lowestDate,
-            recoveryDate: null, // Never recovered
-          });
-
-          i = this.prices.length; // End the loop
-        }
+        i = recoveryIndex; // Jump to recovery point
       } else {
-        // No drop, move to next point
-        i++;
+        // Never recovered - calculate calendar days from start to end of data
+        var endDate = this.prices[this.prices.length - 1].dateTime;
+        dropDuration = this.calculateDateDifference(dropStartDate, endDate);
+
+        // Store this never-recovered drop information
+        dropDurations.push({
+          duration: dropDuration,
+          startPrice: dropStartPrice,
+          startDate: dropStartDate,
+          lowestPrice: lowestPrice,
+          lowestDate: lowestDate,
+          recoveryDate: null, // Never recovered
+        });
+
+        i = this.prices.length; // End the loop
       }
     }
 
