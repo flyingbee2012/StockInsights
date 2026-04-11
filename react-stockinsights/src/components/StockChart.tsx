@@ -131,7 +131,18 @@ const StockChart: React.FC<StockChartProps> = ({
   if (!stockData.length || !chartData) {
     return (
       <div className="chart-container">
-        <div>Select a stock to view the chart</div>
+        <div
+          style={{
+            height: "210px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#ffffff",
+            fontSize: "16px",
+          }}
+        >
+          Select a stock to view the chart
+        </div>
       </div>
     );
   }
