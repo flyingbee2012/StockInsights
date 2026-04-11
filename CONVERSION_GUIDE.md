@@ -4,20 +4,27 @@
 
 Your StockInsights application has been successfully converted from plain JavaScript to React TypeScript while maintaining all original functionality.
 
-## 📁 Project Location
+## 📁 Project Structure
 
-The new React TypeScript project is located at:
+The React TypeScript project is now the **main project** located in the root directory:
 
 ```
-c:\Users\biwu\githome\StockInsights\react-stockinsights\
+c:\Users\biwu\githome\StockInsights\
+```
+
+The original JavaScript version has been moved to:
+
+```
+c:\Users\biwu\githome\StockInsights\legacy-js-version\
 ```
 
 ## 🚀 Quick Start
 
-1. **Navigate to the project:**
+1. **Navigate to the main project (already in root):**
 
    ```bash
-   cd react-stockinsights
+   # You're already in the right directory!
+   cd StockInsights
    ```
 
 2. **Install dependencies:**
