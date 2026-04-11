@@ -1,6 +1,7 @@
 import React from "react";
 import { SummaryData } from "../types";
 import { StockAnalyser } from "../services/StockAnalyser";
+import styles from "./SummaryPanel.module.scss";
 
 interface SummaryPanelProps {
   index: number;
@@ -25,17 +26,11 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
 
     return (
       <div>
-        <div
-          style={{
-            textAlign: "center",
-            fontWeight: "bold",
-            marginBottom: "10px",
-          }}
-        >
+        <div className={styles.stockTitle}>
           --- <strong>{stockInfo}</strong> ({startYear} - {endYear}) ---
         </div>
 
-        <div className="separator">Max Drop</div>
+        <div className={styles.separator}>Max Drop</div>
         <div>Duration: {maxDrop.duration} days</div>
         <div>
           {StockAnalyser.getDropPct(maxDrop.fromPrice, maxDrop.endPrice)}:{" "}
@@ -44,7 +39,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
           {maxDrop.endDate})
         </div>
 
-        <div className="separator">Longest Drop</div>
+        <div className={styles.separator}>Longest Drop</div>
         {longestDrop.duration > 0 ? (
           <div>
             <div>Duration: {longestDrop.duration} days</div>
@@ -74,7 +69,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
 
   return (
     <div
-      className={`summary-panel ${isSelected ? "selected" : ""}`}
+      className={`${styles.summaryPanel} ${isSelected ? styles.selected : ""}`}
       onClick={onSelect}
     >
       {renderSummaryContent()}

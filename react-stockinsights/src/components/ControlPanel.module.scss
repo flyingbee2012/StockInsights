@@ -1,0 +1,45 @@
+// ControlPanel SCSS Module
+@import "../styles/variables";
+
+.controlPanel {
+  background: $color-bg-secondary;
+  border: 1px solid $color-border;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  color: $color-text-primary;
+}
+
+.controlTable {
+  width: 100%;
+  color: $color-text-primary;
+
+  td {
+    padding: 10px;
+    vertical-align: top;
+    border: 1px solid $color-border;
+    background: $color-bg-tertiary;
+  }
+}
+
+.yearRangeContainer {
+  margin: 10px 0;
+
+  &.dualRangeSlider {
+    background: $color-bg-secondary;
+    padding: 15px;
+    border-radius: 8px;
+  }
+}
+
+.inputGroup {
+  margin-bottom: 1rem;
+}
+
+.compoundContainer {
+  margin-left: 5px;
+
+  input[type="checkbox"] {
+    margin-right: 0.5rem;
+  }
+}

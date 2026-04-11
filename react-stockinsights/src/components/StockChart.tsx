@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 import { Price } from "../types";
+import styles from "./StockChart.module.scss";
 
 interface StockChartProps {
   stockData: Price[];
@@ -130,17 +131,8 @@ const StockChart: React.FC<StockChartProps> = ({
 
   if (!stockData.length || !chartData) {
     return (
-      <div className="chart-container">
-        <div
-          style={{
-            height: "210px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#ffffff",
-            fontSize: "16px",
-          }}
-        >
+      <div className={styles.chartContainer}>
+        <div className={styles.placeholderContent}>
           Select a stock to view the chart
         </div>
       </div>
@@ -148,7 +140,7 @@ const StockChart: React.FC<StockChartProps> = ({
   }
 
   return (
-    <div className="chart-container">
+    <div className={styles.chartContainer}>
       <Chart
         options={chartOptions}
         series={[

@@ -7,7 +7,7 @@ import StockChart from "./components/StockChart";
 import ControlPanel from "./components/ControlPanel";
 import SummaryPanel from "./components/SummaryPanel";
 import AddStockModal from "./components/AddStockModal";
-import "./App.css";
+import styles from "./App.module.scss";
 
 const App: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -210,10 +210,10 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="container-fluid">
+    <div className={styles.containerFluid}>
       <div className="row">
         <div className="col-12">
-          <div className="summary-container">
+          <div className={styles.summaryContainer}>
             {[0, 1, 2, 3].map((index) => (
               <SummaryPanel
                 key={index}

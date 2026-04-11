@@ -1,0 +1,17 @@
+// StockChart SCSS Module
+@import "../styles/variables";
+
+.chartContainer {
+  margin: 20px 0;
+  text-align: center;
+  background: $color-bg-secondary;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.placeholderContent {
+  height: 210px;
+  @include flex-center;
+  color: $color-text-primary;
+  font-size: 16px;
+}

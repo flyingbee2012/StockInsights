@@ -1,0 +1,278 @@
+// Import variables and mixins
+@import "./styles/variables";
+
+// Global Dark Theme Overrides
+:global(body),
+:global(html) {
+  background-color: $color-bg-primary !important;
+  color: $color-text-primary !important;
+}
+
+.containerFluid {
+  background-color: $color-bg-primary;
+  color: $color-text-primary;
+  min-height: 100vh;
+}
+
+// Summary Components
+.summaryContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 10px 0;
+  height: 300px;
+}
+
+.summaryPanel {
+  border: 2px solid $color-border;
+  padding: 10px;
+  cursor: pointer;
+  overflow-y: auto;
+  background: $color-bg-secondary;
+  color: $color-text-primary;
+  border-radius: 5px;
+  @include transition-smooth;
+
+  &:hover {
+    border-color: $color-border-lighter;
+    background: $color-bg-tertiary;
+  }
+
+  &.selected {
+    border-color: $color-warning;
+    background: #3d2d2d;
+  }
+}
+
+.separator {
+  font-weight: bold;
+  color: $color-accent;
+  margin: 10px 0;
+}
+
+// Chart Components
+.chartContainer {
+  margin: 20px 0;
+  text-align: center;
+  background: $color-bg-secondary;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+// Control Panel
+.controlPanel {
+  background: $color-bg-secondary;
+  border: 1px solid $color-border;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  color: $color-text-primary;
+}
+
+.controlTable {
+  width: 100%;
+  color: $color-text-primary;
+
+  td {
+    padding: 10px;
+    vertical-align: top;
+    border: 1px solid $color-border;
+    background: $color-bg-tertiary;
+  }
+}
+
+.yearRangeContainer {
+  margin: 10px 0;
+}
+
+.yearSlider {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.dualRangeSlider {
+  background: $color-bg-secondary;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+// Dark Theme for Bootstrap Form Controls (Global)
+:global(.form-control) {
+  background-color: $color-bg-tertiary !important;
+  border-color: $color-border-light !important;
+  color: $color-text-primary !important;
+
+  &:focus {
+    background-color: $color-border !important;
+    border-color: $color-accent !important;
+    box-shadow: 0 0 0 0.2rem rgba(77, 184, 255, 0.25) !important;
+    color: $color-text-primary !important;
+  }
+
+  option {
+    background-color: $color-bg-tertiary !important;
+    color: $color-text-primary !important;
+  }
+}
+
+:global(.input-group-text) {
+  background-color: $color-border !important;
+  border-color: $color-border-light !important;
+  color: $color-text-primary !important;
+}
+
+// Dark Theme for Buttons (Global)
+:global(.btn-primary) {
+  background-color: $color-accent !important;
+  border-color: $color-accent !important;
+  color: $color-bg-primary !important;
+
+  &:hover {
+    background-color: $color-accent-hover !important;
+    border-color: $color-accent-hover !important;
+  }
+
+  &:disabled {
+    background-color: $color-border-light !important;
+    border-color: $color-border-light !important;
+    color: $color-text-secondary !important;
+  }
+}
+
+:global(.btn-success) {
+  background-color: $color-success !important;
+  border-color: $color-success !important;
+
+  &:hover {
+    background-color: $color-success-hover !important;
+    border-color: #1e7e34 !important;
+  }
+}
+
+:global(.btn-danger) {
+  background-color: $color-danger !important;
+  border-color: $color-danger !important;
+
+  &:hover {
+    background-color: $color-danger-hover !important;
+    border-color: #bd2130 !important;
+  }
+}
+
+:global(.btn-secondary) {
+  background-color: $color-border-light !important;
+  border-color: $color-border-light !important;
+  color: $color-text-primary !important;
+
+  &:hover {
+    background-color: $color-border-lighter !important;
+    border-color: $color-border-lighter !important;
+  }
+}
+
+// Dark Theme for Range Sliders (Global)
+:global(.form-range) {
+  background: transparent;
+
+  &::-webkit-slider-track {
+    background: $color-border-light !important;
+    border-radius: 2px;
+  }
+
+  &::-webkit-slider-thumb {
+    background: $color-accent !important;
+    border: 2px solid $color-bg-tertiary !important;
+  }
+
+  &::-moz-range-track {
+    background: $color-border-light !important;
+    border-radius: 2px;
+  }
+
+  &::-moz-range-thumb {
+    background: $color-accent !important;
+    border: 2px solid $color-bg-tertiary !important;
+  }
+}
+
+// Dark Loading Spinner (Global)
+:global(.spinner-border) {
+  color: $color-accent !important;
+}
+
+// Dark Theme for Modals (Global)
+:global(.modal-content) {
+  background-color: $color-bg-secondary !important;
+  border: 1px solid $color-border !important;
+  color: $color-text-primary !important;
+}
+
+:global(.modal-header) {
+  background-color: $color-bg-tertiary !important;
+  border-bottom: 1px solid $color-border !important;
+  color: $color-text-primary !important;
+}
+
+:global(.modal-footer) {
+  background-color: $color-bg-tertiary !important;
+  border-top: 1px solid $color-border !important;
+}
+
+// Dark Theme for Alerts (Global)
+:global(.alert) {
+  color: $color-text-primary !important;
+  border: 1px solid !important;
+
+  &.alert-danger {
+    background-color: $color-danger !important;
+    border-color: $color-danger !important;
+  }
+}
+
+// Dark Theme for Checkboxes (Global)
+:global(input[type="checkbox"]) {
+  background-color: $color-bg-tertiary !important;
+  border-color: $color-border-light !important;
+
+  &:checked {
+    background-color: $color-accent !important;
+    border-color: $color-accent !important;
+  }
+}
+
+// Dark Scrollbar (Global)
+:global(::-webkit-scrollbar) {
+  width: 8px;
+  height: 8px;
+}
+
+:global(::-webkit-scrollbar-track) {
+  background: $color-bg-tertiary;
+}
+
+:global(::-webkit-scrollbar-thumb) {
+  background: $color-border-light;
+  border-radius: 4px;
+
+  &:hover {
+    background: $color-border-lighter;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .summaryContainer {
+    grid-template-columns: 1fr 1fr;
+    height: 600px;
+  }
+
+  .controlTable {
+    display: block;
+
+    td {
+      display: block;
+      width: 100%;
+      padding: 5px;
+    }
+  }
+}

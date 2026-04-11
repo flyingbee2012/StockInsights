@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./ControlPanel.module.scss";
 
 interface ControlPanelProps {
   fund: number;
@@ -71,13 +72,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   };
 
   return (
-    <div className="control-panel">
+    <div className={styles.controlPanel}>
       <form>
-        <table className="control-table">
+        <table className={styles.controlTable}>
           <tbody>
             <tr>
               <td>
-                <div className="input-group mb-3">
+                <div className={`input-group ${styles.inputGroup}`}>
                   <div className="input-group-prepend">
                     <span className="input-group-text">$</span>
                   </div>
@@ -93,7 +94,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                     <span className="input-group-text">.00</span>
                   </div>
                 </div>
-                <div style={{ marginLeft: "5px" }}>
+                <div className={styles.compoundContainer}>
                   <input
                     type="checkbox"
                     id="compoundCheckBox"
@@ -158,7 +159,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                     </tr>
                     <tr>
                       <td colSpan={3}>
-                        <div className="year-range-container">
+                        <div className={styles.yearRangeContainer}>
                           <div
                             className="d-flex"
                             style={{ position: "relative" }}

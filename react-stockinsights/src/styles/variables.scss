@@ -1,0 +1,27 @@
+// SCSS Variables for Dark Theme
+$color-bg-primary: #1a1a1a;
+$color-bg-secondary: #2d2d2d;
+$color-bg-tertiary: #333;
+$color-border: #444;
+$color-border-light: #555;
+$color-border-lighter: #666;
+$color-text-primary: #ffffff;
+$color-text-secondary: #999;
+$color-accent: #4db8ff;
+$color-accent-hover: #3da8ef;
+$color-success: #28a745;
+$color-success-hover: #218838;
+$color-danger: #dc3545;
+$color-danger-hover: #c82333;
+$color-warning: #ff6b6b;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin transition-smooth {
+  transition: all 0.3s ease;
+}
