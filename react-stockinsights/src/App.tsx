@@ -47,7 +47,7 @@ const App: React.FC = () => {
   }, []);
 
   const loadStockData = useCallback(
-    async (symbol: string) => {
+    async (symbol: string, preserveYears?: { startYear: number; endYear: number }) => {
       if (!symbol) return;
 
       try {
@@ -60,13 +60,18 @@ const App: React.FC = () => {
         }
 
         setStockData(prices);
-        if (prices.length > 0) {
+        
+        // Only update years if not preserving specific years
+        if (!preserveYears && prices.length > 0) {
           const startYearData = Number(prices[0].dateTime.split("/")[2]);
           const endYearData = Number(
             prices[prices.length - 1].dateTime.split("/")[2],
           );
           setStartYear(startYearData);
           setEndYear(endYearData);
+        } else if (preserveYears) {
+          setStartYear(preserveYears.startYear);
+          setEndYear(preserveYears.endYear);
         }
       } catch (error) {
         console.error("Failed to load stock data:", error);
@@ -78,6 +83,20 @@ const App: React.FC = () => {
   const handleStockChange = (symbol: string) => {
     setSelectedStock(symbol);
     loadStockData(symbol);
+  };
+
+  const handleSummarySelect = (index: number) => {
+    setSelectedSummary(index);
+    
+    const summary = summaryData[index];
+    if (summary) {
+      // Update the selected stock and load data with preserved time range
+      setSelectedStock(summary.stockInfo);
+      loadStockData(summary.stockInfo, {
+        startYear: summary.startYear,
+        endYear: summary.endYear
+      });
+    }
   };
 
   const handleAddStock = async (symbol: string): Promise<{ success: boolean; error?: string }> => {
@@ -179,7 +198,7 @@ const App: React.FC = () => {
                 index={index}
                 isSelected={selectedSummary === index}
                 summaryData={summaryData[index]}
-                onSelect={() => setSelectedSummary(index)}
+                onSelect={() => handleSummarySelect(index)}
               />
             ))}
           </div>
