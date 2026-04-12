@@ -36,7 +36,6 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
   padding: 6px 0;
-  height: 285px;
   flex-shrink: 0;
 }
 
@@ -44,7 +43,7 @@
   border: 2px solid $color-border;
   padding: 10px;
   cursor: pointer;
-  overflow-y: auto;
+  overflow: hidden;
   background: $color-bg-secondary;
   color: $color-text-primary;
   border-radius: 5px;
@@ -294,7 +293,6 @@
 @media (max-width: 768px) {
   .summaryContainer {
     grid-template-columns: 1fr 1fr;
-    height: 600px;
   }
 
   .controlTable {

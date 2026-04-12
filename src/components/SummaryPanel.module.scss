@@ -5,7 +5,7 @@
   border: 2px solid $color-border;
   padding: 10px;
   cursor: pointer;
-  overflow-y: auto;
+  overflow: hidden;
   background: $color-bg-secondary;
   color: $color-text-primary;
   border-radius: 5px;
