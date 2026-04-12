@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-import { Price } from "../types/StockTypes";
+import type { Price } from "../types/StockTypes";
 import styles from "./StockChart.module.scss";
 
 interface StockChartProps {

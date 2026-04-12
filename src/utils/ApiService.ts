@@ -1,4 +1,4 @@
-import { Price } from "../types";
+import { type Price } from "../types/StockTypes";
 
 const HOSTNAME = "localhost:3000";
 
