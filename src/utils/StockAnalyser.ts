@@ -50,10 +50,10 @@ const filterPricesByYear = (
   });
 };
 
-const findMaxDrop = (prices: Price[]): MaxDropResult => {
+export const findMaxDrop = (prices: Price[]): MaxDropResult => {
   let maxDrop = Number.MIN_SAFE_INTEGER;
   let highestPrice = Number.MIN_SAFE_INTEGER;
-  let highestPriceDate: string | null = null;
+  let highestPriceDate: string = "";
   let highestPriceIndex = 0;
 
   let biggestDropFromPrice = 0;
@@ -76,7 +76,7 @@ const findMaxDrop = (prices: Price[]): MaxDropResult => {
     if (dropPct > maxDrop) {
       maxDrop = dropPct;
       biggestDropFromPrice = highestPrice;
-      biggestDropFromPriceDate = highestPriceDate!;
+      biggestDropFromPriceDate = highestPriceDate;
       biggestDropFromIndex = highestPriceIndex;
       biggestDropEndPrice = currentPrice.lowPrice;
       biggestDropEndPriceDate = currentPrice.dateTime;
@@ -85,8 +85,7 @@ const findMaxDrop = (prices: Price[]): MaxDropResult => {
 
   // Find recovery point (highPrice >= original peak)
   let recoveryDate: string | null = null;
-  let durationEndDate =
-    prices[prices.length - 1]?.dateTime ?? biggestDropEndPriceDate;
+  let durationEndDate = prices[prices.length - 1].dateTime;
   for (let j = biggestDropFromIndex + 1; j < prices.length; j++) {
     if (prices[j].highPrice >= biggestDropFromPrice) {
       recoveryDate = prices[j].dateTime;
@@ -110,7 +109,7 @@ const findMaxDrop = (prices: Price[]): MaxDropResult => {
   };
 };
 
-const findLongestDrop = (prices: Price[]): DropPeriod | null => {
+export const findLongestDrop = (prices: Price[]): DropPeriod | null => {
   if (prices.length < 2) return null;
 
   let peakPrice = Number.MIN_SAFE_INTEGER;
@@ -129,8 +128,8 @@ const findLongestDrop = (prices: Price[]): DropPeriod | null => {
       lowestDate = current.dateTime;
     }
 
+    // Recovery / new peak — record previous period
     if (current.highPrice >= peakPrice) {
-      // Recovery / new peak — record previous period
       if (peakDate) {
         const duration = calculateDateDifference(peakDate, current.dateTime);
         if (!longestDrop || duration > longestDrop.duration) {
