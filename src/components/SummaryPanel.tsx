@@ -4,14 +4,12 @@ import { getDropPct, formatCurrency } from "../utils/StockAnalyser";
 import styles from "./SummaryPanel.module.scss";
 
 interface SummaryPanelProps {
-  index: number;
   isSelected: boolean;
   summaryData?: SummaryData;
   onSelect: () => void;
 }
 
 const SummaryPanel: React.FC<SummaryPanelProps> = ({
-  index,
   isSelected,
   summaryData,
   onSelect,

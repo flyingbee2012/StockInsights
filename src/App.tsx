@@ -211,7 +211,6 @@ const App: React.FC = () => {
             {[0, 1, 2, 3].map((index) => (
               <SummaryPanel
                 key={index}
-                index={index}
                 isSelected={selectedSummary === index}
                 summaryData={summaryData[index]}
                 onSelect={() => handleSummarySelect(index)}
