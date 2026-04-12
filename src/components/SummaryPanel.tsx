@@ -56,6 +56,10 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
           {formatCurrency(maxDrop.fromPrice)} ({maxDrop.fromDate}) =&gt;{" "}
           {formatCurrency(maxDrop.endPrice)} ({maxDrop.endDate})
         </div>
+        <div>
+          Recovery: {maxDrop.recoveryDate || "Never recovered"}
+          {!maxDrop.recoveryDate && " (ongoing)"}
+        </div>
 
         <div className={styles.separator}>
           Longest Drop ({longestDrop.duration} days)
@@ -63,10 +67,10 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         {longestDrop.duration > 0 ? (
           <div>
             <div>
+              {getDropPct(longestDrop.startPrice, longestDrop.endPrice)}:{" "}
               {formatCurrency(longestDrop.startPrice)} ({longestDrop.startDate})
-              {" | Drop: "}
-              {getDropPct(longestDrop.startPrice, longestDrop.endPrice)} to{" "}
-              {formatCurrency(longestDrop.endPrice)}
+              =&gt; {formatCurrency(longestDrop.endPrice)} (
+              {longestDrop.endDate})
             </div>
             <div>
               Recovery: {longestDrop.recoveryDate || "Never recovered"}

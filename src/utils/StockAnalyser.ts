@@ -20,6 +20,7 @@ interface MaxDropResult {
   endPrice: number;
   endDate: string;
   duration: number;
+  recoveryDate: string | null;
 }
 
 // Helper functions
@@ -53,12 +54,13 @@ const findMaxDrop = (prices: Price[]): MaxDropResult => {
   let maxDrop = Number.MIN_SAFE_INTEGER;
   let highestPrice = Number.MIN_SAFE_INTEGER;
   let highestPriceDate: string | null = null;
+  let highestPriceIndex = 0;
 
   let biggestDropFromPrice = 0;
   let biggestDropFromPriceDate = "";
+  let biggestDropFromIndex = 0;
   let biggestDropEndPrice = 0;
   let biggestDropEndPriceDate = "";
-  let biggestDropDuration = 0;
 
   for (let i = 0; i < prices.length; i++) {
     const currentPrice = prices[i];
@@ -66,6 +68,7 @@ const findMaxDrop = (prices: Price[]): MaxDropResult => {
     if (currentPrice.highPrice > highestPrice) {
       highestPrice = currentPrice.highPrice;
       highestPriceDate = currentPrice.dateTime;
+      highestPriceIndex = i;
     }
 
     const dropPct =
@@ -74,21 +77,35 @@ const findMaxDrop = (prices: Price[]): MaxDropResult => {
       maxDrop = dropPct;
       biggestDropFromPrice = highestPrice;
       biggestDropFromPriceDate = highestPriceDate!;
+      biggestDropFromIndex = highestPriceIndex;
       biggestDropEndPrice = currentPrice.lowPrice;
       biggestDropEndPriceDate = currentPrice.dateTime;
-      biggestDropDuration = calculateDateDifference(
-        highestPriceDate!,
-        currentPrice.dateTime,
-      );
     }
   }
+
+  // Find recovery point (highPrice >= original peak)
+  let recoveryDate: string | null = null;
+  let durationEndDate = prices[prices.length - 1]?.dateTime ?? biggestDropEndPriceDate;
+  for (let j = biggestDropFromIndex + 1; j < prices.length; j++) {
+    if (prices[j].highPrice >= biggestDropFromPrice) {
+      recoveryDate = prices[j].dateTime;
+      durationEndDate = recoveryDate;
+      break;
+    }
+  }
+
+  const duration = calculateDateDifference(
+    biggestDropFromPriceDate,
+    durationEndDate,
+  );
 
   return {
     fromPrice: biggestDropFromPrice,
     fromDate: biggestDropFromPriceDate,
     endPrice: biggestDropEndPrice,
     endDate: biggestDropEndPriceDate,
-    duration: biggestDropDuration,
+    duration,
+    recoveryDate,
   };
 };
 

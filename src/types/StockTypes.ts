@@ -13,6 +13,7 @@ export interface MaxDropData {
   endPrice: number;
   endDate: string;
   duration: number;
+  recoveryDate: string | null;
 }
 
 export interface LongestDropData {
