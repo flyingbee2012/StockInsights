@@ -16,7 +16,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
 }) => {
   const renderSummaryContent = () => {
     if (!summaryData) {
-      return <div>Click to view analysis results</div>;
+      return <div className={styles.placeholder}>Click to view analysis results</div>;
     }
 
     const { stockInfo, startYear, endYear, fund, analysisResult, profitLoss } =
