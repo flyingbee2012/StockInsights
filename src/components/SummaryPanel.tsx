@@ -33,25 +33,33 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
           --- <strong>{stockInfo}</strong> ({startYear} - {endYear}) ---
         </div>
 
-        <div className={styles.separator}>Profit / Loss (Fund: {formatCurrency(fund)})</div>
+        <div className={styles.separator}>
+          Profit / Loss (Fund: {formatCurrency(fund)})
+        </div>
         <div>
-          {formatCurrency(profitLoss.startPrice)} =&gt; {formatCurrency(profitLoss.endPrice)}
+          {formatCurrency(profitLoss.startPrice)} =&gt;{" "}
+          {formatCurrency(profitLoss.endPrice)}
           {" | "}
           <span className={plClass}>
             {computedPL >= 0 ? "+" : ""}
-            {formatCurrency(computedPL)} ({profitLoss.profitLossPct >= 0 ? "+" : ""}
+            {formatCurrency(computedPL)} (
+            {profitLoss.profitLossPct >= 0 ? "+" : ""}
             {profitLoss.profitLossPct.toFixed(2)}%)
           </span>
         </div>
 
-        <div className={styles.separator}>Max Drop ({maxDrop.duration} days)</div>
+        <div className={styles.separator}>
+          Max Drop ({maxDrop.duration} days)
+        </div>
         <div>
           {getDropPct(maxDrop.fromPrice, maxDrop.endPrice)}:{" "}
           {formatCurrency(maxDrop.fromPrice)} ({maxDrop.fromDate}) =&gt;{" "}
           {formatCurrency(maxDrop.endPrice)} ({maxDrop.endDate})
         </div>
 
-        <div className={styles.separator}>Longest Drop ({longestDrop.duration} days)</div>
+        <div className={styles.separator}>
+          Longest Drop ({longestDrop.duration} days)
+        </div>
         {longestDrop.duration > 0 ? (
           <div>
             <div>
