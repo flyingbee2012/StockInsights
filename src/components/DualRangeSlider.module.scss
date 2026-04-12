@@ -1,0 +1,66 @@
+@import "../styles/variables";
+
+.sliderContainer {
+  padding: 8px;
+  user-select: none;
+  touch-action: none;
+}
+
+.track {
+  position: relative;
+  height: 28px;
+  cursor: pointer;
+}
+
+.trackBackground {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 6px;
+  transform: translateY(-50%);
+  background: $color-border-light;
+  border-radius: 3px;
+}
+
+.trackFill {
+  position: absolute;
+  top: 50%;
+  height: 6px;
+  transform: translateY(-50%);
+  background: $color-accent;
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: $color-accent;
+  border: 2px solid $color-bg-primary;
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  z-index: 2;
+  @include transition-smooth;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+
+  &:hover {
+    background: $color-accent-hover;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+
+  &.active {
+    cursor: grabbing;
+    background: $color-accent-hover;
+    transform: translate(-50%, -50%) scale(1.3);
+    box-shadow: 0 2px 8px rgba(77, 184, 255, 0.5);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+  }
+}

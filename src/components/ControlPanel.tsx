@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./ControlPanel.module.scss";
+import DualRangeSlider from "./DualRangeSlider";
 
 interface ControlPanelProps {
   fund: number;
@@ -50,25 +51,14 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   }, [startYear, endYear]);
 
   // Handle slider movement (only update display text)
-  const handleStartYearChange = (value: number) => {
-    const newStart = Math.min(value, tempEndYear);
-    setTempStartYear(newStart);
-  };
-
-  const handleEndYearChange = (value: number) => {
-    const newEnd = Math.max(value, tempStartYear);
-    setTempEndYear(newEnd);
+  const handleSliderChange = (start: number, end: number) => {
+    setTempStartYear(start);
+    setTempEndYear(end);
   };
 
   // Handle when slider drag is complete (update chart)
-  const handleStartYearComplete = (value: number) => {
-    const newStart = Math.min(value, tempEndYear);
-    onYearRangeChange(newStart, tempEndYear);
-  };
-
-  const handleEndYearComplete = (value: number) => {
-    const newEnd = Math.max(value, tempStartYear);
-    onYearRangeChange(tempStartYear, newEnd);
+  const handleSliderComplete = (start: number, end: number) => {
+    onYearRangeChange(start, end);
   };
 
   return (
@@ -159,55 +149,14 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                     </tr>
                     <tr>
                       <td colSpan={3}>
-                        <div className={styles.yearRangeContainer}>
-                          <div
-                            className="d-flex"
-                            style={{ position: "relative" }}
-                          >
-                            <input
-                              type="range"
-                              className="form-range me-2"
-                              min={dataMinYear}
-                              max={dataMaxYear}
-                              value={tempStartYear}
-                              onChange={(e) =>
-                                handleStartYearChange(Number(e.target.value))
-                              }
-                              onMouseUp={(e) =>
-                                handleStartYearComplete(
-                                  Number((e.target as HTMLInputElement).value),
-                                )
-                              }
-                              onTouchEnd={(e) =>
-                                handleStartYearComplete(
-                                  Number((e.target as HTMLInputElement).value),
-                                )
-                              }
-                              style={{ width: "120px" }}
-                            />
-                            <input
-                              type="range"
-                              className="form-range"
-                              min={dataMinYear}
-                              max={dataMaxYear}
-                              value={tempEndYear}
-                              onChange={(e) =>
-                                handleEndYearChange(Number(e.target.value))
-                              }
-                              onMouseUp={(e) =>
-                                handleEndYearComplete(
-                                  Number((e.target as HTMLInputElement).value),
-                                )
-                              }
-                              onTouchEnd={(e) =>
-                                handleEndYearComplete(
-                                  Number((e.target as HTMLInputElement).value),
-                                )
-                              }
-                              style={{ width: "120px" }}
-                            />
-                          </div>
-                        </div>
+                        <DualRangeSlider
+                          min={dataMinYear}
+                          max={dataMaxYear}
+                          startValue={tempStartYear}
+                          endValue={tempEndYear}
+                          onChange={handleSliderChange}
+                          onChangeComplete={handleSliderComplete}
+                        />
                       </td>
                     </tr>
                   </tbody>
