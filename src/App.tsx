@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Price, SummaryData, AnalysisRequest } from "./types/StockTypes";
-import { analyzeStock } from "./utils/StockAnalyser";
+import { analyzeStock, calculateProfitLoss } from "./utils/StockAnalyser";
 import { ApiService } from "./utils/ApiService";
 import StockChart from "./components/StockChart";
 import ControlPanel from "./components/ControlPanel";
@@ -170,6 +170,7 @@ const App: React.FC = () => {
     if (!selectedStock || !fund || stockData.length === 0) return;
 
     const analysisResult = analyzeStock(stockData, startYear, endYear);
+    const profitLoss = calculateProfitLoss(stockData, startYear, endYear, fund);
 
     const summary: SummaryData = {
       stockInfo: selectedStock,
@@ -178,6 +179,7 @@ const App: React.FC = () => {
       fund,
       selectedStock,
       analysisResult,
+      profitLoss,
     };
 
     setSummaryData((prev) => ({ ...prev, [selectedSummary]: summary }));

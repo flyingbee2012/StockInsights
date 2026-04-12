@@ -41,6 +41,15 @@ export interface AnalysisRequest {
   endYear: number;
 }
 
+export interface ProfitLossData {
+  startPrice: number;
+  startDate: string;
+  endPrice: number;
+  endDate: string;
+  profitLoss: number;
+  profitLossPct: number;
+}
+
 export interface SummaryData {
   stockInfo: string;
   startYear: number;
@@ -48,6 +57,7 @@ export interface SummaryData {
   fund: number;
   selectedStock: string;
   analysisResult: DropAnalysisResult;
+  profitLoss: ProfitLossData;
 }
 
 export interface ChartDataPoint {

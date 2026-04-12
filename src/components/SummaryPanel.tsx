@@ -19,8 +19,13 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
       return <div>Click to view analysis results</div>;
     }
 
-    const { stockInfo, startYear, endYear, analysisResult } = summaryData;
+    const { stockInfo, startYear, endYear, fund, analysisResult, profitLoss } =
+      summaryData;
     const { maxDrop, longestDrop } = analysisResult;
+
+    // Recalculate dollar P/L based on fund at analysis time
+    const computedPL = fund * (profitLoss.profitLossPct / 100);
+    const plClass = computedPL >= 0 ? styles.profit : styles.loss;
 
     return (
       <div>
@@ -28,33 +33,40 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
           --- <strong>{stockInfo}</strong> ({startYear} - {endYear}) ---
         </div>
 
-        <div className={styles.separator}>Max Drop</div>
-        <div>Duration: {maxDrop.duration} days</div>
+        <div className={styles.separator}>Profit / Loss (Fund: {formatCurrency(fund)})</div>
+        <div>
+          {formatCurrency(profitLoss.startPrice)} =&gt; {formatCurrency(profitLoss.endPrice)}
+          {" | "}
+          <span className={plClass}>
+            {computedPL >= 0 ? "+" : ""}
+            {formatCurrency(computedPL)} ({profitLoss.profitLossPct >= 0 ? "+" : ""}
+            {profitLoss.profitLossPct.toFixed(2)}%)
+          </span>
+        </div>
+
+        <div className={styles.separator}>Max Drop ({maxDrop.duration} days)</div>
         <div>
           {getDropPct(maxDrop.fromPrice, maxDrop.endPrice)}:{" "}
           {formatCurrency(maxDrop.fromPrice)} ({maxDrop.fromDate}) =&gt;{" "}
           {formatCurrency(maxDrop.endPrice)} ({maxDrop.endDate})
         </div>
 
-        <div className={styles.separator}>Longest Drop</div>
+        <div className={styles.separator}>Longest Drop ({longestDrop.duration} days)</div>
         {longestDrop.duration > 0 ? (
           <div>
-            <div>Duration: {longestDrop.duration} days</div>
             <div>
-              From: {formatCurrency(longestDrop.startPrice)} (
-              {longestDrop.startDate})
-            </div>
-            <div>
-              Drop: {getDropPct(longestDrop.startPrice, longestDrop.endPrice)}{" "}
-              to {formatCurrency(longestDrop.endPrice)}
+              {formatCurrency(longestDrop.startPrice)} ({longestDrop.startDate})
+              {" | Drop: "}
+              {getDropPct(longestDrop.startPrice, longestDrop.endPrice)} to{" "}
+              {formatCurrency(longestDrop.endPrice)}
             </div>
             <div>
               Recovery: {longestDrop.recoveryDate || "Never recovered"}
-              {!longestDrop.recoveryDate && " (ongoing decline)"}
+              {!longestDrop.recoveryDate && " (ongoing)"}
             </div>
           </div>
         ) : (
-          <div>No significant drops found in this period.</div>
+          <div>No significant drops found.</div>
         )}
       </div>
     );

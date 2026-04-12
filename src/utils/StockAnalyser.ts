@@ -1,4 +1,8 @@
-import type { Price, DropAnalysisResult } from "../types/StockTypes";
+import type {
+  Price,
+  DropAnalysisResult,
+  ProfitLossData,
+} from "../types/StockTypes";
 
 // Types for internal calculations
 interface DropPeriod {
@@ -185,6 +189,43 @@ export const analyzeStock = (
       endDate: longestDrop?.lowestDate ?? "",
       recoveryDate: longestDrop?.recoveryDate ?? null,
     },
+  };
+};
+
+export const calculateProfitLoss = (
+  prices: Price[],
+  startYear: number,
+  endYear: number,
+  fund: number,
+): ProfitLossData => {
+  const validPrices = filterPricesByYear(prices, startYear, endYear);
+
+  if (validPrices.length < 2) {
+    return {
+      startPrice: 0,
+      startDate: "",
+      endPrice: 0,
+      endDate: "",
+      profitLoss: 0,
+      profitLossPct: 0,
+    };
+  }
+
+  const first = validPrices[0];
+  const last = validPrices[validPrices.length - 1];
+  const shares = fund / first.closePrice;
+  const endValue = shares * last.closePrice;
+  const profitLoss = endValue - fund;
+  const profitLossPct =
+    ((last.closePrice - first.closePrice) / first.closePrice) * 100;
+
+  return {
+    startPrice: first.closePrice,
+    startDate: first.dateTime,
+    endPrice: last.closePrice,
+    endDate: last.dateTime,
+    profitLoss,
+    profitLossPct,
   };
 };
 

@@ -78,7 +78,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                     value={fund}
                     onChange={(e) => onFundChange(Number(e.target.value))}
                     style={{ width: "100px" }}
-                    disabled
                   />
                   <div className="input-group-append">
                     <span className="input-group-text">.00</span>

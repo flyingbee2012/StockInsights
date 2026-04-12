@@ -25,15 +25,25 @@
 .separator {
   font-weight: bold;
   color: $color-accent;
-  margin: 10px 0;
+  margin: 5px 0 2px;
 }
 
 .stockTitle {
   text-align: center;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 
   strong {
     color: $color-text-primary;
   }
+}
+
+.profit {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.loss {
+  color: #f44336;
+  font-weight: bold;
 }
