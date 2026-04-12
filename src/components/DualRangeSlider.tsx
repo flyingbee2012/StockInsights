@@ -21,7 +21,12 @@ const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   onChangeComplete,
 }) => {
   const trackRef = useRef<HTMLDivElement>(null);
+  const draggingRef = useRef<"start" | "end" | null>(null);
+  const latestValuesRef = useRef({ startValue, endValue });
   const [dragging, setDragging] = useState<"start" | "end" | null>(null);
+
+  // Keep ref in sync so document listeners always have fresh values
+  latestValuesRef.current = { startValue, endValue };
 
   const range = max - min || 1;
 
@@ -40,38 +45,57 @@ const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
     [min, range],
   );
 
+  // Document-level move handler (avoids pointer capture bubbling issues)
+  const handleDocumentPointerMove = useCallback(
+    (e: PointerEvent) => {
+      const thumb = draggingRef.current;
+      if (!thumb) return;
+
+      const val = getValueFromPosition(e.clientX);
+      const { startValue: s, endValue: ev } = latestValuesRef.current;
+
+      if (thumb === "start") {
+        const clamped = Math.min(val, ev);
+        onChange(clamped, ev);
+      } else {
+        const clamped = Math.max(val, s);
+        onChange(s, clamped);
+      }
+    },
+    [getValueFromPosition, onChange],
+  );
+
+  // Document-level up handler
+  const handleDocumentPointerUp = useCallback(() => {
+    if (!draggingRef.current) return;
+    const { startValue: s, endValue: ev } = latestValuesRef.current;
+    draggingRef.current = null;
+    setDragging(null);
+    onChangeComplete(s, ev);
+  }, [onChangeComplete]);
+
+  // Attach/detach document listeners when dragging changes
+  useEffect(() => {
+    if (dragging) {
+      document.addEventListener("pointermove", handleDocumentPointerMove);
+      document.addEventListener("pointerup", handleDocumentPointerUp);
+    }
+    return () => {
+      document.removeEventListener("pointermove", handleDocumentPointerMove);
+      document.removeEventListener("pointerup", handleDocumentPointerUp);
+    };
+  }, [dragging, handleDocumentPointerMove, handleDocumentPointerUp]);
+
   const handlePointerDown = useCallback(
     (thumb: "start" | "end") => (e: React.PointerEvent) => {
       if (disabled) return;
       e.preventDefault();
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      e.stopPropagation();
+      draggingRef.current = thumb;
       setDragging(thumb);
     },
-    [],
+    [disabled],
   );
-
-  const handlePointerMove = useCallback(
-    (e: React.PointerEvent) => {
-      if (!dragging) return;
-      const val = getValueFromPosition(e.clientX);
-
-      if (dragging === "start") {
-        const clamped = Math.min(val, endValue);
-        onChange(clamped, endValue);
-      } else {
-        const clamped = Math.max(val, startValue);
-        onChange(startValue, clamped);
-      }
-    },
-    [dragging, startValue, endValue, getValueFromPosition, onChange],
-  );
-
-  const handlePointerUp = useCallback(() => {
-    if (dragging) {
-      setDragging(null);
-      onChangeComplete(startValue, endValue);
-    }
-  }, [dragging, startValue, endValue, onChangeComplete]);
 
   // Handle track click to move nearest thumb
   const handleTrackClick = useCallback(
@@ -92,6 +116,7 @@ const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
       }
     },
     [
+      disabled,
       dragging,
       startValue,
       endValue,
@@ -112,8 +137,6 @@ const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
         className={styles.track}
         ref={trackRef}
         onClick={handleTrackClick}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
       >
         {/* Background track */}
         <div className={styles.trackBackground} />
