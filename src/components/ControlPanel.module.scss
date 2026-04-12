@@ -4,10 +4,13 @@
 .controlPanel {
   background: $color-bg-secondary;
   border: 1px solid $color-border;
-  padding: 20px;
-  border-radius: 8px;
-  margin: 20px 0;
+  padding: 6px;
+  border-radius: 6px;
+  margin: 6px 0;
   color: $color-text-primary;
+  height: 160px;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 .controlTable {
@@ -15,29 +18,30 @@
   color: $color-text-primary;
 
   td {
-    padding: 10px;
-    vertical-align: top;
+    padding: 6px 10px;
+    vertical-align: middle;
     border: 1px solid $color-border;
     background: $color-bg-tertiary;
   }
 }
 
 .yearRangeContainer {
-  margin: 10px 0;
+  margin: 5px 0;
 
   &.dualRangeSlider {
     background: $color-bg-secondary;
-    padding: 15px;
+    padding: 8px;
     border-radius: 8px;
   }
 }
 
 .inputGroup {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .compoundContainer {
   margin-left: 5px;
+  margin-top: 4px;
 
   input[type="checkbox"] {
     margin-right: 0.5rem;

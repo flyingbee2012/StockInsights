@@ -211,50 +211,46 @@ const App: React.FC = () => {
 
   return (
     <div className={styles.containerFluid}>
-      <div className="row">
-        <div className="col-12">
-          <div className={styles.summaryContainer}>
-            {[0, 1, 2, 3].map((index) => (
-              <SummaryPanel
-                key={index}
-                isSelected={selectedSummary === index}
-                summaryData={summaryData[index]}
-                onSelect={() => handleSummarySelect(index)}
-              />
-            ))}
-          </div>
-
-          <StockChart
-            stockData={stockData}
-            stockSymbol={selectedStock}
-            startYear={startYear}
-            endYear={endYear}
+      <div className={styles.summaryContainer}>
+        {[0, 1, 2, 3].map((index) => (
+          <SummaryPanel
+            key={index}
+            isSelected={selectedSummary === index}
+            summaryData={summaryData[index]}
+            onSelect={() => handleSummarySelect(index)}
           />
-
-          <ControlPanel
-            fund={fund}
-            onFundChange={setFund}
-            compound={compound}
-            onCompoundChange={setCompound}
-            selectedStock={selectedStock}
-            stockSymbols={stockSymbols}
-            onStockChange={handleStockChange}
-            onAddStock={() => setShowModal(true)}
-            onRemoveStock={handleRemoveStock}
-            startYear={startYear}
-            endYear={endYear}
-            dataMinYear={dataMinYear}
-            dataMaxYear={dataMaxYear}
-            onYearRangeChange={(start, end) => {
-              setStartYear(start);
-              setEndYear(end);
-            }}
-            onReset={handleReset}
-            onAnalyze={handleAnalyze}
-            isAnalyzeEnabled={isAnalyzeEnabled}
-          />
-        </div>
+        ))}
       </div>
+
+      <StockChart
+        stockData={stockData}
+        stockSymbol={selectedStock}
+        startYear={startYear}
+        endYear={endYear}
+      />
+
+      <ControlPanel
+        fund={fund}
+        onFundChange={setFund}
+        compound={compound}
+        onCompoundChange={setCompound}
+        selectedStock={selectedStock}
+        stockSymbols={stockSymbols}
+        onStockChange={handleStockChange}
+        onAddStock={() => setShowModal(true)}
+        onRemoveStock={handleRemoveStock}
+        startYear={startYear}
+        endYear={endYear}
+        dataMinYear={dataMinYear}
+        dataMaxYear={dataMaxYear}
+        onYearRangeChange={(start, end) => {
+          setStartYear(start);
+          setEndYear(end);
+        }}
+        onReset={handleReset}
+        onAnalyze={handleAnalyze}
+        isAnalyzeEnabled={isAnalyzeEnabled}
+      />
 
       <AddStockModal
         show={showModal}

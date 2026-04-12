@@ -24,16 +24,20 @@
 .containerFluid {
   background-color: $color-bg-primary;
   color: $color-text-primary;
-  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 // Summary Components
 .summaryContainer {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin: 10px 0;
-  height: 300px;
+  gap: 6px;
+  padding: 6px 0;
+  height: 285px;
+  flex-shrink: 0;
 }
 
 .summaryPanel {

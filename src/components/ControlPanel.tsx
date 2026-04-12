@@ -164,10 +164,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                   </tbody>
                 </table>
               </td>
-              <td rowSpan={2}>{/* Empty cell where textarea used to be */}</td>
-            </tr>
-            <tr>
-              <td>{/* Empty cell where strategy dropdown used to be */}</td>
               <td style={{ textAlign: "center" }}>
                 <button
                   type="button"

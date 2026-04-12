@@ -51,7 +51,7 @@ const StockChart: React.FC<StockChartProps> = ({
     return {
       chart: {
         type: "area",
-        height: 210,
+        height: "100%",
         zoom: {
           type: "x",
           enabled: true,
@@ -150,7 +150,7 @@ const StockChart: React.FC<StockChartProps> = ({
           },
         ]}
         type="area"
-        height={210}
+        height="100%"
       />
     </div>
   );
