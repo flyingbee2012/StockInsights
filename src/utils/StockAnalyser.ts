@@ -85,7 +85,8 @@ const findMaxDrop = (prices: Price[]): MaxDropResult => {
 
   // Find recovery point (highPrice >= original peak)
   let recoveryDate: string | null = null;
-  let durationEndDate = prices[prices.length - 1]?.dateTime ?? biggestDropEndPriceDate;
+  let durationEndDate =
+    prices[prices.length - 1]?.dateTime ?? biggestDropEndPriceDate;
   for (let j = biggestDropFromIndex + 1; j < prices.length; j++) {
     if (prices[j].highPrice >= biggestDropFromPrice) {
       recoveryDate = prices[j].dateTime;
@@ -110,71 +111,60 @@ const findMaxDrop = (prices: Price[]): MaxDropResult => {
 };
 
 const findLongestDrop = (prices: Price[]): DropPeriod | null => {
-  const dropDurations: DropPeriod[] = [];
-  let i = 0;
+  if (prices.length < 2) return null;
 
-  while (i < prices.length - 1) {
-    const currentHigh = prices[i].highPrice;
-    const currentDate = prices[i].dateTime;
+  let peakPrice = Number.MIN_SAFE_INTEGER;
+  let peakDate = "";
+  let lowestPrice = Number.MAX_SAFE_INTEGER;
+  let lowestDate = "";
 
-    const dropStartIndex = i;
-    const dropStartPrice = currentHigh;
-    const dropStartDate = currentDate;
-    let recoveryIndex = -1;
+  let longestDrop: DropPeriod | null = null;
 
-    // Look forward for recovery (highPrice >= original highPrice)
-    for (let j = i + 1; j < prices.length; j++) {
-      if (prices[j].highPrice >= currentHigh) {
-        recoveryIndex = j;
-        break;
+  for (let i = 0; i < prices.length; i++) {
+    const current = prices[i];
+
+    // Track lowest price during current drop period
+    if (current.lowPrice < lowestPrice) {
+      lowestPrice = current.lowPrice;
+      lowestDate = current.dateTime;
+    }
+
+    if (current.highPrice >= peakPrice) {
+      // Recovery / new peak — record previous period
+      if (peakDate) {
+        const duration = calculateDateDifference(peakDate, current.dateTime);
+        if (!longestDrop || duration > longestDrop.duration) {
+          longestDrop = {
+            duration,
+            startPrice: peakPrice,
+            startDate: peakDate,
+            lowestPrice,
+            lowestDate,
+            recoveryDate: current.dateTime,
+          };
+        }
       }
+      // Start new period from this peak
+      peakPrice = current.highPrice;
+      peakDate = current.dateTime;
+      lowestPrice = current.lowPrice;
+      lowestDate = current.dateTime;
     }
-
-    let dropDuration: number;
-    let recoveryDate: string | null;
-    let lowestPrice = currentHigh;
-    let lowestDate = currentDate;
-
-    // Find the lowest price during the drop period
-    const endIndex = recoveryIndex !== -1 ? recoveryIndex : prices.length - 1;
-    for (let k = dropStartIndex; k <= endIndex; k++) {
-      if (prices[k].lowPrice < lowestPrice) {
-        lowestPrice = prices[k].lowPrice;
-        lowestDate = prices[k].dateTime;
-      }
-    }
-
-    if (recoveryIndex !== -1) {
-      // Recovered - calculate calendar days between start and recovery
-      dropDuration = calculateDateDifference(
-        dropStartDate,
-        prices[recoveryIndex].dateTime,
-      );
-      recoveryDate = prices[recoveryIndex].dateTime;
-      i = recoveryIndex; // Jump to recovery point
-    } else {
-      // Never recovered - calculate calendar days from start to end of data
-      const endDate = prices[prices.length - 1].dateTime;
-      dropDuration = calculateDateDifference(dropStartDate, endDate);
-      recoveryDate = null;
-      i = prices.length; // End the loop
-    }
-
-    dropDurations.push({
-      duration: dropDuration,
-      startPrice: dropStartPrice,
-      startDate: dropStartDate,
-      lowestPrice: lowestPrice,
-      lowestDate: lowestDate,
-      recoveryDate: recoveryDate,
-    });
   }
 
-  // Find the longest drop
-  let longestDrop: DropPeriod | null = null;
-  for (const drop of dropDurations) {
-    if (!longestDrop || drop.duration > longestDrop.duration) {
-      longestDrop = drop;
+  // Handle the case where the last drop never recovered
+  const lastDate = prices[prices.length - 1].dateTime;
+  if (peakDate !== lastDate) {
+    const duration = calculateDateDifference(peakDate, lastDate);
+    if (!longestDrop || duration > longestDrop.duration) {
+      longestDrop = {
+        duration,
+        startPrice: peakPrice,
+        startDate: peakDate,
+        lowestPrice,
+        lowestDate,
+        recoveryDate: null,
+      };
     }
   }
 
