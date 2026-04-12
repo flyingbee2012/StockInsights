@@ -1,5 +1,5 @@
 import React from "react";
-import { SummaryData } from "../types";
+import { SummaryData } from "../types/StockTypes";
 import { getDropPct, formatCurrency } from "../utils/StockAnalyser";
 import styles from "./SummaryPanel.module.scss";
 

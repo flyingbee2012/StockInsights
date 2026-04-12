@@ -1,4 +1,4 @@
-import { Price, DropAnalysisResult } from "../types";
+import { Price, DropAnalysisResult } from "../types/StockTypes";
 
 // Types for internal calculations
 interface DropPeriod {

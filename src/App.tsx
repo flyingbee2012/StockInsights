@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Price, SummaryData, AnalysisRequest } from "./types";
+import { Price, SummaryData, AnalysisRequest } from "./types/StockTypes";
 import { analyzeStock } from "./utils/StockAnalyser";
 import { ApiService } from "./utils/ApiService";
 import StockChart from "./components/StockChart";

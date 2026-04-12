@@ -116,7 +116,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                           onChange={(e) => onStockChange(e.target.value)}
                           style={{ width: "118px" }}
                         >
-                          <option value="">- stock -</option>
+                          <option value="">--- stock ---</option>
                           {stockSymbols.map((symbol) => (
                             <option key={symbol} value={symbol}>
                               {symbol}
