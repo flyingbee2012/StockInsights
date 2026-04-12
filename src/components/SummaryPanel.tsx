@@ -49,20 +49,21 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         </div>
 
         <div className={styles.separator}>
-          Max Drop ({maxDrop.duration} days)
+          Max Drop ({maxDrop.duration} days
+          {maxDrop.recoveryDate ? " to recover" : ", never recovered"})
         </div>
         <div>
           {getDropPct(maxDrop.fromPrice, maxDrop.endPrice)}:{" "}
           {formatCurrency(maxDrop.fromPrice)} ({maxDrop.fromDate}) =&gt;{" "}
           {formatCurrency(maxDrop.endPrice)} ({maxDrop.endDate})
         </div>
-        <div>
-          Recovery: {maxDrop.recoveryDate || "Never recovered"}
-          {!maxDrop.recoveryDate && " (ongoing)"}
-        </div>
+        {maxDrop.recoveryDate && (
+          <div>Recovery date: {maxDrop.recoveryDate}</div>
+        )}
 
         <div className={styles.separator}>
-          Longest Drop ({longestDrop.duration} days)
+          Longest Drop ({longestDrop.duration} days
+          {longestDrop.recoveryDate ? " to recover" : ", never recovered"})
         </div>
         {longestDrop.duration > 0 ? (
           <div>
@@ -72,10 +73,9 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
               =&gt; {formatCurrency(longestDrop.endPrice)} (
               {longestDrop.endDate})
             </div>
-            <div>
-              Recovery: {longestDrop.recoveryDate || "Never recovered"}
-              {!longestDrop.recoveryDate && " (ongoing)"}
-            </div>
+            {longestDrop.recoveryDate && (
+              <div>Recovery date: {longestDrop.recoveryDate}</div>
+            )}
           </div>
         ) : (
           <div>No significant drops found.</div>
