@@ -6,6 +6,7 @@ interface DualRangeSliderProps {
   max: number;
   startValue: number;
   endValue: number;
+  disabled?: boolean;
   onChange: (start: number, end: number) => void;
   onChangeComplete: (start: number, end: number) => void;
 }
@@ -15,6 +16,7 @@ const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   max,
   startValue,
   endValue,
+  disabled = false,
   onChange,
   onChangeComplete,
 }) => {
@@ -40,6 +42,7 @@ const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
 
   const handlePointerDown = useCallback(
     (thumb: "start" | "end") => (e: React.PointerEvent) => {
+      if (disabled) return;
       e.preventDefault();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
       setDragging(thumb);
@@ -73,7 +76,7 @@ const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   // Handle track click to move nearest thumb
   const handleTrackClick = useCallback(
     (e: React.MouseEvent) => {
-      if (dragging) return;
+      if (disabled || dragging) return;
       const val = getValueFromPosition(e.clientX);
       const distToStart = Math.abs(val - startValue);
       const distToEnd = Math.abs(val - endValue);
@@ -102,7 +105,9 @@ const DualRangeSlider: React.FC<DualRangeSliderProps> = ({
   const endPercent = getPercent(endValue);
 
   return (
-    <div className={styles.sliderContainer}>
+    <div
+      className={`${styles.sliderContainer} ${disabled ? styles.disabled : ""}`}
+    >
       <div
         className={styles.track}
         ref={trackRef}

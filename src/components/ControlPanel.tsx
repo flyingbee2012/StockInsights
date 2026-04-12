@@ -143,7 +143,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                             fontWeight: "bold",
                           }}
                         >
-                          {tempStartYear} - {tempEndYear}
+                          {selectedStock
+                            ? `${tempStartYear} - ${tempEndYear}`
+                            : ""}
                         </label>
                       </td>
                     </tr>
@@ -154,6 +156,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                           max={dataMaxYear}
                           startValue={tempStartYear}
                           endValue={tempEndYear}
+                          disabled={!selectedStock}
                           onChange={handleSliderChange}
                           onChangeComplete={handleSliderComplete}
                         />

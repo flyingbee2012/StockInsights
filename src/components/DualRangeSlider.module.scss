@@ -4,6 +4,11 @@
   padding: 8px;
   user-select: none;
   touch-action: none;
+
+  &.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
 }
 
 .track {

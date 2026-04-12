@@ -90,6 +90,10 @@ const App: React.FC = () => {
 
   const handleStockChange = (symbol: string) => {
     setSelectedStock(symbol);
+    if (!symbol) {
+      setStockData([]);
+      return;
+    }
     loadStockData(symbol);
   };
 
